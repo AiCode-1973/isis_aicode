@@ -43,7 +43,7 @@ final class InstallController extends Controller
         }
         try {
             $ran = Installer::migrate();
-            Installer::seedSegments();
+            Installer::seedCatalogs();
             $summary = [];
             if ($request->input('demo') === '1') {
                 require_once APP_ROOT . '/database/seeds/DemoSeeder.php';

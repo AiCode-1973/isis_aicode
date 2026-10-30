@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Isis\Database\Seeds;
 
+require_once __DIR__ . '/DemoComplianceSeeder.php';
+
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
 use Isis\Auth\TenantContext;
@@ -64,64 +66,74 @@ final class DemoSeeder
         foreach ($companies as $company) {
             $cnpj = self::cnpj($company['cnpj_base']);
             if ((new TenantRepository())->cnpjExists($cnpj)) {
-                $summary[] = "{$company['trade_name']}: já existe, ignorada.";
-                continue;
+                $summary[] = "{$company['trade_name']}: já existe; cadastro mantido.";
+            } else {
+                self::createCompany($company, $cnpj, $hash, $summary);
             }
-
-            Database::transaction(function () use ($company, $cnpj, $hash, &$summary): void {
-                $tenantId = (new TenantRepository())->create([
-                    'legal_name' => $company['legal_name'],
-                    'trade_name' => $company['trade_name'],
-                    'cnpj' => $cnpj,
-                    'segment_code' => $company['segment_code'],
-                    'dpo_name' => $company['people'][1][0],
-                    'dpo_email' => self::email($company['people'][1][0], $company['domain']),
-                    'privacy_email' => 'privacidade@' . $company['domain'],
-                    'onboarding_completed_at' => date('Y-m-d H:i:s'),
-                ]);
-
-                TenantContext::runAs($tenantId, function () use ($company, $hash, $tenantId, &$summary): void {
-                    $departments = new DepartmentRepository();
-                    $deptIds = [];
-                    foreach ($company['departments'] as $name) {
-                        $deptIds[$name] = $departments->create($name);
-                    }
-
-                    $users = new UserRepository();
-                    $adminId = null;
-                    foreach ($company['people'] as [$name, $role, $dept, $title]) {
-                        $email = self::email($name, $company['domain']);
-                        $id = $users->create([
-                            'name' => $name,
-                            'email' => $email,
-                            'password_hash' => $hash,
-                            'role' => $role,
-                            'department_id' => $dept !== null ? $deptIds[$dept] : null,
-                            'job_title' => $title,
-                            'email_verified_at' => date('Y-m-d H:i:s'),
-                        ]);
-                        $adminId ??= $id;
-                        $summary[] = sprintf('%-28s %-12s %s', $company['trade_name'], $role, $email);
-                    }
-
-                    (new InvitationRepository())->create([
-                        'email' => 'novo.colaborador@' . $company['domain'],
-                        'name' => 'Novo Colaborador',
-                        'role' => 'colaborador',
-                        'department_id' => reset($deptIds),
-                        'token_hash' => Crypto::hashToken(Crypto::randomToken()),
-                        'invited_by' => $adminId,
-                        'expires_at' => date('Y-m-d H:i:s', strtotime('+7 days')),
-                    ]);
-
-                    $actor = ['tenant_id' => $tenantId, 'user_id' => $adminId, 'user_name' => $company['people'][0][0]];
-                    AuditLogger::log('tenant.registered', 'tenant', $tenantId, null, ['razao_social' => $company['legal_name'], 'segmento' => $company['segment_code']], $actor);
-                    AuditLogger::log('onboarding.completed', 'tenant', $tenantId, null, ['setores' => count($deptIds)], $actor);
-                    AuditLogger::log('user.invited', 'invitation', null, null, ['email' => 'novo.colaborador@' . $company['domain'], 'perfil' => 'colaborador'], $actor);
-                });
-            });
+            $tenantId = (int) Database::value('SELECT id FROM tenants WHERE cnpj = ?', [$cnpj]);
+            $created = TenantContext::runAs($tenantId, static fn (): bool => DemoComplianceSeeder::run($company['segment_code']));
+            $summary[] = $created
+                ? "{$company['trade_name']}: inventário, riscos e planos de ação demonstrativos criados."
+                : "{$company['trade_name']}: já tinha inventário; dados de conformidade mantidos.";
         }
         return $summary;
+    }
+
+    /** @param array<string, mixed> $company @param list<string> $summary */
+    private static function createCompany(array $company, string $cnpj, string $hash, array &$summary): void
+    {
+        Database::transaction(function () use ($company, $cnpj, $hash, &$summary): void {
+            $tenantId = (new TenantRepository())->create([
+                'legal_name' => $company['legal_name'],
+                'trade_name' => $company['trade_name'],
+                'cnpj' => $cnpj,
+                'segment_code' => $company['segment_code'],
+                'dpo_name' => $company['people'][1][0],
+                'dpo_email' => self::email($company['people'][1][0], $company['domain']),
+                'privacy_email' => 'privacidade@' . $company['domain'],
+                'onboarding_completed_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            TenantContext::runAs($tenantId, function () use ($company, $hash, $tenantId, &$summary): void {
+                $departments = new DepartmentRepository();
+                $deptIds = [];
+                foreach ($company['departments'] as $name) {
+                    $deptIds[$name] = $departments->create($name);
+                }
+
+                $users = new UserRepository();
+                $adminId = null;
+                foreach ($company['people'] as [$name, $role, $dept, $title]) {
+                    $email = self::email($name, $company['domain']);
+                    $id = $users->create([
+                        'name' => $name,
+                        'email' => $email,
+                        'password_hash' => $hash,
+                        'role' => $role,
+                        'department_id' => $dept !== null ? $deptIds[$dept] : null,
+                        'job_title' => $title,
+                        'email_verified_at' => date('Y-m-d H:i:s'),
+                    ]);
+                    $adminId ??= $id;
+                    $summary[] = sprintf('%-28s %-12s %s', $company['trade_name'], $role, $email);
+                }
+
+                (new InvitationRepository())->create([
+                    'email' => 'novo.colaborador@' . $company['domain'],
+                    'name' => 'Novo Colaborador',
+                    'role' => 'colaborador',
+                    'department_id' => reset($deptIds),
+                    'token_hash' => Crypto::hashToken(Crypto::randomToken()),
+                    'invited_by' => $adminId,
+                    'expires_at' => date('Y-m-d H:i:s', strtotime('+7 days')),
+                ]);
+
+                $actor = ['tenant_id' => $tenantId, 'user_id' => $adminId, 'user_name' => $company['people'][0][0]];
+                AuditLogger::log('tenant.registered', 'tenant', $tenantId, null, ['razao_social' => $company['legal_name'], 'segmento' => $company['segment_code']], $actor);
+                AuditLogger::log('onboarding.completed', 'tenant', $tenantId, null, ['setores' => count($deptIds)], $actor);
+                AuditLogger::log('user.invited', 'invitation', null, null, ['email' => 'novo.colaborador@' . $company['domain'], 'perfil' => 'colaborador'], $actor);
+            });
+        });
     }
 
     private static function email(string $name, string $domain): string

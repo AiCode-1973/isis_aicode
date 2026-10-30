@@ -31,6 +31,21 @@ $tenant = Auth::tenant();
             <?php endif; ?>
         </ul>
 
+        <?php if (can(P::INVENTORY_VIEW) || can(P::RISKS_VIEW) || can(P::ACTIONS_VIEW)): ?>
+        <p class="nav-section">Conformidade</p>
+        <ul class="nav">
+            <?php if (can(P::INVENTORY_VIEW)): ?>
+            <li><a class="<?= nav_active('/inventario') ?>" href="/inventario"><?= icon('database') ?> Inventário de dados</a></li>
+            <?php endif; ?>
+            <?php if (can(P::RISKS_VIEW)): ?>
+            <li><a class="<?= nav_active('/riscos') ?>" href="/riscos"><?= icon('target') ?> Riscos</a></li>
+            <?php endif; ?>
+            <?php if (can(P::ACTIONS_VIEW)): ?>
+            <li><a class="<?= nav_active('/planos') ?>" href="/planos"><?= icon('check') ?> <?= Isis\Services\AccessScope::onlyOwnActions() ? 'Minhas tarefas' : 'Planos de ação' ?></a></li>
+            <?php endif; ?>
+        </ul>
+        <?php endif; ?>
+
         <?php if (can(P::USERS_VIEW) || can(P::SETTINGS_MANAGE) || can(P::AUDIT_VIEW)): ?>
         <p class="nav-section">Governança</p>
         <ul class="nav">
@@ -52,7 +67,7 @@ $tenant = Auth::tenant();
         </ul>
     </nav>
 
-    <div class="sidebar-foot">ISIS v<?= e(APP_VERSION) ?> · LGPD • Governança • Segurança • Conformidade</div>
+    <div class="sidebar-foot">ÍSIS v<?= e(APP_VERSION) ?> · LGPD • Governança • Segurança • Conformidade</div>
 </aside>
 <div class="sidebar-backdrop" data-close-sidebar></div>
 
@@ -86,7 +101,7 @@ $tenant = Auth::tenant();
     </main>
 
     <footer class="app-footer">
-        <strong>ISIS</strong> · Gestão da Privacidade e Proteção de Dados ·
+        <strong>ÍSIS</strong> · Gestão da Privacidade e Proteção de Dados ·
         <?= Isis\Core\View::partial('partials/disclaimer') ?>
     </footer>
 </div>

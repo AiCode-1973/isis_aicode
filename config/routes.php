@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use Isis\Auth\Permission as P;
+use Isis\Controllers\ActionController;
 use Isis\Controllers\AuditController;
+use Isis\Controllers\EvidenceController;
+use Isis\Controllers\InventoryController;
+use Isis\Controllers\RiskController;
 use Isis\Controllers\AuthController;
 use Isis\Controllers\DashboardController;
 use Isis\Controllers\HomeController;
@@ -52,6 +56,45 @@ return static function (Router $r): void {
 
     // Área da empresa
     $r->get('/painel', [DashboardController::class, 'index'], $app(P::DASHBOARD_VIEW));
+
+    // Inventário de operações de tratamento
+    $r->get('/inventario', [InventoryController::class, 'index'], $app(P::INVENTORY_VIEW));
+    $r->get('/inventario/exportar', [InventoryController::class, 'export'], $app(P::INVENTORY_VIEW));
+    $r->get('/inventario/nova', [InventoryController::class, 'create'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario', [InventoryController::class, 'store'], $app(P::INVENTORY_EDIT));
+    $r->get('/inventario/catalogos', [InventoryController::class, 'catalogs'], $app(P::INVENTORY_VIEW));
+    $r->post('/inventario/catalogos/importar', [InventoryController::class, 'catalogImport'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario/catalogos/{type}', [InventoryController::class, 'catalogStore'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario/catalogos/{type}/{id}', [InventoryController::class, 'catalogUpdate'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario/catalogos/{type}/{id}/excluir', [InventoryController::class, 'catalogDelete'], $app(P::INVENTORY_EDIT));
+    $r->get('/inventario/{id}', [InventoryController::class, 'show'], $app(P::INVENTORY_VIEW));
+    $r->get('/inventario/{id}/editar', [InventoryController::class, 'edit'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario/{id}', [InventoryController::class, 'update'], $app(P::INVENTORY_EDIT));
+    $r->post('/inventario/{id}/excluir', [InventoryController::class, 'delete'], $app(P::INVENTORY_EDIT));
+
+    // Riscos
+    $r->get('/riscos', [RiskController::class, 'index'], $app(P::RISKS_VIEW));
+    $r->get('/riscos/novo', [RiskController::class, 'create'], $app(P::RISKS_EDIT));
+    $r->post('/riscos', [RiskController::class, 'store'], $app(P::RISKS_EDIT));
+    $r->get('/riscos/{id}', [RiskController::class, 'show'], $app(P::RISKS_VIEW));
+    $r->get('/riscos/{id}/editar', [RiskController::class, 'edit'], $app(P::RISKS_EDIT));
+    $r->post('/riscos/{id}', [RiskController::class, 'update'], $app(P::RISKS_EDIT));
+    $r->post('/riscos/{id}/excluir', [RiskController::class, 'delete'], $app(P::RISKS_EDIT));
+
+    // Planos de ação
+    $r->get('/planos', [ActionController::class, 'index'], $app(P::ACTIONS_VIEW));
+    $r->get('/planos/nova', [ActionController::class, 'create'], $app(P::ACTIONS_EDIT));
+    $r->post('/planos', [ActionController::class, 'store'], $app(P::ACTIONS_EDIT));
+    $r->get('/planos/{id}', [ActionController::class, 'show'], $app(P::ACTIONS_VIEW));
+    $r->get('/planos/{id}/editar', [ActionController::class, 'edit'], $app(P::ACTIONS_EDIT));
+    $r->post('/planos/{id}', [ActionController::class, 'update'], $app(P::ACTIONS_EDIT));
+    $r->post('/planos/{id}/andamento', [ActionController::class, 'progress'], $app(P::ACTIONS_VIEW));
+    $r->post('/planos/{id}/excluir', [ActionController::class, 'delete'], $app(P::ACTIONS_EDIT));
+
+    // Evidências (permissão conferida sobre o registro de origem)
+    $r->post('/evidencias', [EvidenceController::class, 'upload'], $app(P::DASHBOARD_VIEW));
+    $r->get('/evidencias/{id}', [EvidenceController::class, 'download'], $app(P::DASHBOARD_VIEW));
+    $r->post('/evidencias/{id}/excluir', [EvidenceController::class, 'delete'], $app(P::DASHBOARD_VIEW));
 
     $r->get('/usuarios', [UserController::class, 'index'], $app(P::USERS_VIEW));
     $r->post('/usuarios/convites', [UserController::class, 'invite'], $app(P::USERS_MANAGE));

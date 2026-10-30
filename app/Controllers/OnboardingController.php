@@ -89,7 +89,12 @@ final class OnboardingController extends Controller
                 'onboarding_completed_at' => date('Y-m-d H:i:s'),
             ];
             $tenants->updateCurrent($changes);
-            AuditLogger::log('onboarding.completed', 'tenant', (int) $before['id'], $before, $changes + ['setores_criados' => $created]);
+            $catalog = \Isis\Services\CatalogService::importSuggestions((string) $data['segment_code']);
+            AuditLogger::log('onboarding.completed', 'tenant', (int) $before['id'], $before, $changes + [
+                'setores_criados' => $created,
+                'categorias_dados_sugeridas' => $catalog['data'],
+                'categorias_titulares_sugeridas' => $catalog['subjects'],
+            ]);
         });
 
         return $this->success('/painel', 'Configuração concluída! Próximo passo: convide sua equipe em Usuários.');

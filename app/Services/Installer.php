@@ -62,7 +62,26 @@ final class Installer
         return $ran;
     }
 
-    /** Atualiza o catálogo global de segmentos (pode rodar quantas vezes quiser). */
+    /** Atualiza os catálogos globais (segmentos e hipóteses legais). Pode rodar quantas vezes quiser. */
+    public static function seedCatalogs(): string
+    {
+        return sprintf('Segmentos: %d · Hipóteses legais: %d', self::seedSegments(), self::seedLegalBases());
+    }
+
+    public static function seedLegalBases(): int
+    {
+        $bases = require APP_ROOT . '/database/seeds/legal_bases.php';
+        foreach ($bases as $i => [$code, $article, $name, $description, $sensitive]) {
+            Database::execute(
+                'INSERT INTO legal_bases (code, article, name, description, is_sensitive, sort_order) VALUES (?, ?, ?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE article = VALUES(article), name = VALUES(name), description = VALUES(description),
+                 is_sensitive = VALUES(is_sensitive), sort_order = VALUES(sort_order)',
+                [$code, $article, $name, $description, $sensitive, $i + 1],
+            );
+        }
+        return count($bases);
+    }
+
     public static function seedSegments(): int
     {
         $segments = require APP_ROOT . '/database/seeds/segments.php';

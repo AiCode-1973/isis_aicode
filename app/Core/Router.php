@@ -17,6 +17,7 @@ final class Router
         'id' => '\d+',
         'token' => '[A-Za-z0-9_-]{20,128}',
         'slug' => '[a-z0-9-]{2,80}',
+        'type' => '[a-z]{2,20}',
     ];
 
     /**

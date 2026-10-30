@@ -42,7 +42,25 @@ function csrf_field(): string
 function old(string $key, mixed $default = ''): string
 {
     $old = Session::getFlash('_old', []);
-    return (string) ($old[$key] ?? $default ?? '');
+    $value = $old[$key] ?? $default ?? '';
+    return is_scalar($value) ? (string) $value : '';
+}
+
+/** Lista antiga (checkboxes múltiplos) ou o valor atual do registro. @return list<string> */
+function old_list(string $key, array $current = []): array
+{
+    $old = Session::getFlash('_old');
+    if (is_array($old)) {
+        $value = $old[$key] ?? [];
+        return is_array($value) ? array_map('strval', $value) : [];
+    }
+    return array_map('strval', $current);
+}
+
+/** Há dados antigos de formulário (após erro de validação)? */
+function has_old(): bool
+{
+    return is_array(Session::getFlash('_old'));
 }
 
 /** Mensagem de erro do campo, já escapada. */
@@ -104,6 +122,35 @@ function fmt_cnpj(?string $cnpj): string
         return $c;
     }
     return substr($c, 0, 2) . '.' . substr($c, 2, 3) . '.' . substr($c, 5, 3) . '/' . substr($c, 8, 4) . '-' . substr($c, 12, 2);
+}
+
+/** Código legível de registros: OP-001, RSK-012, ACT-003. */
+function code(string $prefix, int $seq): string
+{
+    return sprintf('%s-%03d', $prefix, $seq);
+}
+
+function fmt_bytes(int $bytes): string
+{
+    return $bytes >= 1048576 ? number_format($bytes / 1048576, 1, ',', '.') . ' MB' : max(1, (int) round($bytes / 1024)) . ' KB';
+}
+
+/** Classe de largura (w-0..w-100, passos de 10) para barras sem estilo inline. */
+function width_class(float $percent): string
+{
+    return 'w-' . (int) (round(max(0, min(100, $percent)) / 10) * 10);
+}
+
+function label(array $map, string|int|null $value): string
+{
+    return Isis\Support\Labels::of($map, $value);
+}
+
+/** Selo do nível de risco. */
+function risk_badge(int $likelihood, int $impact): string
+{
+    $level = Isis\Services\RiskMatrix::levelOf($likelihood, $impact);
+    return '<span class="badge ' . Isis\Services\RiskMatrix::badge($level) . '">' . e(Isis\Services\RiskMatrix::label($level)) . ' · ' . ($likelihood * $impact) . '</span>';
 }
 
 function initials(?string $name): string
@@ -188,6 +235,24 @@ function audit_label(string $action): string
         'sessions.revoked' => 'Outras sessões encerradas',
         'audit.exported' => 'Trilha de auditoria exportada',
         'audit.verified' => 'Integridade da auditoria verificada',
+        'activity.created' => 'Operação de tratamento criada',
+        'activity.updated' => 'Operação de tratamento alterada',
+        'activity.deleted' => 'Operação de tratamento excluída',
+        'inventory.exported' => 'Inventário exportado',
+        'catalog.created' => 'Item de catálogo criado',
+        'catalog.updated' => 'Item de catálogo alterado',
+        'catalog.deleted' => 'Item de catálogo excluído',
+        'catalog.imported' => 'Sugestões do segmento importadas',
+        'risk.created' => 'Risco registrado',
+        'risk.updated' => 'Risco alterado',
+        'risk.deleted' => 'Risco excluído',
+        'action.created' => 'Ação criada',
+        'action.updated' => 'Ação alterada',
+        'action.progress' => 'Andamento de ação registrado',
+        'action.deleted' => 'Ação excluída',
+        'evidence.uploaded' => 'Evidência anexada',
+        'evidence.downloaded' => 'Evidência baixada',
+        'evidence.deleted' => 'Evidência excluída',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

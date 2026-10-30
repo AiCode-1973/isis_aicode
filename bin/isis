@@ -6,9 +6,9 @@ declare(strict_types=1);
 /*
  * ISIS - comandos de linha de comando.
  *   php bin/isis key:generate      Gera APP_KEY no .env (somente se estiver vazia)
- *   php bin/isis migrate           Aplica migrations pendentes e atualiza o catálogo de segmentos
+ *   php bin/isis migrate           Aplica migrations pendentes e atualiza os catálogos globais
  *   php bin/isis install [--demo]  migrate + bloqueio do instalador web (+ dados fictícios)
- *   php bin/isis seed:demo         Cria as empresas e usuários fictícios de demonstração
+ *   php bin/isis seed:demo         Cria as empresas fictícias e completa os dados demonstrativos dos módulos
  *   php bin/isis audit:verify      Verifica a integridade (cadeia de hashes) da auditoria de todas as empresas
  */
 
@@ -31,6 +31,14 @@ $options = array_slice($argv, 2);
 function out(string $text = ''): void
 {
     fwrite(STDOUT, $text . PHP_EOL);
+}
+
+function demo(): void
+{
+    out('Dados demonstrativos (senha de todos: ' . DemoSeeder::PASSWORD . '):');
+    foreach (DemoSeeder::run() as $line) {
+        out('  ' . $line);
+    }
 }
 
 try {
@@ -57,7 +65,7 @@ try {
         case 'migrate':
             $ran = Installer::migrate();
             out($ran ? 'Migrations aplicadas: ' . implode(', ', $ran) : 'Banco já está atualizado.');
-            out('Segmentos no catálogo: ' . Installer::seedSegments());
+            out(Installer::seedCatalogs());
             break;
 
         case 'install':
@@ -66,22 +74,16 @@ try {
             }
             $ran = Installer::migrate();
             out($ran ? 'Migrations aplicadas: ' . implode(', ', $ran) : 'Banco já está atualizado.');
-            out('Segmentos no catálogo: ' . Installer::seedSegments());
+            out(Installer::seedCatalogs());
             if (in_array('--demo', $options, true)) {
-                out('Dados demonstrativos (senha de todos: ' . DemoSeeder::PASSWORD . '):');
-                foreach (DemoSeeder::run() as $line) {
-                    out('  ' . $line);
-                }
+                demo();
             }
             Installer::lock();
             out('Instalação concluída. Instalador web bloqueado (storage/install.lock).');
             break;
 
         case 'seed:demo':
-            out('Dados demonstrativos (senha de todos: ' . DemoSeeder::PASSWORD . '):');
-            foreach (DemoSeeder::run() as $line) {
-                out('  ' . $line);
-            }
+            demo();
             break;
 
         case 'audit:verify':

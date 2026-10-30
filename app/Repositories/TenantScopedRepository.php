@@ -94,6 +94,32 @@ abstract class TenantScopedRepository
         );
     }
 
+    /** Próximo número sequencial da empresa (códigos como OP-001). Use dentro de transação. */
+    protected function nextSeq(): int
+    {
+        return (int) Database::value(
+            "SELECT COALESCE(MAX(seq), 0) + 1 FROM `{$this->table()}` WHERE tenant_id = ? FOR UPDATE",
+            [$this->tenantId()],
+        );
+    }
+
+    /**
+     * Substitui os vínculos N:N de um registro (tabela de ligação com tenant_id).
+     *
+     * @param list<int> $ids
+     */
+    protected function syncPivot(string $pivot, string $ownerColumn, int $ownerId, string $itemColumn, array $ids): void
+    {
+        array_map(Database::assertIdentifier(...), [$pivot, $ownerColumn, $itemColumn]);
+        Database::execute("DELETE FROM `{$pivot}` WHERE tenant_id = ? AND `{$ownerColumn}` = ?", [$this->tenantId(), $ownerId]);
+        foreach (array_unique($ids) as $id) {
+            Database::execute(
+                "INSERT INTO `{$pivot}` (tenant_id, `{$ownerColumn}`, `{$itemColumn}`) VALUES (?, ?, ?)",
+                [$this->tenantId(), $ownerId, $id],
+            );
+        }
+    }
+
     protected function delete(int $id): int
     {
         return Database::execute(

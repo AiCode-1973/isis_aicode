@@ -33,7 +33,8 @@ abstract class Controller
     protected function backWithErrors(string $path, array $errors, array $input = [], ?string $message = null): Response
     {
         Session::flash('_errors', $errors);
-        Session::flash('_old', array_diff_key(array_filter($input, 'is_string'), array_flip(self::NEVER_FLASH)));
+        $keep = array_filter($input, static fn (mixed $v): bool => is_string($v) || (is_array($v) && count($v) <= 200));
+        Session::flash('_old', array_diff_key($keep, array_flip(self::NEVER_FLASH)));
         Session::flash('error', $message ?? 'Revise os campos destacados.');
         return Response::redirect($path);
     }
