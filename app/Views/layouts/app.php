@@ -5,11 +5,33 @@ use Isis\Auth\Permission as P;
 
 $user = Auth::user();
 $tenant = Auth::tenant();
+
+// Menu lateral: seção => itens [permissão (null = todos), caminho, ícone, rótulo]
+$menu = [
+    'Visão geral' => [
+        [P::DASHBOARD_VIEW, '/painel', 'dashboard', 'Painel de conformidade'],
+    ],
+    'Conformidade' => [
+        [P::INVENTORY_VIEW, '/inventario', 'database', 'Inventário de dados'],
+        [P::RISKS_VIEW, '/riscos', 'target', 'Riscos'],
+        [P::ACTIONS_VIEW, '/planos', 'check', Isis\Services\AccessScope::onlyOwnActions() ? 'Minhas tarefas' : 'Planos de ação'],
+    ],
+    'Governança' => [
+        [P::USERS_VIEW, '/usuarios', 'users', 'Usuários e perfis'],
+        [P::SETTINGS_MANAGE, '/configuracoes', 'settings', 'Configurações'],
+        [P::AUDIT_VIEW, '/auditoria', 'audit', 'Trilha de auditoria'],
+    ],
+    'Conta' => [
+        [null, '/perfil', 'user', 'Meu perfil'],
+        [null, '/manual', 'info', 'Manual do sistema'],
+    ],
+];
 ?>
 <!doctype html>
 <html lang="pt-BR">
 <head>
 <?= Isis\Core\View::partial('partials/head', ['title' => $title ?? '']) ?>
+<script src="<?= e(asset('js/sidebar-state.js')) ?>"></script>
 </head>
 <body class="app-shell">
 <a class="skip-link" href="#main">Pular para o conteúdo</a>
@@ -17,54 +39,29 @@ $tenant = Auth::tenant();
 <aside class="sidebar" id="sidebar" aria-label="Menu principal">
     <?= Isis\Core\View::partial('partials/brand') ?>
     <?php if ($tenant): ?>
-    <div class="tenant-chip">
-        <strong><?= e($tenant['trade_name'] ?: $tenant['legal_name']) ?></strong>
-        <span><?= e($tenant['segment_name'] ?? '') ?></span>
+    <div class="tenant-chip" title="<?= e($tenant['trade_name'] ?: $tenant['legal_name']) ?>">
+        <span class="tenant-initials" aria-hidden="true"><?= e(initials($tenant['trade_name'] ?: $tenant['legal_name'])) ?></span>
+        <span class="tenant-text">
+            <strong><?= e($tenant['trade_name'] ?: $tenant['legal_name']) ?></strong>
+            <span><?= e($tenant['segment_name'] ?? '') ?></span>
+        </span>
     </div>
     <?php endif; ?>
 
     <nav>
-        <p class="nav-section">Visão geral</p>
+        <?php foreach ($menu as $section => $items):
+            $visible = array_filter($items, static fn (array $i): bool => $i[0] === null || can($i[0]));
+            if (!$visible) {
+                continue;
+            }
+        ?>
+        <p class="nav-section"><span><?= e($section) ?></span></p>
         <ul class="nav">
-            <?php if (can(P::DASHBOARD_VIEW)): ?>
-            <li><a class="<?= nav_active('/painel') ?>" href="/painel"><?= icon('dashboard') ?> Painel de conformidade</a></li>
-            <?php endif; ?>
+            <?php foreach ($visible as [, $path, $iconName, $label]): ?>
+            <li><a class="<?= nav_active($path) ?>" href="<?= e($path) ?>" title="<?= e($label) ?>"><?= icon($iconName) ?><span class="nav-label"><?= e($label) ?></span></a></li>
+            <?php endforeach; ?>
         </ul>
-
-        <?php if (can(P::INVENTORY_VIEW) || can(P::RISKS_VIEW) || can(P::ACTIONS_VIEW)): ?>
-        <p class="nav-section">Conformidade</p>
-        <ul class="nav">
-            <?php if (can(P::INVENTORY_VIEW)): ?>
-            <li><a class="<?= nav_active('/inventario') ?>" href="/inventario"><?= icon('database') ?> Inventário de dados</a></li>
-            <?php endif; ?>
-            <?php if (can(P::RISKS_VIEW)): ?>
-            <li><a class="<?= nav_active('/riscos') ?>" href="/riscos"><?= icon('target') ?> Riscos</a></li>
-            <?php endif; ?>
-            <?php if (can(P::ACTIONS_VIEW)): ?>
-            <li><a class="<?= nav_active('/planos') ?>" href="/planos"><?= icon('check') ?> <?= Isis\Services\AccessScope::onlyOwnActions() ? 'Minhas tarefas' : 'Planos de ação' ?></a></li>
-            <?php endif; ?>
-        </ul>
-        <?php endif; ?>
-
-        <?php if (can(P::USERS_VIEW) || can(P::SETTINGS_MANAGE) || can(P::AUDIT_VIEW)): ?>
-        <p class="nav-section">Governança</p>
-        <ul class="nav">
-            <?php if (can(P::USERS_VIEW)): ?>
-            <li><a class="<?= nav_active('/usuarios') ?>" href="/usuarios"><?= icon('users') ?> Usuários e perfis</a></li>
-            <?php endif; ?>
-            <?php if (can(P::SETTINGS_MANAGE)): ?>
-            <li><a class="<?= nav_active('/configuracoes') ?>" href="/configuracoes"><?= icon('settings') ?> Configurações</a></li>
-            <?php endif; ?>
-            <?php if (can(P::AUDIT_VIEW)): ?>
-            <li><a class="<?= nav_active('/auditoria') ?>" href="/auditoria"><?= icon('audit') ?> Trilha de auditoria</a></li>
-            <?php endif; ?>
-        </ul>
-        <?php endif; ?>
-
-        <p class="nav-section">Conta</p>
-        <ul class="nav">
-            <li><a class="<?= nav_active('/perfil') ?>" href="/perfil"><?= icon('user') ?> Meu perfil</a></li>
-        </ul>
+        <?php endforeach; ?>
     </nav>
 
     <div class="sidebar-foot">ÍSIS v<?= e(APP_VERSION) ?> · LGPD • Governança • Segurança • Conformidade</div>
@@ -73,7 +70,7 @@ $tenant = Auth::tenant();
 
 <div class="main-wrap">
     <header class="topbar">
-        <button type="button" class="icon-btn menu-btn" data-toggle-sidebar aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu"><?= icon('menu') ?></button>
+        <button type="button" class="icon-btn menu-btn" data-toggle-sidebar aria-controls="sidebar" aria-expanded="true" aria-label="Recolher menu" title="Recolher ou expandir o menu"><?= icon('menu') ?></button>
         <div class="topbar-title"><?= e($title ?? '') ?></div>
         <?php if ($user): ?>
         <details class="user-menu">
@@ -86,6 +83,7 @@ $tenant = Auth::tenant();
             </summary>
             <div class="menu-pop">
                 <a href="/perfil"><?= icon('user') ?> Meu perfil</a>
+                <a href="/manual"><?= icon('info') ?> Manual do sistema</a>
                 <form method="post" action="/sair" class="inline-form">
                     <?= csrf_field() ?>
                     <button type="submit"><?= icon('logout') ?> Sair</button>

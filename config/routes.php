@@ -31,6 +31,7 @@ return static function (Router $r): void {
     // Público
     $r->get('/', [HomeController::class, 'index']);
     $r->get('/termos', [HomeController::class, 'terms']);
+    $r->get('/manual', [HomeController::class, 'manual']);
     $r->get('/instalar', [InstallController::class, 'show']);
     $r->post('/instalar', [InstallController::class, 'run']);
 
