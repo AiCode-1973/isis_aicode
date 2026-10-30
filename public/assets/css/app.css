@@ -584,6 +584,38 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
   .content { padding: 0; }
 }
 
+/* ---------- Relatório ---------- */
+.report { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 2.25rem; box-shadow: var(--shadow); }
+.report-head { border-bottom: 3px solid var(--brand); padding-bottom: 1.25rem; margin-bottom: 1.25rem; }
+.report-brand { display: flex; align-items: center; gap: .65rem; margin-bottom: 1rem; }
+.report-brand strong { display: block; letter-spacing: .12em; color: var(--brand); }
+.report-brand span { font-size: .78rem; color: var(--muted); }
+.report-head h1 { font-size: 1.5rem; margin-bottom: .9rem; }
+.report-id { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; font-size: .92rem; }
+.report-id dt { color: var(--muted); }
+.report-id dd { margin: 0; }
+.report-section { padding: 1rem 0; border-bottom: 1px solid var(--line); break-inside: avoid; }
+.report-section h2 { font-size: 1.1rem; color: var(--brand); }
+.report-section p { color: var(--ink-2); }
+.report-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .75rem; margin-top: .5rem; }
+.report-kpis div { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .75rem .9rem; background: var(--surface-2); }
+.report-kpis strong { display: block; font-size: 1.5rem; color: var(--brand); }
+.report-kpis span { font-size: .82rem; color: var(--muted); }
+.report-table { width: 100%; border-collapse: collapse; font-size: .85rem; margin-top: .5rem; }
+.report-table th, .report-table td { border: 1px solid var(--line); padding: .4rem .55rem; text-align: left; }
+.report-table th { background: var(--surface-2); text-transform: none; letter-spacing: 0; font-size: .8rem; }
+.report-split { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 1.4fr); gap: 1.5rem; align-items: start; }
+.report-foot { padding-top: 1rem; font-size: .8rem; color: var(--muted); }
+.export-card h3 { display: flex; align-items: center; gap: .4rem; font-size: .98rem; }
+a.export-card { text-decoration: none; color: inherit; }
+a.export-card:hover { border-color: var(--teal); }
+@media (max-width: 960px) { .report-split { grid-template-columns: minmax(0, 1fr); } .report { padding: 1.25rem; } }
+@media print {
+  .report { border: 0; box-shadow: none; padding: 0; }
+  .report-table th, .report-table td { border-color: #bbb; }
+  .heat { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+
 /* ---------- Erros ---------- */
 .error-page { text-align: center; padding: 3rem 1rem; }
 .error-code { font-size: 3.5rem; font-weight: 800; color: var(--line-2); line-height: 1; }

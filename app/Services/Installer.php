@@ -17,7 +17,7 @@ final class Installer
         $checks = [
             'PHP 8.3 ou superior' => [version_compare(PHP_VERSION, '8.3.0', '>='), PHP_VERSION],
         ];
-        foreach (['pdo_mysql', 'sodium', 'mbstring', 'openssl', 'fileinfo'] as $ext) {
+        foreach (['pdo_mysql', 'sodium', 'mbstring', 'openssl', 'fileinfo', 'zip'] as $ext) {
             $checks["Extensão {$ext}"] = [extension_loaded($ext), extension_loaded($ext) ? 'ativa' : 'ausente'];
         }
         foreach (['storage/logs', 'storage/sessions', 'storage/uploads', 'storage/backups'] as $dir) {

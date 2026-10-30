@@ -5,11 +5,25 @@ declare(strict_types=1);
 
 /*
  * ÍSIS - comandos de linha de comando.
+ *
+ * Instalação e atualização
  *   php bin/isis key:generate      Gera APP_KEY no .env (somente se estiver vazia)
  *   php bin/isis migrate           Aplica migrations pendentes e atualiza os catálogos globais
  *   php bin/isis install [--demo]  migrate + bloqueio do instalador web (+ dados fictícios)
  *   php bin/isis seed:demo         Cria as empresas fictícias e completa os dados demonstrativos dos módulos
- *   php bin/isis audit:verify      Verifica a integridade (cadeia de hashes) da auditoria de todas as empresas
+ *
+ * Rotina (agendar no cron / Agendador de Tarefas)
+ *   php bin/isis diario            backup + rotação + lembretes + manutenção (uma vez por dia)
+ *   php bin/isis backup [--sem-arquivos]   Cópia criptografada do banco e das evidências em storage/backups
+ *   php bin/isis lembretes         Envia o resumo diário de pendências por e-mail
+ *   php bin/isis manutencao        Limpa registros temporários vencidos
+ *
+ * Suporte
+ *   php bin/isis verificar         Verifica requisitos, banco, migrations, auditoria, backup e e-mail
+ *   php bin/isis audit:verify      Verifica a cadeia de hashes da auditoria de todas as empresas
+ *   php bin/isis backup:listar
+ *   php bin/isis backup:decifrar <arquivo.isisbak> <saida.zip>
+ *   php bin/isis backup:restaurar <arquivo.isisbak> [--banco=nome] [--force] [--sem-arquivos]
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -20,13 +34,27 @@ require dirname(__DIR__) . '/app/bootstrap.php';
 require APP_ROOT . '/database/seeds/DemoSeeder.php';
 
 use Isis\Audit\AuditHasher;
+use Isis\Core\Config;
 use Isis\Core\Crypto;
 use Isis\Core\Database;
 use Isis\Database\Seeds\DemoSeeder;
+use Isis\Services\BackupService;
 use Isis\Services\Installer;
+use Isis\Services\MaintenanceService;
+use Isis\Services\ReminderService;
 
 $command = $argv[1] ?? 'help';
-$options = array_slice($argv, 2);
+$args = array_slice($argv, 2);
+$options = [];
+$positional = [];
+foreach ($args as $arg) {
+    if (str_starts_with($arg, '--')) {
+        [$name, $value] = array_pad(explode('=', substr($arg, 2), 2), 2, true);
+        $options[$name] = $value;
+    } else {
+        $positional[] = $arg;
+    }
+}
 
 function out(string $text = ''): void
 {
@@ -41,6 +69,17 @@ function demo(): void
     }
 }
 
+function backup(bool $withFiles): void
+{
+    $result = BackupService::create($withFiles);
+    out(sprintf('Backup criado: %s (%s) · %d tabelas, %d registros, %d arquivo(s) de evidência.',
+        basename($result['file']), fmt_bytes($result['size']), $result['tables'], $result['rows'], $result['files']));
+    $removed = BackupService::rotate((int) Config::get('backup.keep_daily', 7), (int) Config::get('backup.keep_weekly', 4));
+    if ($removed !== []) {
+        out('Backups antigos removidos: ' . implode(', ', $removed));
+    }
+}
+
 try {
     switch ($command) {
         case 'key:generate':
@@ -51,7 +90,7 @@ try {
             }
             $env = (string) file_get_contents($envFile);
             if (preg_match('/^APP_KEY=base64:\S+/m', $env)) {
-                out('APP_KEY já existe. Não foi alterada (trocar a chave tornaria ilegíveis os dados criptografados).');
+                out('APP_KEY já existe. Não foi alterada (trocar a chave tornaria ilegíveis os dados criptografados e os backups).');
                 break;
             }
             $key = Crypto::generateKey();
@@ -75,7 +114,7 @@ try {
             $ran = Installer::migrate();
             out($ran ? 'Migrations aplicadas: ' . implode(', ', $ran) : 'Banco já está atualizado.');
             out(Installer::seedCatalogs());
-            if (in_array('--demo', $options, true)) {
+            if (isset($options['demo'])) {
                 demo();
             }
             Installer::lock();
@@ -85,6 +124,71 @@ try {
         case 'seed:demo':
             demo();
             break;
+
+        case 'backup':
+            backup(!isset($options['sem-arquivos']));
+            break;
+
+        case 'backup:listar':
+            $items = BackupService::list();
+            out($items ? '' : 'Nenhum backup em storage/backups.');
+            foreach ($items as $item) {
+                out(sprintf('  %s  %s  %s', $item['name'], str_pad(fmt_bytes($item['size']), 9, ' ', STR_PAD_LEFT), $item['date']));
+            }
+            break;
+
+        case 'backup:decifrar':
+            if (count($positional) < 2) {
+                throw new RuntimeException('Uso: php bin/isis backup:decifrar <arquivo.isisbak> <saida.zip>');
+            }
+            $manifest = BackupService::decryptTo($positional[0], $positional[1]);
+            out('Backup decifrado em ' . $positional[1] . ' · gerado em ' . ($manifest['created_at'] ?? '?') . ', versão ' . ($manifest['version'] ?? '?') . '.');
+            out('ATENÇÃO: o ZIP contém dados pessoais em claro. Apague-o depois de usar.');
+            break;
+
+        case 'backup:restaurar':
+            if (count($positional) < 1) {
+                throw new RuntimeException('Uso: php bin/isis backup:restaurar <arquivo.isisbak> [--banco=nome] [--force] [--sem-arquivos]');
+            }
+            $dbName = is_string($options['banco'] ?? null) ? $options['banco'] : (string) Config::get('db.database');
+            Database::assertIdentifier(strtolower(str_replace('-', '_', $dbName)));
+            $pdo = new PDO(
+                sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', Config::get('db.host'), Config::get('db.port'), $dbName),
+                (string) Config::get('db.username'), (string) Config::get('db.password'),
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+            );
+            $result = BackupService::restore($positional[0], $pdo, isset($options['force']), !isset($options['sem-arquivos']));
+            out(sprintf('Restauração concluída no banco %s: %d comandos executados, %d arquivo(s) de evidência restaurado(s).', $dbName, $result['statements'], $result['files']));
+            break;
+
+        case 'lembretes':
+            $stats = ReminderService::run();
+            out(sprintf('Lembretes: %d e-mail(s) enviado(s) em %d empresa(s); %d já enviado(s) hoje.', $stats['sent'], $stats['tenants'], $stats['skipped']));
+            break;
+
+        case 'manutencao':
+            foreach (MaintenanceService::cleanup() as $label => $count) {
+                out(sprintf('  %s: %d removido(s)', str_replace('_', ' ', $label), $count));
+            }
+            break;
+
+        case 'diario':
+            out('[' . date('Y-m-d H:i') . '] Rotina diária do ÍSIS');
+            backup(true);
+            $stats = ReminderService::run();
+            out(sprintf('Lembretes: %d enviado(s).', $stats['sent']));
+            $clean = MaintenanceService::cleanup();
+            out('Manutenção: ' . array_sum($clean) . ' registro(s) temporário(s) removido(s).');
+            break;
+
+        case 'verificar':
+            $failures = 0;
+            foreach (MaintenanceService::check() as $check) {
+                out(sprintf('[%s] %s · %s', $check['ok'] ? 'ok' : '!!', $check['label'], $check['detail']));
+                $failures += $check['ok'] ? 0 : 1;
+            }
+            out($failures === 0 ? 'Tudo certo.' : "{$failures} ponto(s) de atenção.");
+            exit($failures === 0 ? 0 : 3);
 
         case 'audit:verify':
             $keys = array_column(Database::fetchAll('SELECT chain_key FROM audit_chain ORDER BY chain_key'), 'chain_key');
@@ -102,7 +206,7 @@ try {
             exit($failures > 0 ? 2 : 0);
 
         default:
-            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | audit:verify');
+            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | diario | backup | backup:listar | backup:decifrar | backup:restaurar | lembretes | manutencao | verificar | audit:verify');
     }
 } catch (Throwable $e) {
     fwrite(STDERR, 'Erro: ' . $e->getMessage() . PHP_EOL);

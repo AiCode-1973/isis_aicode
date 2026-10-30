@@ -10,6 +10,7 @@ $tenant = Auth::tenant();
 $menu = [
     'Visão geral' => [
         [P::DASHBOARD_VIEW, '/painel', 'dashboard', 'Painel de conformidade'],
+        [P::REPORTS_VIEW, '/relatorios', 'file', 'Relatório de conformidade'],
     ],
     'Conformidade' => [
         [P::INVENTORY_VIEW, '/inventario', 'database', 'Inventário de dados'],

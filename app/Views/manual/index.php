@@ -20,13 +20,15 @@ $sections = [
     'fornecedores' => 'Fornecedores',
     'politicas' => 'Políticas e documentos',
     'treinamentos' => 'Treinamentos e certificados',
+    'relatorios' => 'Relatório de conformidade',
+    'emails' => 'E-mails e lembretes',
     'evidencias' => 'Evidências',
     'usuarios' => 'Usuários e convites',
     'configuracoes' => 'Configurações da empresa',
     'auditoria' => 'Trilha de auditoria',
     'perfil' => 'Meu perfil',
     'duvidas' => 'Dúvidas frequentes',
-    'proximos' => 'Próximos módulos',
+    'proximos' => 'Próximas melhorias',
     'historico' => 'Histórico de alterações',
 ];
 
@@ -55,7 +57,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         <header class="manual-head">
             <p class="eyebrow">ÍSIS · Gestão da Privacidade e Proteção de Dados</p>
             <h1>Manual do sistema</h1>
-            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · módulos das fases 1 a 4</p>
+            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · MVP completo (fases 1 a 5)</p>
             <div class="disclaimer"><?= icon('info') ?><span>O ÍSIS apoia a organização da conformidade com a LGPD e <strong>não substitui análise jurídica especializada nem garante conformidade legal</strong>. As orientações automáticas exibidas no sistema servem de apoio ao preenchimento.</span></div>
         </header>
 
@@ -64,7 +66,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
-            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências e trilha de auditoria.</p>
+            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
@@ -123,6 +125,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li><strong>Sessão:</strong> encerrada automaticamente após 30 minutos sem uso ou 8 horas desde a entrada.</li>
                 <li>Trocar a senha, redefini-la ou ter o perfil alterado encerra as sessões abertas em outros dispositivos.</li>
                 <li>Contas desativadas pelo administrador perdem o acesso imediatamente.</li>
+                <li><strong>Cópias de segurança:</strong> o banco de dados e as evidências são copiados diariamente em arquivo criptografado. Mantêm-se as cópias dos últimos dias e uma por semana das semanas anteriores. A rotina é configurada no servidor pelo responsável técnico.</li>
+                <li><strong>Dados criptografados:</strong> dados dos titulares nas solicitações e detalhes de incidentes ficam cifrados no banco de dados.</li>
             </ul>
             <h3>3.3 Recuperar o acesso</h3>
             <ol>
@@ -148,6 +152,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                         <tr><td>Fornecedores</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Políticas e documentos</td><td>Editar, aprovar e dar ciência</td><td>Editar, aprovar e dar ciência</td><td>Ler vigentes e dar ciência</td><td>Ler vigentes e dar ciência</td><td>Ler vigentes</td></tr>
                         <tr><td>Treinamentos</td><td>Criar, designar e fazer</td><td>Criar, designar e fazer</td><td>Fazer os designados</td><td>Fazer os designados</td><td>Fazer os designados</td></tr>
+                        <tr><td>Relatório de conformidade e exportações</td><td>Sim</td><td>Sim</td><td>—</td><td>—</td><td>Sim</td></tr>
                         <tr><td>Usuários</td><td>Ver e administrar</td><td>Ver</td><td>—</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Configurações da empresa</td><td>Sim</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
                         <tr><td>Trilha de auditoria</td><td>Sim</td><td>Sim</td><td>—</td><td>—</td><td>Sim</td></tr>
@@ -518,8 +523,67 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <?= $fig('certificado', 'Certificado de conclusão com código de verificação') ?>
         </section>
 
+        <section id="relatorios">
+            <h2>16. Relatório de conformidade</h2>
+            <p>Em <strong>Relatório de conformidade</strong>, no grupo Visão geral do menu, o ÍSIS monta um documento consolidado da gestão de privacidade. Ele serve para a direção, para auditorias e para eventuais fiscalizações. Está disponível para o administrador, o encarregado e o auditor.</p>
+            <p>O relatório traz:</p>
+            <ul>
+                <li><strong>Identificação:</strong> empresa, encarregado e período.</li>
+                <li><strong>Resumo</strong> em indicadores.</li>
+                <li><strong>Inventário</strong> com a lista de operações.</li>
+                <li><strong>Riscos:</strong> matriz e principais riscos abertos.</li>
+                <li><strong>Plano de ação</strong> e ações vencidas.</li>
+                <li><strong>Direitos dos titulares:</strong> recebidas, respondidas, percentual no prazo e tempo médio.</li>
+                <li><strong>Incidentes:</strong> quantos no período, quantos com risco relevante e comunicações à ANPD no prazo.</li>
+                <li><strong>Fornecedores, políticas, treinamentos e rastreabilidade</strong>, incluindo a verificação da integridade da auditoria.</li>
+            </ul>
+            <ul>
+                <li>Escolha o período dos movimentos (30 dias, 90 dias, 6 meses ou 12 meses); os demais números mostram a situação atual.</li>
+                <li>Use <strong>Imprimir ou salvar em PDF</strong> para gerar o documento.</li>
+                <li>Cada relatório gerado fica registrado na trilha de auditoria.</li>
+            </ul>
+            <?= $fig('relatorio', 'Relatório de conformidade pronto para imprimir ou salvar em PDF') ?>
+            <h3>16.1 Exportações em planilha</h3>
+            <p>Na mesma página, exporte em CSV (Excel ou LibreOffice):</p>
+            <ul>
+                <li>riscos;</li>
+                <li>planos de ação;</li>
+                <li>solicitações de titulares, <strong>sem os dados pessoais dos titulares</strong>;</li>
+                <li>incidentes, sem a descrição detalhada;</li>
+                <li>fornecedores;</li>
+                <li>treinamentos.</li>
+            </ul>
+            <p>O registro das operações de tratamento é exportado no Inventário, e a trilha de auditoria, em Auditoria.</p>
+        </section>
+
+        <section id="emails">
+            <h2>17. E-mails e lembretes</h2>
+            <p>O ÍSIS envia e-mails automáticos nestas situações:</p>
+            <ul>
+                <li><strong>Acesso:</strong> confirmação de cadastro, convite para a equipe e recuperação de senha.</li>
+                <li><strong>Para o encarregado:</strong> nova solicitação recebida pelo canal on-line (só com protocolo e tipo, sem dados do titular) e novo incidente comunicado.</li>
+                <li><strong>Para o titular:</strong> protocolo da solicitação e, quando a empresa escolhe, a resposta.</li>
+            </ul>
+            <h3>17.1 Lembrete diário</h3>
+            <p>Uma vez por dia, cada pessoa recebe <strong>um único e-mail</strong> com o resumo do que vence ou venceu. Quem não tem pendências não recebe nada. O lembrete inclui:</p>
+            <ul>
+                <li>ações sob sua responsabilidade que vencem em até 3 dias ou já venceram;</li>
+                <li>treinamentos designados com prazo em até 7 dias;</li>
+                <li>solicitações de titulares atribuídas a você que vencem em até 3 dias;</li>
+                <li>às segundas-feiras, as políticas que ainda pedem sua ciência;</li>
+                <li><strong>para o encarregado</strong> (ou para o administrador, se não houver encarregado):
+                    <ul>
+                        <li>prazos de comunicação à ANPD;</li>
+                        <li>incidentes aguardando análise;</li>
+                        <li>solicitações sem responsável.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Os lembretes dependem da rotina diária configurada no servidor pelo responsável técnico.</p>
+        </section>
+
         <section id="evidencias">
-            <h2>16. Evidências</h2>
+            <h2>18. Evidências</h2>
             <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos, operações do inventário, solicitações de titulares, incidentes, fornecedores e políticas, no quadro <strong>Evidências</strong> de cada página.</p>
             <ul>
                 <li><strong>Formatos aceitos:</strong> PDF, PNG, JPG, TXT, CSV, DOCX, XLSX, PPTX, ODT e ODS, até 10 MB. O ÍSIS confere o conteúdo real do arquivo, não só a extensão.</li>
@@ -530,8 +594,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="usuarios">
-            <h2>17. Usuários e convites</h2>
-            <h3>17.1 Convidar</h3>
+            <h2>19. Usuários e convites</h2>
+            <h3>19.1 Convidar</h3>
             <ol>
                 <li>Em <strong>Usuários e perfis</strong>, preencha <strong>Convidar colaborador</strong>: nome, e-mail, perfil e, se quiser, o setor.</li>
                 <li>A pessoa recebe um link válido por 7 dias, cria a própria senha e entra direto na empresa.</li>
@@ -539,7 +603,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ol>
             <?= $fig('usuarios', 'Usuários, convites pendentes e formulário de convite') ?>
             <p>Nesta versão, cada e-mail pertence a uma única empresa. Um e-mail que já tem conta no ÍSIS não pode ser convidado.</p>
-            <h3>17.2 Alterar perfil, setor ou situação</h3>
+            <h3>19.2 Alterar perfil, setor ou situação</h3>
             <p>Clique em <strong>Editar</strong> ao lado do usuário. Regras:</p>
             <ul>
                 <li>ninguém altera o próprio perfil nem desativa a própria conta;</li>
@@ -550,7 +614,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="configuracoes">
-            <h2>18. Configurações da empresa</h2>
+            <h2>20. Configurações da empresa</h2>
             <p>Disponível para o administrador:</p>
             <ul>
                 <li><strong>Dados da empresa:</strong> razão social, nome fantasia e segmento. Para alterar o CNPJ, é preciso falar com o suporte.</li>
@@ -561,7 +625,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="auditoria">
-            <h2>19. Trilha de auditoria</h2>
+            <h2>21. Trilha de auditoria</h2>
             <p>Registra automaticamente os acessos e as ações feitas no ÍSIS. Cada registro guarda:</p>
             <ul>
                 <li>usuário, data e hora;</li>
@@ -579,7 +643,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="perfil">
-            <h2>20. Meu perfil</h2>
+            <h2>22. Meu perfil</h2>
             <p>Em <strong>Meu perfil</strong>, cada usuário:</p>
             <ul>
                 <li>atualiza o nome e o cargo;</li>
@@ -591,7 +655,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="duvidas">
-            <h2>21. Dúvidas frequentes</h2>
+            <h2>23. Dúvidas frequentes</h2>
             <dl class="faq">
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
@@ -617,19 +681,23 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="proximos">
-            <h2>22. Próximos módulos</h2>
-            <p>Em desenvolvimento, nesta ordem:</p>
+            <h2>24. Próximas melhorias</h2>
+            <p>Com a versão 1.0, todos os módulos previstos para o MVP estão disponíveis. Melhorias em estudo:</p>
             <ul>
-                <li><strong>Backups e relatórios.</strong></li>
+                <li>verificação em duas etapas no login;</li>
+                <li>um mesmo e-mail com acesso a mais de uma empresa (útil para consultorias);</li>
+                <li>relatório de impacto à proteção de dados (RIPD);</li>
+                <li>avisos de cookies e consentimentos.</li>
             </ul>
         </section>
 
         <section id="historico">
-            <h2>23. Histórico de alterações</h2>
+            <h2>25. Histórico de alterações</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.0.0</td><td>30/10/2026</td><td>Fase 5, que conclui o MVP:<br>• <strong>Relatório de conformidade</strong> para impressão ou PDF e exportações em planilha de riscos, ações, solicitações (sem dados pessoais), incidentes, fornecedores e treinamentos.<br>• <strong>Lembrete diário por e-mail</strong>, um por pessoa, só quando há pendências.<br>• <strong>Cópias de segurança diárias criptografadas</strong>, com rotação e restauração.<br>• Limpeza automática de registros temporários e verificação do ambiente.</td></tr>
                         <tr><td>0.4.0</td><td>29/10/2026</td><td>Fase 4, com três módulos novos:<br>• <strong>Fornecedores:</strong> avaliação de proteção de dados com nota e nível de risco, contratos com cláusulas de dados, vínculo com o inventário e revisão periódica.<br>• <strong>Políticas e documentos:</strong> rascunho, aprovação, versões, validade, ciência dos colaboradores e modelos iniciais.<br>• <strong>Treinamentos:</strong> conteúdo, avaliação, designação com prazo, certificado com código e verificação pública, além de um treinamento modelo de LGPD.<br>O painel ganhou o quadro "Para você" e novos alertas e indicadores.</td></tr>
                         <tr><td>0.3.0</td><td>29/10/2026</td><td>Fase 3, com dois módulos novos:<br>• <strong>Solicitações de titulares:</strong> protocolo, prazo de 15 dias, verificação de identidade, resposta por e-mail e dados criptografados.<br>• <strong>Incidentes de segurança:</strong> comunicação por qualquer colaborador, classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD e registro das comunicações.<br>Também entraram o canal on-line do titular com acompanhamento por protocolo, ações corretivas ligadas a incidentes e novos alertas e indicadores no painel. Corrigida a exclusão de setores e de operações que tinham registros vinculados.</td></tr>
                         <tr><td>0.2.4</td><td>29/10/2026</td><td>Barras de rolagem finas e discretas nas telas, tabelas e no menu lateral; no menu, a barra só aparece ao passar o mouse.</td></tr>

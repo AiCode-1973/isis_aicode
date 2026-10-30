@@ -37,6 +37,10 @@ return [
         'verify_token_hours' => 48,
         'invite_days' => 7,
     ],
+    'backup' => [
+        'keep_daily' => Env::int('BACKUP_KEEP_DAILY', 7),
+        'keep_weekly' => Env::int('BACKUP_KEEP_WEEKLY', 4),
+    ],
     'mail' => [
         'driver' => Env::get('MAIL_DRIVER', 'log'),
         'host' => Env::get('MAIL_HOST'),

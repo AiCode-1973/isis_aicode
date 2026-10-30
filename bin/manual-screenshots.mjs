@@ -207,6 +207,7 @@ try {
   const incident = await hrefOf('Planilha de pacientes');
   if (incident) { await go(incident); await shot('incidente-detalhe', 1150); }
   await go('/titular/clinica-vida-plena'); await shot('canal-titular', 1050);
+  await go('/relatorios'); await shot('relatorio', 1250);
   await go('/fornecedores'); await shot('fornecedores', 900);
   const vendor = await hrefOf('Laboratório');
   if (vendor) { await go(vendor); await shot('fornecedor-detalhe', 1300); }

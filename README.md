@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: fase 4 de 5 (versão 0.4.0)
+## Situação: MVP completo (versão 1.0.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -17,7 +17,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 2 | Inventário de operações de tratamento (registro do art. 37 com exportação CSV), catálogos, riscos (matriz 5×5), planos de ação com histórico, evidências com hash SHA-256 e painel de conformidade completo | **pronta** |
 | 3 | Solicitações de titulares (protocolo, prazo de 15 dias, resposta por e-mail, dados criptografados), canal público `/titular/<empresa>` com acompanhamento e incidentes de segurança (classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD) | **pronta** |
 | 4 | Fornecedores (avaliação com nota e risco, contratos, revisão), políticas e documentos (versões, aprovação, validade, ciência, modelos) e treinamentos (avaliação, designação, certificado com verificação pública em `/certificado/<código>`) | **pronta** |
-| 5 | Backup automatizado, relatórios e refinamentos | próxima |
+| 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 
 ## Requisitos
 
@@ -73,6 +73,44 @@ php bin/isis audit:verify   # confere a integridade da trilha de auditoria de to
 
 **A `APP_KEY` do servidor precisa ser a mesma usada para gravar os dados criptografados.** Isso vale para os dados do titular, os detalhes de incidentes e os dados demonstrativos gravados a partir de outra máquina. Se a chave for diferente, esses campos aparecem como "conteúdo protegido indisponível".
 
+## Operação (rotina diária)
+
+Agende **uma vez por dia**, de madrugada, o comando que faz backup, rotação, lembretes e limpeza:
+
+```bash
+cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
+```
+
+- **cPanel:** em *Cron Jobs*, escolha "Uma vez por dia" (ex.: 02:30). Use o caminho completo do PHP 8.3 se o `php` padrão do servidor for outro (ex.: `/usr/local/bin/ea-php83` ou `/opt/cpanel/ea-php83/root/usr/bin/php`).
+- **Linux (crontab -e):**
+  ```
+  30 2 * * * cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
+  ```
+- **Windows (Agendador de Tarefas):** programa `php.exe`, argumentos `bin\isis diario`, iniciar em: pasta do ÍSIS.
+
+### Backups
+
+| Comando | Para quê |
+|---|---|
+| `php bin/isis backup` | Cria o backup agora (`--sem-arquivos` deixa as evidências de fora) |
+| `php bin/isis backup:listar` | Lista os backups em `storage/backups` |
+| `php bin/isis backup:restaurar <arquivo> --banco=novo_banco` | Restaura num banco **vazio** (`--force` substitui um banco com dados; `--sem-arquivos` não restaura as evidências) |
+| `php bin/isis backup:decifrar <arquivo> <saida.zip>` | Gera um ZIP comum (`database.sql`, evidências e `manifest.json`) para conferência. Apague o ZIP depois, porque ele contém dados em claro. |
+
+- **O que vai no backup:** banco completo (exportação SQL feita em PHP, sem depender do `mysqldump`) e evidências.
+- **Formato:** compactado e criptografado com libsodium (secretstream XChaCha20-Poly1305), com chave derivada da `APP_KEY`.
+- **Retenção:** os últimos `BACKUP_KEEP_DAILY` backups (padrão 7) e, além deles, um por semana das `BACKUP_KEEP_WEEKLY` semanas anteriores (padrão 4).
+- **Integridade:** o hash do SQL é conferido na restauração. Um arquivo alterado ou decifrado com outra chave é recusado.
+- **Leve cópias para fora do servidor regularmente**, por exemplo baixando `storage/backups` ou com a sincronização da hospedagem. Sem a `APP_KEY` os backups não podem ser abertos: guarde a chave num cofre separado.
+
+### Outros comandos
+
+| Comando | Para quê |
+|---|---|
+| `php bin/isis lembretes` | Envia o resumo diário de pendências por e-mail: um por pessoa por dia, só para quem tem pendências |
+| `php bin/isis manutencao` | Remove tentativas de login antigas, tokens vencidos, sessões expiradas e temporários |
+| `php bin/isis verificar` | Confere requisitos, banco, migrations, integridade da auditoria, backup recente, SMTP e modo de depuração |
+
 ## Contas de demonstração (fictícias)
 
 Criadas com `--demo`. Senha de todas: `Demo@Isis2026`.
@@ -110,7 +148,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 89 testes. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
+São 95 testes. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):

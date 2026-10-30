@@ -34,6 +34,7 @@ final class Permission
     public const string POLICIES_APPROVE = 'policies.approve';
     public const string TRAININGS_VIEW = 'trainings.view';
     public const string TRAININGS_MANAGE = 'trainings.manage';
+    public const string REPORTS_VIEW = 'reports.view';
 
     /** @return list<string> */
     public static function all(): array

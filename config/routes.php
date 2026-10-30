@@ -16,6 +16,7 @@ use Isis\Controllers\PolicyController;
 use Isis\Controllers\PublicRequestController;
 use Isis\Controllers\TrainingController;
 use Isis\Controllers\VendorController;
+use Isis\Controllers\ReportController;
 use Isis\Controllers\RequestController;
 use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
@@ -163,6 +164,10 @@ return static function (Router $r): void {
     $r->post('/treinamentos/{id}/designar', [TrainingController::class, 'assign'], $app(P::TRAININGS_MANAGE));
     $r->get('/treinamentos/{id}/avaliacao', [TrainingController::class, 'quiz'], $app(P::TRAININGS_VIEW));
     $r->post('/treinamentos/{id}/avaliacao', [TrainingController::class, 'submit'], $app(P::TRAININGS_VIEW));
+
+    // Relatórios
+    $r->get('/relatorios', [ReportController::class, 'index'], $app(P::REPORTS_VIEW));
+    $r->get('/relatorios/exportar/{type}', [ReportController::class, 'export'], $app(P::REPORTS_VIEW));
 
     // Evidências (permissão conferida sobre o registro de origem)
     $r->post('/evidencias', [EvidenceController::class, 'upload'], $app(P::DASHBOARD_VIEW));

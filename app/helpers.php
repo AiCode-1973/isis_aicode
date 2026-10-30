@@ -282,6 +282,8 @@ function audit_label(string $action): string
         'training.assigned' => 'Participantes designados para treinamento',
         'training.passed' => 'Treinamento concluído com aprovação',
         'training.failed' => 'Avaliação de treinamento abaixo da nota mínima',
+        'report.viewed' => 'Relatório de conformidade gerado',
+        'report.exported' => 'Dados exportados em planilha',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

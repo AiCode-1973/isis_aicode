@@ -76,6 +76,11 @@
     input.addEventListener('focus', function () { input.select(); });
   });
 
+  // Selects que aplicam o filtro ao mudar (ex.: período do relatório)
+  document.querySelectorAll('select[data-autosubmit]').forEach(function (select) {
+    select.addEventListener('change', function () { if (select.form) select.form.submit(); });
+  });
+
   // Imprimir (ou salvar em PDF) — usado no manual
   document.querySelectorAll('[data-print]').forEach(function (btn) {
     btn.addEventListener('click', function () { window.print(); });
