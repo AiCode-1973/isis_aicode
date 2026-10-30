@@ -45,7 +45,7 @@ final class TenantRepository
     /** @param array<string, mixed> $data */
     public function updateCurrent(array $data): void
     {
-        $allowed = ['legal_name', 'trade_name', 'segment_code', 'dpo_name', 'dpo_email', 'privacy_email', 'onboarding_completed_at'];
+        $allowed = ['legal_name', 'trade_name', 'segment_code', 'dpo_name', 'dpo_email', 'privacy_email', 'mfa_policy', 'onboarding_completed_at'];
         $data = array_intersect_key($data, array_flip($allowed));
         if ($data === []) {
             return;

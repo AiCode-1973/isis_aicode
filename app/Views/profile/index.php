@@ -40,6 +40,17 @@
         </form>
 
         <section class="card">
+            <h2>Verificação em duas etapas</h2>
+            <?php if (Isis\Services\MfaService::isEnabled($me)): ?>
+            <p class="small section-gap-sm"><span class="badge badge-ok">Ativada</span> desde <?= e(fmt_date($me['mfa_enabled_at'])) ?>.</p>
+            <a class="btn btn-ghost section-gap-sm" href="/perfil/dois-fatores">Gerenciar</a>
+            <?php else: ?>
+            <p class="small section-gap-sm">Proteja sua conta com um código do celular além da senha.</p>
+            <a class="btn btn-primary section-gap-sm" href="/perfil/dois-fatores"><?= icon('shield') ?> Ativar</a>
+            <?php endif; ?>
+        </section>
+
+        <section class="card">
             <h2>Sessões</h2>
             <p class="small muted">Último acesso: <?= e(fmt_datetime($me['last_login_at'])) ?>. A sessão expira após <?= (int) config('session.idle_minutes') ?> minutos sem uso.</p>
             <form method="post" action="/perfil/sessoes/encerrar" data-confirm="Encerrar sua sessão em todos os outros dispositivos?">

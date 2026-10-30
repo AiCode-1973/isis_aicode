@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Isis\Controllers;
 
 use Isis\Audit\AuditLogger;
+use Isis\Auth\Auth;
 use Isis\Core\Request;
 use Isis\Core\Response;
 use Isis\Core\Validator;
 use Isis\Repositories\DepartmentRepository;
 use Isis\Repositories\SegmentRepository;
 use Isis\Repositories\TenantRepository;
+use Isis\Services\MfaService;
+use Isis\Support\Labels;
 
 /**
  * Configurações da empresa: dados cadastrais, segmento, encarregado e setores.
@@ -24,6 +27,7 @@ final class SettingsController extends Controller
             'tenant' => (new TenantRepository())->current(),
             'segments' => SegmentRepository::options(),
             'departments' => (new DepartmentRepository())->all(),
+            'mfaAdoption' => MfaService::adoption((int) Auth::tenant()['id']),
         ]);
     }
 
@@ -37,6 +41,7 @@ final class SettingsController extends Controller
             'dpo_name' => 'required|min:3|max:150',
             'dpo_email' => 'required|email',
             'privacy_email' => 'nullable|email',
+            'mfa_policy' => 'required|' . Labels::rule(Labels::MFA_POLICY),
         ], [
             'legal_name' => 'a razão social', 'trade_name' => 'o nome fantasia', 'segment_code' => 'o segmento',
             'dpo_name' => 'o nome do encarregado', 'dpo_email' => 'o e-mail do encarregado', 'privacy_email' => 'o e-mail de privacidade',

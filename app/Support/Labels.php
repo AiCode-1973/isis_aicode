@@ -196,6 +196,12 @@ final class Labels
         'relevante' => 'Pode acarretar risco ou dano relevante aos titulares',
     ];
 
+    public const array MFA_POLICY = [
+        'opcional' => 'Opcional: cada pessoa decide',
+        'gestao' => 'Obrigatória para administradores e encarregados',
+        'todos' => 'Obrigatória para todos os usuários',
+    ];
+
     public const array DPIA_STATUS = ['rascunho' => 'Em elaboração', 'em_aprovacao' => 'Aguardando aprovação', 'aprovado' => 'Aprovado'];
 
     /** Situações que, pelas orientações da ANPD, indicam tratamento de alto risco e recomendam o RIPD. */

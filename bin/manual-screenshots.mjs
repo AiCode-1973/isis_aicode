@@ -11,6 +11,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { createHmac } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -144,6 +145,18 @@ async function shotSection(name, selector, maxHeight = 1100) {
   console.log(`  ${name}.webp`);
 }
 
+/** Código TOTP (RFC 6238) a partir da chave Base32, como faz o aplicativo autenticador. */
+function totp(secret, offset = 0) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const bits = secret.replace(/\s/g, '').split('').map((c) => alphabet.indexOf(c).toString(2).padStart(5, '0')).join('');
+  const key = Buffer.from(bits.match(/.{8}/g).map((b) => parseInt(b, 2)));
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000) + offset));
+  const h = createHmac('sha1', key).update(counter).digest();
+  const o = h[19] & 15;
+  return String((h.readUInt32BE(o) & 0x7fffffff) % 1000000).padStart(6, '0');
+}
+
 async function login(email) {
   await send('Network.clearBrowserCookies');
   await go('/entrar');
@@ -251,6 +264,20 @@ try {
   await evaluate("localStorage.setItem('isis.sidebar', 'collapsed')");
   await go('/painel'); await shot('menu-recolhido', 768);
   await evaluate("localStorage.setItem('isis.sidebar', 'expanded')");
+
+  // Verificação em duas etapas (gestora fictícia): ativação, códigos, login em duas etapas e desativação
+  await login('beatriz.lima@vidaplena.example');
+  if (await evaluate('location.pathname') === '/painel') {
+    await go('/perfil/dois-fatores'); await shot('mfa-ativar', 1000);
+    const secret = await evaluate(`document.querySelector('.mfa-secret')?.textContent ?? ''`);
+    await submit(`(() => { const f = document.querySelector('form[action="/perfil/dois-fatores/ativar"]'); f.code.value = '${totp(secret)}'; f.requestSubmit(); })()`);
+    await shot('mfa-codigos', 900);
+    await login('beatriz.lima@vidaplena.example');
+    await shot('mfa-login', 768);
+    await submit(`(() => { const f = document.querySelector('form[action="/entrar/verificacao"]'); f.code.value = '${totp(secret, 1)}'; f.requestSubmit(); })()`);
+    await go('/perfil/dois-fatores');
+    await submit(`(() => { const f = document.querySelector('form[action="/perfil/dois-fatores/desativar"]'); f.password.value = '${PASSWORD}'; HTMLFormElement.prototype.submit.call(f); })()`); // submit() direto: sem a caixa de confirmação
+  }
 
   // Colaborador: só as próprias tarefas
   await login('carlos.souza@vidaplena.example');

@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD (versão 1.2.0)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas (versão 1.3.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -20,13 +20,14 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 | 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
+| 1.3 | Verificação em duas etapas (TOTP, RFC 6238) com QR code gerado no servidor, códigos de recuperação de uso único, política da empresa (opcional, gestão ou todos) e redefinição pelo administrador | **pronta** |
 
 ## Requisitos
 
 - PHP **8.3+** com as extensões `pdo_mysql`, `sodium`, `mbstring`, `openssl` e `fileinfo`
 - MySQL 8.0+ ou MariaDB 10.4+
 - Apache com `mod_rewrite` (ou Nginx, veja abaixo) e HTTPS
-- Composer (recomendado: instala o PHPMailer para SMTP e o PHPUnit para os testes). Sem Composer o sistema roda, mas os e-mails só vão para o log.
+- Composer: instala o PHPMailer (SMTP), o `bacon/bacon-qr-code` (QR code da verificação em duas etapas) e o PHPUnit (testes). **A pasta `vendor/` é obrigatória** a partir da 1.3: sem ela a tela de ativação da verificação em duas etapas não abre. Sem o PHPMailer, os e-mails só vão para o log.
 
 ## Instalação no servidor (isis.aicode.dev.br)
 
@@ -260,7 +261,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 110 testes. Os do RIPD conferem a indicação das operações pelo inventário, o bloqueio de envio incompleto, a aprovação com versão congelada (que não muda quando o inventário muda), a devolução, a revisão, a proibição de excluir RIPD aprovado, o isolamento entre empresas e as permissões por perfil. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
+São 116 testes. Os da verificação em duas etapas usam os vetores oficiais da RFC 6238 e conferem a recusa de código repetido ou vencido, os códigos de recuperação de uso único, o login que só abre a sessão depois do código, o bloqueio após 5 códigos errados, a política da empresa e a redefinição pelo administrador só na própria empresa. Os do RIPD conferem a indicação das operações pelo inventário, o bloqueio de envio incompleto, a aprovação com versão congelada (que não muda quando o inventário muda), a devolução, a revisão, a proibição de excluir RIPD aprovado, o isolamento entre empresas e as permissões por perfil. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):

@@ -607,6 +607,18 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .report-table th { background: var(--surface-2); text-transform: none; letter-spacing: 0; font-size: .8rem; }
 .report-split { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 1.4fr); gap: 1.5rem; align-items: start; }
 .report-foot { padding-top: 1rem; font-size: .8rem; color: var(--muted); }
+
+/* ---------- Verificação em duas etapas ---------- */
+.code-input { font-family: var(--mono, ui-monospace, monospace); font-size: 1.35rem; letter-spacing: .3em; text-align: center; max-width: 220px; }
+.mfa-steps { margin: 0; padding-left: 1.2rem; }
+.mfa-steps > li { padding: .55rem 0; }
+.mfa-setup { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; margin: .75rem 0; }
+.mfa-setup .qr { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .5rem; line-height: 0; }
+.mfa-setup .qr svg { width: 200px; height: 200px; }
+.mfa-secret { font-size: 1.05rem; letter-spacing: .06em; margin: .2rem 0 .5rem; overflow-wrap: anywhere; }
+.recovery-box { border-color: var(--warn); }
+.recovery-box h2 { display: flex; align-items: center; gap: .4rem; }
+.recovery-codes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .4rem 1.5rem; margin: .9rem 0; padding-left: 1.4rem; font-size: 1.05rem; }
 .pre-line { white-space: pre-line; overflow-wrap: anywhere; }
 .report-sub { font-size: .95rem; margin: .9rem 0 .35rem; color: var(--ink); }
 .report-kv th { width: 32%; }

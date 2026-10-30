@@ -21,6 +21,7 @@ use Isis\Controllers\ReportController;
 use Isis\Controllers\RequestController;
 use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
+use Isis\Controllers\MfaController;
 use Isis\Controllers\OnboardingController;
 use Isis\Controllers\PasswordController;
 use Isis\Controllers\ProfileController;
@@ -62,6 +63,8 @@ return static function (Router $r): void {
     $r->get('/verificar-email/{token}', [RegisterController::class, 'verify']);
     $r->get('/entrar', [AuthController::class, 'showLogin'], ['guest']);
     $r->post('/entrar', [AuthController::class, 'login'], ['guest']);
+    $r->get('/entrar/verificacao', [MfaController::class, 'challenge'], ['guest']);
+    $r->post('/entrar/verificacao', [MfaController::class, 'verify'], ['guest']);
     $r->post('/sair', [AuthController::class, 'logout'], ['auth']);
     $r->get('/esqueci-senha', [PasswordController::class, 'showForgot'], ['guest']);
     $r->post('/esqueci-senha', [PasswordController::class, 'sendLink'], ['guest']);
@@ -199,6 +202,7 @@ return static function (Router $r): void {
     $r->post('/usuarios/convites/{id}/cancelar', [UserController::class, 'revokeInvite'], $app(P::USERS_MANAGE));
     $r->get('/usuarios/{id}/editar', [UserController::class, 'edit'], $app(P::USERS_MANAGE));
     $r->post('/usuarios/{id}', [UserController::class, 'update'], $app(P::USERS_MANAGE));
+    $r->post('/usuarios/{id}/dois-fatores/redefinir', [UserController::class, 'resetMfa'], $app(P::USERS_MANAGE));
 
     $r->get('/configuracoes', [SettingsController::class, 'index'], $app(P::SETTINGS_MANAGE));
     $r->post('/configuracoes/empresa', [SettingsController::class, 'updateCompany'], $app(P::SETTINGS_MANAGE));
@@ -234,4 +238,8 @@ return static function (Router $r): void {
     $r->post('/perfil', [ProfileController::class, 'update'], ['auth']);
     $r->post('/perfil/senha', [ProfileController::class, 'password'], ['auth']);
     $r->post('/perfil/sessoes/encerrar', [ProfileController::class, 'logoutOthers'], ['auth']);
+    $r->get('/perfil/dois-fatores', [MfaController::class, 'show'], ['auth']);
+    $r->post('/perfil/dois-fatores/ativar', [MfaController::class, 'enable'], ['auth']);
+    $r->post('/perfil/dois-fatores/desativar', [MfaController::class, 'disable'], ['auth']);
+    $r->post('/perfil/dois-fatores/codigos', [MfaController::class, 'regenerate'], ['auth']);
 };

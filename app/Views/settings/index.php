@@ -54,6 +54,15 @@
                 <?= field_error('privacy_email') ?>
             </div>
         </div>
+        <p class="section-title">Segurança de acesso</p>
+        <div class="field">
+            <label for="f-mfa_policy">Verificação em duas etapas</label>
+            <select id="f-mfa_policy" name="mfa_policy"<?= error_attrs('mfa_policy') ?>>
+                <?php foreach (Isis\Support\Labels::MFA_POLICY as $k => $v): ?><option value="<?= e($k) ?>"<?= old('mfa_policy', $tenant['mfa_policy'] ?? 'opcional') === $k ? ' selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?>
+            </select>
+            <?= field_error('mfa_policy') ?>
+            <p class="hint">Quando obrigatória, quem ainda não ativou é levado à ativação no próximo acesso, inclusive você. Hoje <?= (int) $mfaAdoption['enabled'] ?> de <?= (int) $mfaAdoption['active'] ?> usuário(s) ativo(s) já ativaram.</p>
+        </div>
         <div class="field section-gap">
             <label for="f-channel">Canal on-line do titular</label>
             <input type="text" id="f-channel" class="mono" value="<?= e(absolute_url('/titular/' . $tenant['slug'])) ?>" readonly data-select-on-focus>

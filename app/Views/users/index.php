@@ -40,7 +40,7 @@ $canManage = can(P::USERS_MANAGE);
                             <?php elseif ($u['email_verified_at'] === null): ?><span class="badge badge-warn">E-mail não confirmado</span>
                             <?php else: ?><span class="badge badge-ok">Ativo</span><?php endif; ?>
                         </td>
-                        <td data-label="Último acesso"><?= e(fmt_datetime($u['last_login_at'])) ?></td>
+                        <td data-label="Último acesso"><?= e(fmt_datetime($u['last_login_at'])) ?><?php if (!empty($u['mfa_enabled_at'])): ?> <span class="badge badge-ok badge-sm" title="Verificação em duas etapas ativada">2 etapas</span><?php endif; ?></td>
                         <?php if ($canManage): ?>
                         <td class="actions-cell"><a class="btn btn-ghost btn-sm" href="/usuarios/<?= (int) $u['id'] ?>/editar">Editar</a></td>
                         <?php endif; ?>

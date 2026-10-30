@@ -58,6 +58,22 @@
         </div>
     </form>
 
+    <div class="stack">
+    <?php if (!$isSelf): ?>
+    <section class="card">
+        <h2>Verificação em duas etapas</h2>
+        <?php if (Isis\Services\MfaService::isEnabled($editUser)): ?>
+        <p class="small section-gap-sm"><span class="badge badge-ok">Ativada</span> desde <?= e(fmt_date($editUser['mfa_enabled_at'])) ?>.</p>
+        <form method="post" action="/usuarios/<?= (int) $editUser['id'] ?>/dois-fatores/redefinir" class="section-gap-sm" data-confirm="Redefinir a verificação em duas etapas de <?= e($editUser['name']) ?>? Use só se a pessoa perdeu o celular e os códigos de recuperação. Confirme a identidade dela antes.">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-ghost"><?= icon('refresh') ?> Redefinir</button>
+        </form>
+        <p class="hint section-gap-sm">Use quando a pessoa perder o celular e os códigos de recuperação. Ela entra só com a senha e cadastra o aplicativo de novo.</p>
+        <?php else: ?>
+        <p class="small muted section-gap-sm">Não ativada.</p>
+        <?php endif; ?>
+    </section>
+    <?php endif; ?>
     <aside class="card">
         <h2>Boas práticas</h2>
         <ul class="guidance">
@@ -67,4 +83,5 @@
             <li>Toda alteração fica registrada na trilha de auditoria.</li>
         </ul>
     </aside>
+    </div>
 </div>

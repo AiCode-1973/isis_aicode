@@ -137,6 +137,28 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>Se o e-mail estiver cadastrado e ativo, você recebe um link válido por 60 minutos e de uso único. Por segurança, a mensagem na tela é a mesma em qualquer caso.</li>
                 <li>Crie a nova senha. Todas as sessões abertas da conta são encerradas.</li>
             </ol>
+            <p>Com a verificação em duas etapas ativada, a nova senha não basta: na entrada, o ÍSIS continua pedindo o código do aplicativo.</p>
+            <h3>3.4 Verificação em duas etapas</h3>
+            <p>Com a verificação em duas etapas, depois da senha o ÍSIS pede um código de 6 dígitos que muda a cada 30 segundos, gerado por um aplicativo no celular. Assim, quem descobrir a sua senha não consegue entrar. Ela é recomendada para todos e indispensável para quem administra a empresa ou conduz a conformidade.</p>
+            <p><strong>Para ativar:</strong></p>
+            <ol>
+                <li>Instale um aplicativo autenticador no celular, como Google Authenticator ou Microsoft Authenticator.</li>
+                <li>Em <strong>Meu perfil</strong>, clique em <strong>Ativar</strong> no quadro "Verificação em duas etapas".</li>
+                <li>No aplicativo, leia o QR code (ou digite a chave mostrada) e informe o código de 6 dígitos que aparecer.</li>
+                <li>Guarde os <strong>10 códigos de recuperação</strong> mostrados em seguida. Eles aparecem uma única vez.</li>
+            </ol>
+            <?= $fig('mfa-ativar', 'Ativação: QR code para o aplicativo autenticador') ?>
+            <p>Na ativação, as sessões abertas em outros dispositivos são encerradas.</p>
+            <?= $fig('mfa-codigos', 'Códigos de recuperação, mostrados uma única vez') ?>
+            <p><strong>Ao entrar:</strong> depois do e-mail e da senha, digite o código do aplicativo. Você tem 5 minutos e 5 tentativas. Depois disso, é preciso começar de novo. Cada código vale uma única vez.</p>
+            <?= $fig('mfa-login', 'Segunda etapa da entrada') ?>
+            <p><strong>Perdeu ou trocou o celular?</strong></p>
+            <ul>
+                <li>Entre com um código de recuperação no lugar do código do aplicativo. Cada um funciona uma única vez.</li>
+                <li>Depois, em <strong>Meu perfil &gt; Verificação em duas etapas</strong>, gere novos códigos. Para trocar o aplicativo, desative e ative de novo.</li>
+                <li>Sem celular e sem códigos, peça ao administrador da empresa para <strong>redefinir</strong> a verificação. Veja a seção <a href="#usuarios">Usuários e convites</a>.</li>
+            </ul>
+            <p>Se a empresa tornar a verificação <strong>obrigatória</strong> para o seu perfil, o ÍSIS leva você à tela de ativação no próximo acesso. Até ativar, as demais telas ficam bloqueadas. Nesse caso, a verificação também não pode ser desativada.</p>
         </section>
 
         <section id="perfis">
@@ -661,6 +683,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>mudar o perfil ou desativar a conta encerra as sessões abertas da pessoa;</li>
                 <li>contas de quem saiu da empresa devem ser desativadas no mesmo dia.</li>
             </ul>
+            <h3>20.3 Redefinir a verificação em duas etapas</h3>
+            <p>Se alguém perdeu o celular e os códigos de recuperação, abra <strong>Editar</strong> no usuário e use <strong>Redefinir</strong> no quadro "Verificação em duas etapas". A pessoa volta a entrar só com a senha e cadastra o aplicativo de novo; as sessões abertas dela são encerradas. <strong>Confirme a identidade da pessoa antes</strong>, por exemplo por telefone ou pessoalmente. A lista de usuários mostra o selo "2 etapas" para quem já ativou.</p>
         </section>
 
         <section id="configuracoes">
@@ -669,6 +693,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <ul>
                 <li><strong>Dados da empresa:</strong> razão social, nome fantasia e segmento. Para alterar o CNPJ, é preciso falar com o suporte.</li>
                 <li><strong>Encarregado e canal de privacidade:</strong> nome e e-mail do encarregado e o e-mail público para os titulares.</li>
+                <li><strong>Segurança de acesso:</strong> torna a verificação em duas etapas obrigatória para administradores e encarregados, ou para todos os usuários. O quadro mostra quantas pessoas já ativaram. Quem ainda não ativou é levado à ativação no próximo acesso, inclusive você.</li>
                 <li><strong>Setores:</strong> criar, renomear e excluir. Excluir um setor deixa sem setor os usuários que estavam nele.</li>
             </ul>
             <?= $fig('configuracoes', 'Configurações da empresa e setores') ?>
@@ -731,6 +756,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <ul>
                 <li>atualiza o nome e o cargo;</li>
                 <li>troca a senha, informando a atual;</li>
+                <li>ativa ou gerencia a <a href="#acesso">verificação em duas etapas</a>;</li>
                 <li>pode clicar em <strong>Sair de todos os outros dispositivos</strong>, o que é útil se esqueceu a sessão aberta em outro computador.</li>
             </ul>
             <p>Para trocar o e-mail, peça ao administrador.</p>
@@ -742,6 +768,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <dl class="faq">
                 <dt>Toda operação precisa de RIPD?</dt>
                 <dd>Não. O relatório é para tratamentos que podem gerar alto risco aos titulares. O ÍSIS indica as operações com sinais de alto risco, mas a decisão é do encarregado. A ANPD também pode pedir um RIPD a qualquer momento.</dd>
+                <dt>O código do aplicativo não é aceito.</dt>
+                <dd>Confira se o horário do celular está no modo automático e digite o código que aparece agora, antes de ele trocar. Cada código vale uma única vez. Sem acesso ao aplicativo, use um código de recuperação.</dd>
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
                 <dt>Apareceu "Acesso negado".</dt>
@@ -773,7 +801,6 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <h2>26. Próximas melhorias</h2>
             <p>Com a versão 1.0, todos os módulos previstos para o MVP estão disponíveis. Melhorias em estudo:</p>
             <ul>
-                <li>verificação em duas etapas no login;</li>
                 <li>um mesmo e-mail com acesso a mais de uma empresa (útil para consultorias);</li>
                 <li>avisos de cookies e consentimentos.</li>
             </ul>
@@ -785,6 +812,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.3.0</td><td>30/10/2026</td><td><strong>Verificação em duas etapas:</strong> código de aplicativo autenticador na entrada, códigos de recuperação de uso único, política da empresa (opcional, obrigatória para administradores e encarregados, ou para todos) e redefinição pelo administrador para quem perdeu o celular.</td></tr>
                         <tr><td>1.2.0</td><td>30/10/2026</td><td><strong>Relatório de impacto (RIPD):</strong> indicação das operações que podem exigir o relatório, elaboração com os dados do inventário e os riscos, aprovação com versão guardada e código de integridade, revisões e documento para impressão. A página de cada operação mostra o RIPD dela.</td></tr>
                         <tr><td>1.1.2</td><td>30/10/2026</td><td>Planos e preços agora são uma seção da página inicial (botão "Ver planos e preços"); o link saiu do topo do site e continua no rodapé.</td></tr>
                         <tr><td>1.1.1</td><td>30/10/2026</td><td>Criação do acesso da equipe AiCode ao painel da plataforma: a senha não aparece enquanto é digitada e é confirmada duas vezes; atalho para criar o acesso a partir de um computador Windows. Nada muda para as empresas.</td></tr>

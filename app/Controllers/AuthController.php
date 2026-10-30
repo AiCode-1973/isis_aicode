@@ -9,6 +9,7 @@ use Isis\Core\RateLimiter;
 use Isis\Core\Request;
 use Isis\Core\Response;
 use Isis\Core\Session;
+use Isis\Services\MfaService;
 
 final class AuthController extends Controller
 {
@@ -41,12 +42,17 @@ final class AuthController extends Controller
             return $this->failure('/entrar', $message);
         }
 
-        Auth::login($result['user']);
         if (random_int(1, 50) === 1) {
             RateLimiter::prune();
         }
         $intended = Session::get('intended');
         Session::forget('intended');
+        if (MfaService::isEnabled($result['user'])) {
+            Session::regenerate();
+            Session::set('mfa_pending', ['uid' => (int) $result['user']['id'], 'at' => time(), 'intended' => $intended]);
+            return $this->redirect('/entrar/verificacao');
+        }
+        Auth::login($result['user']);
         return $this->redirect(is_string($intended) && str_starts_with($intended, '/') ? $intended : '/painel');
     }
 

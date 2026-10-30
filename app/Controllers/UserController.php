@@ -14,6 +14,7 @@ use Isis\Repositories\DepartmentRepository;
 use Isis\Repositories\InvitationRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\AccountService;
+use Isis\Services\MfaService;
 use Isis\Services\SubscriptionService;
 
 /**
@@ -135,5 +136,22 @@ final class UserController extends Controller
         }
         AuditLogger::log('user.updated', 'user', $id, $user, $changes);
         return $this->success('/usuarios', 'Usuário atualizado.');
+    }
+
+    /** Para quem perdeu o celular: apaga o aplicativo cadastrado; a pessoa ativa de novo no próximo acesso. */
+    public function resetMfa(Request $request, int $id): Response
+    {
+        $repo = new UserRepository();
+        $user = $repo->findOrFail($id);
+        if ($id === Auth::id()) {
+            return $this->failure("/usuarios/{$id}/editar", 'Para a sua própria conta, use Meu perfil > Verificação em duas etapas.');
+        }
+        if (!MfaService::isEnabled($user)) {
+            return $this->failure("/usuarios/{$id}/editar", 'Este usuário não tem a verificação em duas etapas ativada.');
+        }
+        MfaService::disable($user);
+        $repo->bumpSessionEpoch($id);
+        AuditLogger::log('mfa.reset', 'user', $id);
+        return $this->success("/usuarios/{$id}/editar", 'Verificação em duas etapas redefinida. No próximo acesso, a pessoa entra só com a senha e cadastra o aplicativo de novo.');
     }
 }
