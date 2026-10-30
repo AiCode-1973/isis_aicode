@@ -32,7 +32,7 @@ enum Role: string
     {
         return match ($this) {
             self::Admin => 'Acesso total: usuários, configurações da empresa e todos os módulos.',
-            self::Dpo => 'Conduz a conformidade: inventário, riscos, titulares, incidentes, políticas e treinamentos.',
+            self::Dpo => 'Conduz a conformidade: inventário, riscos, RIPD, titulares, incidentes, políticas e treinamentos.',
             self::Manager => 'Mantém o inventário, os riscos e os planos de ação do seu setor.',
             self::Collaborator => 'Executa tarefas atribuídas, faz treinamentos, lê políticas e comunica incidentes.',
             self::Auditor => 'Somente leitura de todos os módulos e da trilha de auditoria.',
@@ -49,6 +49,7 @@ enum Role: string
                 P::DASHBOARD_VIEW,
                 P::INVENTORY_VIEW, P::INVENTORY_EDIT,
                 P::RISKS_VIEW, P::RISKS_EDIT,
+                P::DPIA_VIEW,
                 P::ACTIONS_VIEW, P::ACTIONS_EDIT,
                 P::REQUESTS_VIEW,
                 P::INCIDENTS_VIEW, P::INCIDENTS_REPORT,

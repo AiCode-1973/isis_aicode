@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura (versão 1.1.2)
+## Situação: MVP completo + planos e assinatura + RIPD (versão 1.2.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -19,6 +19,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 4 | Fornecedores (avaliação com nota e risco, contratos, revisão), políticas e documentos (versões, aprovação, validade, ciência, modelos) e treinamentos (avaliação, designação, certificado com verificação pública em `/certificado/<código>`) | **pronta** |
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
+| 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
 
 ## Requisitos
 
@@ -259,7 +260,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 104 testes. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
+São 110 testes. Os do RIPD conferem a indicação das operações pelo inventário, o bloqueio de envio incompleto, a aprovação com versão congelada (que não muda quando o inventário muda), a devolução, a revisão, a proibição de excluir RIPD aprovado, o isolamento entre empresas e as permissões por perfil. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):

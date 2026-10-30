@@ -211,6 +211,13 @@ try {
   const risk = await hrefOf('Acesso indevido');
   if (risk) { await go(risk); await shot('risco-detalhe', 1000); }
   await go('/riscos/novo'); await shot('risco-form', 1100);
+  await go('/ripd'); await shot('ripd', 900);
+  const dpia = await hrefOf('Prontuário eletrônico');
+  if (dpia) {
+    await go(dpia); await shot('ripd-detalhe', 1200);
+    await go(dpia + '/documento'); await shot('ripd-documento', 1300);
+  }
+  await go('/ripd/novo'); await shot('ripd-novo', 1100);
   await go('/planos'); await shot('planos', 900);
   const action = await hrefOf('Revisar perfis');
   if (action) { await go(action); await shot('acao-detalhe', 1100); }

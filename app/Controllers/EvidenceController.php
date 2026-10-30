@@ -24,7 +24,7 @@ final class EvidenceController extends Controller
 {
     private const array PATHS = [
         'action' => '/planos/', 'risk' => '/riscos/', 'activity' => '/inventario/', 'request' => '/titulares/', 'incident' => '/incidentes/',
-        'vendor' => '/fornecedores/', 'policy' => '/politicas/',
+        'vendor' => '/fornecedores/', 'policy' => '/politicas/', 'dpia' => '/ripd/',
     ];
 
     public function upload(Request $request): Response
@@ -95,6 +95,10 @@ final class EvidenceController extends Controller
             'policy' => (function () use ($id, $write): bool {
                 (new \Isis\Repositories\PolicyRepository())->findOrFail($id);
                 return Auth::can($write ? P::POLICIES_EDIT : P::POLICIES_VIEW);
+            })(),
+            'dpia' => (function () use ($id, $write): bool {
+                (new \Isis\Repositories\DpiaRepository())->findOrFail($id);
+                return Auth::can($write ? P::DPIA_EDIT : P::DPIA_VIEW);
             })(),
             default => throw new HttpException(404),
         };

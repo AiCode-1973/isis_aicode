@@ -16,12 +16,14 @@ use Isis\Repositories\ActivityRepository;
 use Isis\Repositories\AttachmentRepository;
 use Isis\Repositories\CatalogRepository;
 use Isis\Repositories\DepartmentRepository;
+use Isis\Repositories\DpiaRepository;
 use Isis\Repositories\LegalBasisRepository;
 use Isis\Repositories\RiskRepository;
 use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\AccessScope;
 use Isis\Services\CatalogService;
+use Isis\Services\DpiaService;
 use Isis\Services\EvidenceService;
 use Isis\Support\Labels;
 
@@ -61,6 +63,8 @@ final class InventoryController extends Controller
                 ? array_filter((new ActionRepository())->search([]), static fn (array $x): bool => (int) $x['activity_id'] === $id) : [],
             'evidences' => (new AttachmentRepository())->forEntity('activity', $id),
             'canEdit' => AccessScope::canEditActivity($activity),
+            'dpias' => Auth::can(P::DPIA_VIEW) ? (new DpiaRepository())->forActivity($id) : null,
+            'dpiaTriggers' => DpiaService::suggestTriggers($activity),
         ]);
     }
 

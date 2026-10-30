@@ -607,6 +607,13 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .report-table th { background: var(--surface-2); text-transform: none; letter-spacing: 0; font-size: .8rem; }
 .report-split { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 1.4fr); gap: 1.5rem; align-items: start; }
 .report-foot { padding-top: 1rem; font-size: .8rem; color: var(--muted); }
+.pre-line { white-space: pre-line; overflow-wrap: anywhere; }
+.report-sub { font-size: .95rem; margin: .9rem 0 .35rem; color: var(--ink); }
+.report-kv th { width: 32%; }
+.report-draft { display: flex; align-items: center; gap: .4rem; color: var(--danger); font-weight: 700; margin: -.4rem 0 .8rem; }
+.report-signatures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; padding-top: 3rem; border-bottom: 0; }
+.report-signatures span { display: block; border-top: 1px solid var(--ink-2); }
+.report-signatures p { font-size: .85rem; text-align: center; margin-top: .4rem; }
 .export-card h3 { display: flex; align-items: center; gap: .4rem; font-size: .98rem; }
 a.export-card { text-decoration: none; color: inherit; }
 a.export-card:hover { border-color: var(--teal); }

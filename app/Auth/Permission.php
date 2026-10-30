@@ -35,6 +35,9 @@ final class Permission
     public const string TRAININGS_VIEW = 'trainings.view';
     public const string TRAININGS_MANAGE = 'trainings.manage';
     public const string REPORTS_VIEW = 'reports.view';
+    public const string DPIA_VIEW = 'dpia.view';
+    public const string DPIA_EDIT = 'dpia.edit';
+    public const string DPIA_APPROVE = 'dpia.approve';
 
     /** @return list<string> */
     public static function all(): array

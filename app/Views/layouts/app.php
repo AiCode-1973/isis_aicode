@@ -15,6 +15,7 @@ $menu = [
     'Conformidade' => [
         [P::INVENTORY_VIEW, '/inventario', 'database', 'Inventário de dados'],
         [P::RISKS_VIEW, '/riscos', 'target', 'Riscos'],
+        [P::DPIA_VIEW, '/ripd', 'scale', 'Relatórios de impacto (RIPD)'],
         [P::ACTIONS_VIEW, '/planos', 'check', Isis\Services\AccessScope::onlyOwnActions() ? 'Minhas tarefas' : 'Planos de ação'],
         [P::REQUESTS_VIEW, '/titulares', 'inbox', 'Solicitações de titulares'],
         [[P::INCIDENTS_VIEW, P::INCIDENTS_REPORT], '/incidentes', 'siren', 'Incidentes de segurança'],

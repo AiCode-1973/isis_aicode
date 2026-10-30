@@ -139,6 +139,23 @@ $text = static fn (?string $v): string => $v !== null && trim($v) !== '' ? e($v)
             <p class="hint section-gap-sm">Orientações automáticas de preenchimento; não substituem a análise jurídica.</p>
         </section>
 
+        <?php if ($dpias !== null && ($dpias || $dpiaTriggers)): ?>
+        <section class="card">
+            <h2>Relatório de impacto (RIPD)</h2>
+            <?php if ($dpias): ?>
+            <ul class="bar-list section-gap-sm">
+                <?php foreach ($dpias as $dp): ?>
+                <li><a class="title-link" href="/ripd/<?= (int) $dp['id'] ?>"><?= e(code('RIPD', (int) $dp['seq']) . ' · ' . $dp['title']) ?></a>
+                    <span class="badge badge-sm <?= $dp['approved_version'] !== null ? 'badge-ok' : 'badge-warn' ?>"><?= $dp['approved_version'] !== null ? 'aprovado v' . (int) $dp['approved_version'] : 'em elaboração' ?></span></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php else: ?>
+            <p class="small section-gap-sm">Esta operação tem indicadores de alto risco: <?= e(implode('; ', array_map(static fn (string $t): string => mb_strtolower(Labels::DPIA_TRIGGER[$t]), $dpiaTriggers))) ?>. Avalie a elaboração do RIPD.</p>
+            <?php if (can(P::DPIA_EDIT)): ?><a class="btn btn-ghost btn-sm section-gap-sm" href="/ripd/novo?operacao=<?= (int) $a['id'] ?>"><?= icon('plus') ?> Elaborar RIPD</a><?php endif; ?>
+            <?php endif; ?>
+        </section>
+        <?php endif; ?>
+
         <section class="card">
             <h2>Responsabilidade</h2>
             <dl class="dl section-gap-sm">

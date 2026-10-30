@@ -7,6 +7,7 @@ namespace Isis\Database\Seeds;
 require_once __DIR__ . '/DemoComplianceSeeder.php';
 require_once __DIR__ . '/DemoPrivacySeeder.php';
 require_once __DIR__ . '/DemoProgramSeeder.php';
+require_once __DIR__ . '/DemoDpiaSeeder.php';
 
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
@@ -87,6 +88,10 @@ final class DemoSeeder
             $summary[] = $program
                 ? "{$company['trade_name']}: fornecedores, políticas e treinamento demonstrativos criados."
                 : "{$company['trade_name']}: já tinha fornecedores; mantidos.";
+            $dpia = TenantContext::runAs($tenantId, static fn (): bool => DemoDpiaSeeder::run($company['segment_code']));
+            $summary[] = $dpia
+                ? "{$company['trade_name']}: relatório de impacto (RIPD) demonstrativo criado."
+                : "{$company['trade_name']}: já tinha RIPD; mantido.";
             $summary[] = self::billing($tenantId, $company);
         }
         return $summary;

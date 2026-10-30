@@ -13,6 +13,7 @@ $sections = [
     'inventario' => 'Inventário de dados pessoais',
     'catalogos' => 'Catálogos do inventário',
     'riscos' => 'Gestão de riscos',
+    'ripd' => 'Relatório de impacto (RIPD)',
     'planos' => 'Planos de ação',
     'titulares' => 'Solicitações de titulares',
     'canal' => 'Canal on-line do titular',
@@ -109,6 +110,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>Mapear as operações de tratamento no <a href="#inventario">Inventário</a>, começando pelas que envolvem dados sensíveis ou muitos titulares.</li>
                 <li>Definir a hipótese legal de cada operação e completar os pontos de atenção.</li>
                 <li>Avaliar os <a href="#riscos">riscos</a> das operações mais críticas.</li>
+                <li>Elaborar o <a href="#ripd">RIPD</a> das operações de alto risco que o ÍSIS indicar.</li>
                 <li>Criar <a href="#planos">ações</a> para tratar os riscos, com responsável e prazo.</li>
                 <li>Acompanhar tudo pelo <a href="#painel">Painel de conformidade</a> e guardar evidências do que foi feito.</li>
             </ol>
@@ -147,6 +149,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                         <tr><td>Painel de conformidade</td><td>Sim</td><td>Sim</td><td>Sim</td><td>Sim (as próprias tarefas)</td><td>Sim</td></tr>
                         <tr><td>Inventário de dados</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Riscos</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>—</td><td>Ver</td></tr>
+                        <tr><td>Relatórios de impacto (RIPD)</td><td>Elaborar e aprovar</td><td>Elaborar e aprovar</td><td>Ver</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Planos de ação</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>Só as próprias tarefas: andamento e evidências</td><td>Ver</td></tr>
                         <tr><td>Solicitações de titulares</td><td>Ver e atender</td><td>Ver e atender</td><td>Ver</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Incidentes de segurança</td><td>Comunicar e conduzir</td><td>Comunicar e conduzir</td><td>Comunicar e ver todos</td><td>Comunicar e acompanhar os próprios</td><td>Ver</td></tr>
@@ -294,26 +297,71 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <?= $fig('risco-detalhe', 'Detalhe de um risco com seu plano de ação') ?>
         </section>
 
+        <section id="ripd">
+            <h2>9. Relatório de impacto (RIPD)</h2>
+            <p>O <strong>Relatório de Impacto à Proteção de Dados Pessoais</strong> documenta os tratamentos que podem gerar alto risco aos titulares: como os dados são tratados, por que o tratamento é necessário, quais são os riscos e quais medidas os reduzem (art. 5º, XVII, e art. 38 da LGPD). A ANPD pode pedir o relatório a qualquer momento.</p>
+            <h3>9.1 Quando elaborar</h3>
+            <p>O ÍSIS olha o inventário e lista, em <strong>Relatórios de impacto (RIPD)</strong>, as operações que ainda não têm relatório e apresentam algum destes indicadores:</p>
+            <ul>
+                <li>dados pessoais sensíveis;</li>
+                <li>titulares vulneráveis, como crianças;</li>
+                <li>mais de 10 mil titulares;</li>
+                <li>hipótese legal de legítimo interesse;</li>
+                <li>transferência internacional.</li>
+            </ul>
+            <p>A lista é uma orientação: quem decide é o encarregado. Monitoramento sistemático, decisões automatizadas, tecnologias novas e cruzamento de bases também pedem RIPD e podem ser marcados no relatório. A página de cada operação do inventário também mostra se ela tem RIPD.</p>
+            <?= $fig('ripd', 'Relatórios de impacto e operações que podem exigir RIPD') ?>
+            <h3>9.2 Elaborar o relatório</h3>
+            <ol>
+                <li>Clique em <strong>Elaborar RIPD</strong> ao lado da operação, ou em <strong>Novo RIPD</strong>. Um relatório pode cobrir várias operações parecidas.</li>
+                <li>Preencha as seções:
+                    <ul>
+                        <li>situações de alto risco e justificativa (as que o inventário já indica vêm marcadas);</li>
+                        <li>natureza, escopo, contexto e finalidade do tratamento;</li>
+                        <li>partes interessadas consultadas;</li>
+                        <li>necessidade e proporcionalidade: hipótese legal, uso só dos dados necessários, transparência e direitos dos titulares;</li>
+                        <li>medidas e salvaguardas gerais;</li>
+                        <li>conclusão e parecer do encarregado.</li>
+                    </ul>
+                </li>
+                <li>Salve quantas vezes precisar. A página do RIPD mostra o que falta para enviar à aprovação.</li>
+            </ol>
+            <p>Os dados das operações (dados, titulares, hipótese legal, compartilhamentos, retenção, segurança) e os <strong>riscos</strong> ligados a elas entram no relatório sozinhos, com nível inerente e residual, tratamento e andamento do plano de ação. Para incluir um risco, registre-o em <a href="#riscos">Riscos</a>, vinculado à operação.</p>
+            <?= $fig('ripd-novo', 'Formulário do RIPD, com as situações de alto risco') ?>
+            <h3>9.3 Aprovação e versões</h3>
+            <ol>
+                <li>Com tudo preenchido, clique em <strong>Enviar para aprovação</strong>. A partir daí o relatório não pode ser alterado.</li>
+                <li>O encarregado ou o administrador revisa o documento e <strong>aprova</strong>, ou <strong>devolve</strong> com o motivo.</li>
+                <li>Na aprovação, o ÍSIS guarda uma cópia fechada do relatório, com código de integridade. Mudanças posteriores no inventário ou nos riscos não alteram a versão aprovada.</li>
+                <li>Para atualizar, use <strong>Iniciar revisão</strong>: abre a versão seguinte em elaboração e a anterior continua valendo até a nova ser aprovada.</li>
+            </ol>
+            <p>Revise o relatório na data marcada, quando o tratamento mudar de forma relevante ou depois de um incidente. Um RIPD que já foi aprovado não pode ser excluído.</p>
+            <?= $fig('ripd-detalhe', 'Página do RIPD com operações, descrição, riscos e versões') ?>
+            <h3>9.4 Documento para impressão</h3>
+            <p><strong>Documento aprovado</strong> (ou <strong>Ver documento</strong>, enquanto em elaboração) abre o relatório completo, pronto para imprimir ou salvar em PDF, com espaço para as assinaturas do encarregado e do representante da empresa. O documento em elaboração sai marcado como "ainda não aprovado".</p>
+            <?= $fig('ripd-documento', 'Documento do RIPD aprovado, pronto para imprimir') ?>
+        </section>
+
         <section id="planos">
-            <h2>9. Planos de ação</h2>
+            <h2>10. Planos de ação</h2>
             <p>As ações são as medidas para tratar riscos e as demais tarefas de conformidade. Cada ação tem código (ACT-001…), responsável, setor, prazo, prioridade (alta, média ou baixa) e situação: pendente, em andamento, concluída ou cancelada.</p>
-            <h3>9.1 Criar e acompanhar</h3>
+            <h3>10.1 Criar e acompanhar</h3>
             <ul>
                 <li>Crie em <strong>Planos de ação → Nova ação</strong> ou a partir de um risco.</li>
                 <li>Descreva o que será feito e qual critério comprova a conclusão.</li>
                 <li>A lista pode ser filtrada por situação, responsável, "só vencidas" e "só as minhas". As vencidas aparecem destacadas em vermelho.</li>
             </ul>
             <?= $fig('planos', 'Lista de ações dos planos') ?>
-            <h3>9.2 Registrar andamento</h3>
+            <h3>10.2 Registrar andamento</h3>
             <p>Na página da ação, use <strong>Registrar andamento</strong> para mudar a situação ou deixar uma observação. Tudo vai para o <strong>Histórico</strong>, com data e autor. A data de conclusão é preenchida automaticamente quando a ação passa a <em>Concluída</em>.</p>
             <?= $fig('acao-detalhe', 'Detalhe da ação: andamento, evidências e histórico') ?>
-            <h3>9.3 Minhas tarefas (colaborador)</h3>
+            <h3>10.3 Minhas tarefas (colaborador)</h3>
             <p>O colaborador vê, em <strong>Minhas tarefas</strong>, apenas as ações atribuídas a ele. Pode registrar o andamento e anexar evidências, mas não edita os demais campos da ação.</p>
             <?= $fig('minhas-tarefas', 'Minhas tarefas, na visão do colaborador') ?>
         </section>
 
         <section id="titulares">
-            <h2>10. Solicitações de titulares</h2>
+            <h2>11. Solicitações de titulares</h2>
             <p>Reúne os pedidos das pessoas sobre os próprios dados, conforme o art. 18 da LGPD:</p>
             <ul>
                 <li>confirmação de que a empresa trata dados delas;</li>
@@ -325,21 +373,21 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ul>
             <p>Os pedidos chegam pelo <a href="#canal">canal on-line do titular</a> ou são registrados pela equipe.</p>
             <?= $fig('titulares', 'Lista de solicitações, com o endereço do canal on-line e os indicadores de prazo') ?>
-            <h3>10.1 Prazo de referência</h3>
+            <h3>11.1 Prazo de referência</h3>
             <p>Cada solicitação recebe um <strong>protocolo</strong>, no formato XXXX-XXXX, e um prazo de referência de <strong>15 dias</strong> a partir do recebimento (art. 19, II).</p>
             <ul>
                 <li>A lista mostra quantos dias faltam.</li>
                 <li>Pedidos fora do prazo aparecem em vermelho.</li>
                 <li>Os que vencem em até 3 dias aparecem como alerta no painel.</li>
             </ul>
-            <h3>10.2 Registrar um pedido recebido por outro canal</h3>
+            <h3>11.2 Registrar um pedido recebido por outro canal</h3>
             <p>Para pedidos que chegaram por e-mail, telefone ou presencialmente, use <strong>Registrar solicitação</strong>:</p>
             <ul>
                 <li>informe o tipo de pedido, o canal, a data de recebimento (o prazo conta a partir dela) e os dados do titular;</li>
                 <li>é preciso ao menos um contato: e-mail ou telefone;</li>
                 <li>se o titular tiver e-mail, ele recebe o protocolo automaticamente.</li>
             </ul>
-            <h3>10.3 Atender</h3>
+            <h3>11.3 Atender</h3>
             <p>Na página da solicitação:</p>
             <ul>
                 <li><strong>Atendimento:</strong> defina o responsável, marque se a identidade do titular foi confirmada (e como) e ligue o pedido à operação de tratamento relacionada.</li>
@@ -348,7 +396,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li><strong>Evidências:</strong> anexe o que foi enviado ao titular ou o que comprova o atendimento.</li>
             </ul>
             <?= $fig('titular-detalhe', 'Página da solicitação: pedido, resposta, atendimento e histórico') ?>
-            <h3>10.4 Proteção dos dados do titular</h3>
+            <h3>11.4 Proteção dos dados do titular</h3>
             <ul>
                 <li>Nome, e-mail, telefone, documento, descrição e resposta ficam <strong>criptografados</strong> no banco de dados.</li>
                 <li>Cada vez que alguém abre uma solicitação, o acesso fica registrado na trilha de auditoria.</li>
@@ -358,7 +406,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="canal">
-            <h2>11. Canal on-line do titular</h2>
+            <h2>12. Canal on-line do titular</h2>
             <p>Cada empresa tem um endereço público, no mesmo domínio do ÍSIS, para os titulares fazerem pedidos sem precisar de conta: <span class="mono">https://isis.aicode.dev.br/titular/<em>nome-da-empresa</em></span>.</p>
             <ul>
                 <li>O endereço exato aparece em <strong>Solicitações de titulares</strong> e em <strong>Configurações</strong>.</li>
@@ -369,7 +417,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <?= $fig('canal-titular', 'Formulário público para o titular fazer o pedido') ?>
                 <?= $fig('canal-acompanhar', 'Acompanhamento pelo protocolo e e-mail', 'shot-phone') ?>
             </div>
-            <h3>11.1 Como funciona para o titular</h3>
+            <h3>12.1 Como funciona para o titular</h3>
             <ol>
                 <li>Escolhe o tipo de pedido, descreve o que precisa e informa nome e e-mail.</li>
                 <li>Recebe na tela e por e-mail o número do protocolo e o prazo.</li>
@@ -385,10 +433,10 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="incidentes">
-            <h2>12. Incidentes de segurança</h2>
+            <h2>13. Incidentes de segurança</h2>
             <p>Registra e acompanha eventos que podem comprometer dados pessoais ou sistemas: acesso não autorizado, vazamento, perda, ransomware, phishing, erro humano, furto de equipamento e outros.</p>
             <?= $fig('incidentes', 'Lista de incidentes com gravidade e prazo de comunicação à ANPD') ?>
-            <h3>12.1 Comunicar um incidente</h3>
+            <h3>13.1 Comunicar um incidente</h3>
             <p>Qualquer colaborador pode comunicar, pelo botão <strong>Comunicar incidente</strong>, mesmo sem ter certeza de que é um incidente. Basta informar:</p>
             <ul>
                 <li>um resumo e o tipo;</li>
@@ -398,7 +446,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ul>
             <p>O encarregado recebe um e-mail na hora. Quem comunicou acompanha a situação em <strong>Meus comunicados</strong>, mas não vê os detalhes da investigação. Não apague e-mails, arquivos ou registros relacionados: eles são evidências.</p>
             <?= $fig('incidente-comunicar', 'Comunicação de incidente por um colaborador') ?>
-            <h3>12.2 Classificar e investigar</h3>
+            <h3>13.2 Classificar e investigar</h3>
             <p>O encarregado e o administrador conduzem o incidente:</p>
             <ul>
                 <li><strong>Classificação:</strong>
@@ -414,7 +462,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li><strong>Situação e providências:</strong> comunicado, em análise, contido, resolvido ou encerrado, com registro de cada providência no histórico.</li>
                 <li><strong>Ação corretiva:</strong> cria no plano de ação uma tarefa ligada ao incidente.</li>
             </ul>
-            <h3>12.3 Comunicação à ANPD e aos titulares</h3>
+            <h3>13.3 Comunicação à ANPD e aos titulares</h3>
             <p>Quando o incidente <strong>pode acarretar risco ou dano relevante aos titulares</strong> (art. 48):</p>
             <ul>
                 <li>o ÍSIS calcula o prazo de referência de <strong>3 dias úteis</strong> a partir do conhecimento do incidente (Resolução CD/ANPD nº 15/2024);</li>
@@ -425,7 +473,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="fornecedores">
-            <h2>13. Fornecedores</h2>
+            <h2>14. Fornecedores</h2>
             <p>Cadastre os terceiros que tratam ou recebem dados pessoais da empresa, como sistemas em nuvem, contabilidade, laboratórios, transportadoras e agências de marketing. Para cada um, registre:</p>
             <ul>
                 <li>o papel em relação aos dados: <em>operador</em>, que trata em nome da empresa, ou outro controlador;</li>
@@ -434,7 +482,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>o contato no fornecedor e o responsável interno.</li>
             </ul>
             <?= $fig('fornecedores', 'Lista de fornecedores com risco, contratos e revisão') ?>
-            <h3>13.1 Avaliação de proteção de dados</h3>
+            <h3>14.1 Avaliação de proteção de dados</h3>
             <p>Na página do fornecedor, responda às 12 perguntas da <strong>avaliação</strong> com <em>sim</em>, <em>parcialmente</em>, <em>não</em> ou <em>não se aplica</em>. Elas tratam de:</p>
             <ul>
                 <li>contrato, instruções e suboperadores;</li>
@@ -456,7 +504,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ul>
             <p>A próxima revisão é marcada automaticamente: em 6 meses para risco alto e em 12 meses nos demais casos. O histórico das avaliações fica guardado.</p>
             <?= $fig('fornecedor-detalhe', 'Página do fornecedor: dados, contratos, avaliação e resultado') ?>
-            <h3>13.2 Contratos e documentos</h3>
+            <h3>14.2 Contratos e documentos</h3>
             <ul>
                 <li>Registre cada contrato com vigência e marque se tem cláusulas de proteção de dados (ou um acordo de tratamento de dados).</li>
                 <li>Anexe o contrato assinado, questionários e certificados em <strong>Evidências</strong>.</li>
@@ -465,7 +513,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="politicas">
-            <h2>14. Políticas e documentos</h2>
+            <h2>15. Políticas e documentos</h2>
             <p>Reúne as políticas internas, os avisos de privacidade e os procedimentos da empresa. Cada documento passa pelas mesmas etapas:</p>
             <ol>
                 <li><strong>Rascunho:</strong> o encarregado ou o administrador escreve ou ajusta o texto.</li>
@@ -481,7 +529,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ul>
             <p>Os modelos são pontos de partida: adapte-os à realidade da empresa e revise com a assessoria jurídica antes de aprovar.</p>
             <?= $fig('politicas', 'Políticas com versão vigente, validade, aprovação pendente e ciência') ?>
-            <h3>14.1 Ciência dos colaboradores</h3>
+            <h3>15.1 Ciência dos colaboradores</h3>
             <ul>
                 <li>Quando o documento exige ciência, cada usuário vê o aviso <strong>Leitura obrigatória</strong> e confirma com <strong>Li e estou ciente</strong>. A confirmação fica registrada com data e hora.</li>
                 <li>O responsável acompanha quem já deu ciência e quem está pendente.</li>
@@ -492,7 +540,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="treinamentos">
-            <h2>15. Treinamentos e certificados</h2>
+            <h2>16. Treinamentos e certificados</h2>
             <p>O encarregado e o administrador criam treinamentos com <strong>conteúdo em texto</strong> e <strong>avaliação de múltipla escolha</strong>. Em cada um, definem:</p>
             <ul>
                 <li>até 10 perguntas, com até 4 alternativas cada;</li>
@@ -500,14 +548,14 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>a validade do certificado.</li>
             </ul>
             <p>O botão <strong>Usar treinamento modelo de LGPD</strong> cria um treinamento pronto, que você pode revisar e publicar: "Fundamentos da LGPD para colaboradores", com 5 perguntas.</p>
-            <h3>15.1 Publicar e designar</h3>
+            <h3>16.1 Publicar e designar</h3>
             <ul>
                 <li>O treinamento nasce como rascunho. Depois de <strong>publicado</strong>, pode ser designado a todos os usuários ativos, a setores ou a pessoas específicas, com prazo para concluir.</li>
                 <li>A página do treinamento mostra, por participante, o prazo, as tentativas, a nota e a situação.</li>
                 <li>O painel avisa sobre prazos vencidos.</li>
             </ul>
             <?= $fig('treinamentos', 'Treinamentos: indicadores, módulos e conclusão') ?>
-            <h3>15.2 Fazer o treinamento</h3>
+            <h3>16.2 Fazer o treinamento</h3>
             <ol>
                 <li>Cada usuário vê em <strong>Meus treinamentos</strong>, e no quadro <strong>Para você</strong> do painel, os treinamentos designados a ele.</li>
                 <li>Leia o conteúdo e clique em <strong>Fazer a avaliação</strong>.</li>
@@ -515,7 +563,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>Com a aprovação, o certificado é emitido na hora.</li>
             </ol>
             <?= $fig('treinamento-avaliacao', 'Avaliação de múltipla escolha') ?>
-            <h3>15.3 Certificado</h3>
+            <h3>16.3 Certificado</h3>
             <ul>
                 <li>O certificado traz o nome, o treinamento, a empresa, a carga horária, o aproveitamento, as datas de conclusão e de validade e um <strong>código</strong> (formato ISIS-XXXX-XXXX).</li>
                 <li>Pode ser impresso ou salvo em PDF.</li>
@@ -525,7 +573,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="relatorios">
-            <h2>16. Relatório de conformidade</h2>
+            <h2>17. Relatório de conformidade</h2>
             <p>Em <strong>Relatório de conformidade</strong>, no grupo Visão geral do menu, o ÍSIS monta um documento consolidado da gestão de privacidade. Ele serve para a direção, para auditorias e para eventuais fiscalizações. Está disponível para o administrador, o encarregado e o auditor.</p>
             <p>O relatório traz:</p>
             <ul>
@@ -544,7 +592,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>Cada relatório gerado fica registrado na trilha de auditoria.</li>
             </ul>
             <?= $fig('relatorio', 'Relatório de conformidade pronto para imprimir ou salvar em PDF') ?>
-            <h3>16.1 Exportações em planilha</h3>
+            <h3>17.1 Exportações em planilha</h3>
             <p>Na mesma página, exporte em CSV (Excel ou LibreOffice):</p>
             <ul>
                 <li>riscos;</li>
@@ -558,14 +606,14 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="emails">
-            <h2>17. E-mails e lembretes</h2>
+            <h2>18. E-mails e lembretes</h2>
             <p>O ÍSIS envia e-mails automáticos nestas situações:</p>
             <ul>
                 <li><strong>Acesso:</strong> confirmação de cadastro, convite para a equipe e recuperação de senha.</li>
                 <li><strong>Para o encarregado:</strong> nova solicitação recebida pelo canal on-line (só com protocolo e tipo, sem dados do titular) e novo incidente comunicado.</li>
                 <li><strong>Para o titular:</strong> protocolo da solicitação e, quando a empresa escolhe, a resposta.</li>
             </ul>
-            <h3>17.1 Lembrete diário</h3>
+            <h3>18.1 Lembrete diário</h3>
             <p>Uma vez por dia, cada pessoa recebe <strong>um único e-mail</strong> com o resumo do que vence ou venceu. Quem não tem pendências não recebe nada. O lembrete inclui:</p>
             <ul>
                 <li>ações sob sua responsabilidade que vencem em até 3 dias ou já venceram;</li>
@@ -585,7 +633,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="evidencias">
-            <h2>18. Evidências</h2>
+            <h2>19. Evidências</h2>
             <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos, operações do inventário, solicitações de titulares, incidentes, fornecedores e políticas, no quadro <strong>Evidências</strong> de cada página.</p>
             <ul>
                 <li><strong>Formatos aceitos:</strong> PDF, PNG, JPG, TXT, CSV, DOCX, XLSX, PPTX, ODT e ODS, até 10 MB. O ÍSIS confere o conteúdo real do arquivo, não só a extensão.</li>
@@ -596,8 +644,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="usuarios">
-            <h2>19. Usuários e convites</h2>
-            <h3>19.1 Convidar</h3>
+            <h2>20. Usuários e convites</h2>
+            <h3>20.1 Convidar</h3>
             <ol>
                 <li>Em <strong>Usuários e perfis</strong>, preencha <strong>Convidar colaborador</strong>: nome, e-mail, perfil e, se quiser, o setor.</li>
                 <li>A pessoa recebe um link válido por 7 dias, cria a própria senha e entra direto na empresa.</li>
@@ -605,7 +653,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ol>
             <?= $fig('usuarios', 'Usuários, convites pendentes e formulário de convite') ?>
             <p>Nesta versão, cada e-mail pertence a uma única empresa. Um e-mail que já tem conta no ÍSIS não pode ser convidado.</p>
-            <h3>19.2 Alterar perfil, setor ou situação</h3>
+            <h3>20.2 Alterar perfil, setor ou situação</h3>
             <p>Clique em <strong>Editar</strong> ao lado do usuário. Regras:</p>
             <ul>
                 <li>ninguém altera o próprio perfil nem desativa a própria conta;</li>
@@ -616,7 +664,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="configuracoes">
-            <h2>20. Configurações da empresa</h2>
+            <h2>21. Configurações da empresa</h2>
             <p>Disponível para o administrador:</p>
             <ul>
                 <li><strong>Dados da empresa:</strong> razão social, nome fantasia e segmento. Para alterar o CNPJ, é preciso falar com o suporte.</li>
@@ -627,7 +675,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="plano">
-            <h2>21. Plano e assinatura</h2>
+            <h2>22. Plano e assinatura</h2>
             <p>Todos os planos têm <strong>todos os módulos</strong>. O que muda é o tamanho da equipe e alguns limites. Os valores atuais estão na seção <a href="/#planos">Planos e preços</a> da página inicial.</p>
             <div class="table-wrap">
                 <table>
@@ -660,7 +708,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="auditoria">
-            <h2>22. Trilha de auditoria</h2>
+            <h2>23. Trilha de auditoria</h2>
             <p>Registra automaticamente os acessos e as ações feitas no ÍSIS. Cada registro guarda:</p>
             <ul>
                 <li>usuário, data e hora;</li>
@@ -678,7 +726,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="perfil">
-            <h2>23. Meu perfil</h2>
+            <h2>24. Meu perfil</h2>
             <p>Em <strong>Meu perfil</strong>, cada usuário:</p>
             <ul>
                 <li>atualiza o nome e o cargo;</li>
@@ -690,8 +738,10 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="duvidas">
-            <h2>24. Dúvidas frequentes</h2>
+            <h2>25. Dúvidas frequentes</h2>
             <dl class="faq">
+                <dt>Toda operação precisa de RIPD?</dt>
+                <dd>Não. O relatório é para tratamentos que podem gerar alto risco aos titulares. O ÍSIS indica as operações com sinais de alto risco, mas a decisão é do encarregado. A ANPD também pode pedir um RIPD a qualquer momento.</dd>
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
                 <dt>Apareceu "Acesso negado".</dt>
@@ -720,22 +770,22 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="proximos">
-            <h2>25. Próximas melhorias</h2>
+            <h2>26. Próximas melhorias</h2>
             <p>Com a versão 1.0, todos os módulos previstos para o MVP estão disponíveis. Melhorias em estudo:</p>
             <ul>
                 <li>verificação em duas etapas no login;</li>
                 <li>um mesmo e-mail com acesso a mais de uma empresa (útil para consultorias);</li>
-                <li>relatório de impacto à proteção de dados (RIPD);</li>
                 <li>avisos de cookies e consentimentos.</li>
             </ul>
         </section>
 
         <section id="historico">
-            <h2>26. Histórico de alterações</h2>
+            <h2>27. Histórico de alterações</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.2.0</td><td>30/10/2026</td><td><strong>Relatório de impacto (RIPD):</strong> indicação das operações que podem exigir o relatório, elaboração com os dados do inventário e os riscos, aprovação com versão guardada e código de integridade, revisões e documento para impressão. A página de cada operação mostra o RIPD dela.</td></tr>
                         <tr><td>1.1.2</td><td>30/10/2026</td><td>Planos e preços agora são uma seção da página inicial (botão "Ver planos e preços"); o link saiu do topo do site e continua no rodapé.</td></tr>
                         <tr><td>1.1.1</td><td>30/10/2026</td><td>Criação do acesso da equipe AiCode ao painel da plataforma: a senha não aparece enquanto é digitada e é confirmada duas vezes; atalho para criar o acesso a partir de um computador Windows. Nada muda para as empresas.</td></tr>
                         <tr><td>1.1.0</td><td>30/10/2026</td><td><strong>Planos e assinatura:</strong> planos Essencial, Profissional e Empresarial com todos os módulos; teste grátis de 14 dias; limites de usuários, fornecedores e treinamentos; tela Plano e assinatura com faturas, instruções de pagamento e pedido de mudança de plano; avisos por e-mail e no topo das telas; modo somente leitura quando a assinatura vence (sem bloquear titulares e incidentes); página pública de preços. Pagamento registrado manualmente pela AiCode.</td></tr>

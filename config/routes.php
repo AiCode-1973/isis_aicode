@@ -10,6 +10,7 @@ use Isis\Controllers\InventoryController;
 use Isis\Controllers\RiskController;
 use Isis\Controllers\AuthController;
 use Isis\Controllers\DashboardController;
+use Isis\Controllers\DpiaController;
 use Isis\Controllers\HomeController;
 use Isis\Controllers\IncidentController;
 use Isis\Controllers\PolicyController;
@@ -99,6 +100,21 @@ return static function (Router $r): void {
     $r->get('/riscos/{id}/editar', [RiskController::class, 'edit'], $app(P::RISKS_EDIT));
     $r->post('/riscos/{id}', [RiskController::class, 'update'], $app(P::RISKS_EDIT));
     $r->post('/riscos/{id}/excluir', [RiskController::class, 'delete'], $app(P::RISKS_EDIT));
+
+    // Relatório de Impacto à Proteção de Dados Pessoais (RIPD)
+    $r->get('/ripd', [DpiaController::class, 'index'], $app(P::DPIA_VIEW));
+    $r->get('/ripd/novo', [DpiaController::class, 'create'], $app(P::DPIA_EDIT));
+    $r->post('/ripd', [DpiaController::class, 'store'], $app(P::DPIA_EDIT));
+    $r->get('/ripd/{id}', [DpiaController::class, 'show'], $app(P::DPIA_VIEW));
+    $r->get('/ripd/{id}/editar', [DpiaController::class, 'edit'], $app(P::DPIA_EDIT));
+    $r->get('/ripd/{id}/documento', [DpiaController::class, 'document'], $app(P::DPIA_VIEW));
+    $r->get('/ripd/{id}/versoes/{item}', [DpiaController::class, 'version'], $app(P::DPIA_VIEW));
+    $r->post('/ripd/{id}', [DpiaController::class, 'update'], $app(P::DPIA_EDIT));
+    $r->post('/ripd/{id}/enviar', [DpiaController::class, 'submit'], $app(P::DPIA_EDIT));
+    $r->post('/ripd/{id}/aprovar', [DpiaController::class, 'approve'], $app(P::DPIA_APPROVE));
+    $r->post('/ripd/{id}/devolver', [DpiaController::class, 'reject'], $app(P::DPIA_APPROVE));
+    $r->post('/ripd/{id}/revisar', [DpiaController::class, 'revise'], $app(P::DPIA_EDIT));
+    $r->post('/ripd/{id}/excluir', [DpiaController::class, 'delete'], $app(P::DPIA_EDIT));
 
     // Planos de ação
     $r->get('/planos', [ActionController::class, 'index'], $app(P::ACTIONS_VIEW));

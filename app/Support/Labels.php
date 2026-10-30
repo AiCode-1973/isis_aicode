@@ -196,6 +196,28 @@ final class Labels
         'relevante' => 'Pode acarretar risco ou dano relevante aos titulares',
     ];
 
+    public const array DPIA_STATUS = ['rascunho' => 'Em elaboração', 'em_aprovacao' => 'Aguardando aprovação', 'aprovado' => 'Aprovado'];
+
+    /** Situações que, pelas orientações da ANPD, indicam tratamento de alto risco e recomendam o RIPD. */
+    public const array DPIA_TRIGGER = [
+        'dados_sensiveis' => 'Dados pessoais sensíveis',
+        'vulneraveis' => 'Titulares vulneráveis (crianças, adolescentes, idosos)',
+        'larga_escala' => 'Tratamento em larga escala',
+        'monitoramento' => 'Vigilância ou monitoramento sistemático',
+        'novas_tecnologias' => 'Uso de tecnologias novas ou inovadoras',
+        'decisao_automatizada' => 'Decisões automatizadas ou perfilamento',
+        'legitimo_interesse' => 'Tratamento baseado em legítimo interesse',
+        'transferencia_internacional' => 'Transferência internacional de dados',
+        'combinacao' => 'Combinação ou cruzamento de bases de dados',
+        'solicitacao_anpd' => 'Solicitação da ANPD',
+    ];
+
+    public const array DPIA_CONCLUSION = [
+        'aceitavel' => 'Riscos aceitáveis: o tratamento pode seguir',
+        'aceitavel_com_medidas' => 'Aceitável desde que as medidas previstas sejam implantadas',
+        'nao_aceitavel' => 'Riscos não aceitáveis: o tratamento não deve seguir como está',
+    ];
+
     /** @param array<string|int, string> $map */
     public static function of(array $map, string|int|null $value): string
     {
