@@ -130,6 +130,12 @@ function code(string $prefix, int $seq): string
     return sprintf('%s-%03d', $prefix, $seq);
 }
 
+/** Valor em centavos para "R$ 1.234,56"; null vira "Sob consulta". */
+function money(?int $cents): string
+{
+    return $cents === null ? 'Sob consulta' : 'R$ ' . number_format($cents / 100, 2, ',', '.');
+}
+
 function fmt_bytes(int $bytes): string
 {
     return $bytes >= 1048576 ? number_format($bytes / 1048576, 1, ',', '.') . ' MB' : max(1, (int) round($bytes / 1024)) . ' KB';
@@ -284,6 +290,14 @@ function audit_label(string $action): string
         'training.failed' => 'Avaliação de treinamento abaixo da nota mínima',
         'report.viewed' => 'Relatório de conformidade gerado',
         'report.exported' => 'Dados exportados em planilha',
+        'subscription.change_requested' => 'Mudança de plano solicitada',
+        'subscription.updated' => 'Assinatura alterada pela AiCode',
+        'invoice.created' => 'Cobrança lançada',
+        'invoice.paid' => 'Pagamento registrado',
+        'invoice.canceled' => 'Cobrança cancelada',
+        'platform.login' => 'Entrada no painel da plataforma',
+        'platform.login_failed' => 'Tentativa de entrada na plataforma recusada',
+        'platform.plan_updated' => 'Plano comercial alterado',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

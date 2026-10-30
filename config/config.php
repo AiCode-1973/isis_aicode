@@ -41,6 +41,11 @@ return [
         'keep_daily' => Env::int('BACKUP_KEEP_DAILY', 7),
         'keep_weekly' => Env::int('BACKUP_KEEP_WEEKLY', 4),
     ],
+    'billing' => [
+        'trial_days' => Env::int('BILLING_TRIAL_DAYS', 14),
+        'trial_plan' => Env::get('BILLING_TRIAL_PLAN', 'profissional'),
+        'grace_days' => Env::int('BILLING_GRACE_DAYS', 7),
+    ],
     'mail' => [
         'driver' => Env::get('MAIL_DRIVER', 'log'),
         'host' => Env::get('MAIL_HOST'),

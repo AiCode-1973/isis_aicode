@@ -25,20 +25,23 @@ use Isis\Controllers\PasswordController;
 use Isis\Controllers\ProfileController;
 use Isis\Controllers\RegisterController;
 use Isis\Controllers\SettingsController;
+use Isis\Controllers\SubscriptionController;
+use Isis\Controllers\PlatformController;
 use Isis\Controllers\UserController;
 use Isis\Core\Router;
 
 /*
  * Rotas. Todas no mesmo domínio; a empresa vem sempre da sessão autenticada.
- * Middleware: guest, auth, onboarded, perm:<permissão>. Todo POST exige token CSRF (no Router).
+ * Middleware: guest, auth, onboarded, billing (somente leitura se a assinatura venceu), perm:<permissão>, platform. Todo POST exige token CSRF (no Router).
  */
 return static function (Router $r): void {
-    $app = static fn (string $permission): array => ['auth', 'onboarded', 'perm:' . $permission];
+    $app = static fn (string $permission): array => ['auth', 'onboarded', 'billing', 'perm:' . $permission];
 
     // Público
     $r->get('/', [HomeController::class, 'index']);
     $r->get('/termos', [HomeController::class, 'terms']);
     $r->get('/manual', [HomeController::class, 'manual']);
+    $r->get('/precos', [HomeController::class, 'pricing']);
 
     // Canal público do titular (mesmo domínio; a empresa vem do endereço)
     $r->get('/titular/{slug}', [PublicRequestController::class, 'form']);
@@ -190,6 +193,26 @@ return static function (Router $r): void {
     $r->get('/auditoria', [AuditController::class, 'index'], $app(P::AUDIT_VIEW));
     $r->get('/auditoria/exportar', [AuditController::class, 'export'], $app(P::AUDIT_VIEW));
     $r->post('/auditoria/verificar', [AuditController::class, 'verify'], $app(P::AUDIT_VIEW));
+
+    // Plano e assinatura da empresa (fica fora do filtro "billing" para a empresa poder regularizar)
+    $r->get('/plano', [SubscriptionController::class, 'show'], ['auth', 'onboarded', 'perm:' . P::SETTINGS_MANAGE]);
+    $r->post('/plano/solicitar', [SubscriptionController::class, 'request'], ['auth', 'onboarded', 'perm:' . P::SETTINGS_MANAGE]);
+
+    // Painel da plataforma (equipe AiCode), com login próprio
+    $r->get('/plataforma/entrar', [PlatformController::class, 'showLogin']);
+    $r->post('/plataforma/entrar', [PlatformController::class, 'login']);
+    $r->post('/plataforma/sair', [PlatformController::class, 'logout'], ['platform']);
+    $r->get('/plataforma', [PlatformController::class, 'index'], ['platform']);
+    $r->get('/plataforma/empresas/{id}', [PlatformController::class, 'tenant'], ['platform']);
+    $r->post('/plataforma/empresas/{id}/assinatura', [PlatformController::class, 'updateSubscription'], ['platform']);
+    $r->post('/plataforma/empresas/{id}/faturas', [PlatformController::class, 'createInvoice'], ['platform']);
+    $r->post('/plataforma/empresas/{id}/faturas/{item}/pagamento', [PlatformController::class, 'payInvoice'], ['platform']);
+    $r->post('/plataforma/empresas/{id}/faturas/{item}/cancelar', [PlatformController::class, 'cancelInvoice'], ['platform']);
+    $r->get('/plataforma/planos', [PlatformController::class, 'plans'], ['platform']);
+    $r->post('/plataforma/planos/{slug}', [PlatformController::class, 'updatePlan'], ['platform']);
+    $r->get('/plataforma/configuracoes', [PlatformController::class, 'settings'], ['platform']);
+    $r->post('/plataforma/configuracoes', [PlatformController::class, 'saveSettings'], ['platform']);
+    $r->post('/plataforma/senha', [PlatformController::class, 'password'], ['platform']);
 
     $r->get('/perfil', [ProfileController::class, 'show'], ['auth']);
     $r->post('/perfil', [ProfileController::class, 'update'], ['auth']);

@@ -14,6 +14,7 @@ use Isis\Repositories\DepartmentRepository;
 use Isis\Repositories\InvitationRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\AccountService;
+use Isis\Services\SubscriptionService;
 
 /**
  * Usuários da empresa: listagem, convites e alteração de perfil/setor/situação.
@@ -113,6 +114,9 @@ final class UserController extends Controller
             && ($data['role'] !== Role::Admin->value || $data['status'] !== 'active');
         if ($losesAdmin && $repo->countActiveAdmins() <= 1) {
             $v->addError('role', 'A empresa precisa de pelo menos um administrador ativo.');
+        }
+        if ($user['status'] !== 'active' && $data['status'] === 'active' && ($limit = SubscriptionService::limitReached('users')) !== null) {
+            $v->addError('status', $limit);
         }
         if ($v->fails()) {
             return $this->backWithErrors("/usuarios/{$id}/editar", $v->errors(), $request->all());

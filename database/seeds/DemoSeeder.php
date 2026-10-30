@@ -17,6 +17,8 @@ use Isis\Repositories\DepartmentRepository;
 use Isis\Repositories\InvitationRepository;
 use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
+use Isis\Repositories\SubscriptionRepository;
+use Isis\Services\SubscriptionService;
 
 /**
  * Dados demonstrativos FICTÍCIOS: duas empresas de segmentos diferentes, com um usuário de cada perfil.
@@ -85,8 +87,35 @@ final class DemoSeeder
             $summary[] = $program
                 ? "{$company['trade_name']}: fornecedores, políticas e treinamento demonstrativos criados."
                 : "{$company['trade_name']}: já tinha fornecedores; mantidos.";
+            $summary[] = self::billing($tenantId, $company);
         }
         return $summary;
+    }
+
+    /**
+     * Assinatura demonstrativa: a clínica paga o Profissional mensal (com uma fatura paga);
+     * a loja está no teste grátis do Essencial.
+     */
+    private static function billing(int $tenantId, array $company): string
+    {
+        $name = $company['trade_name'];
+        if (Database::value('SELECT 1 FROM invoices WHERE tenant_id = ?', [$tenantId]) !== null) {
+            return "{$name}: assinatura mantida.";
+        }
+        SubscriptionService::forget($tenantId);
+        $subscription = SubscriptionService::forTenant($tenantId);
+        $repo = new SubscriptionRepository();
+        if ($company['segment_code'] !== 'saude') {
+            $repo->update((int) $subscription['id'], ['plan_code' => 'essencial', 'status' => 'teste', 'trial_ends_at' => SubscriptionService::addDays(date('Y-m-d'), 9)]);
+            SubscriptionService::forget($tenantId);
+            return "{$name}: teste grátis do plano Essencial.";
+        }
+        $repo->update((int) $subscription['id'], ['plan_code' => 'profissional', 'status' => 'ativa', 'billing_cycle' => 'mensal',
+            'current_period_end' => SubscriptionService::addDays(date('Y-m-d'), -1)]);
+        SubscriptionService::forget($tenantId);
+        $invoiceId = SubscriptionService::createInvoice($tenantId, ['amount_cents' => 54900, 'due_date' => date('Y-m-d'), 'description' => null], 'Demonstração');
+        SubscriptionService::markPaid($tenantId, $invoiceId, ['paid_at' => date('Y-m-d H:i:s'), 'payment_method' => 'pix', 'payment_reference' => 'PIX-DEMO-0001'], 'Demonstração');
+        return "{$name}: plano Profissional mensal ativo, com uma fatura paga.";
     }
 
     /** @param array<string, mixed> $company @param list<string> $summary */

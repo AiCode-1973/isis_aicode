@@ -5,7 +5,7 @@
         <p class="lead">Uma plataforma para implantar e manter a gestão da LGPD: mapeie operações de tratamento, avalie riscos, atenda titulares, registre incidentes e comprove cada passo com uma trilha de auditoria.</p>
         <div class="actions">
             <a class="btn btn-teal" href="/cadastro">Criar conta da empresa <?= icon('arrow-right') ?></a>
-            <a class="btn btn-light" href="/entrar">Já tenho conta</a>
+            <a class="btn btn-light" href="/precos">Ver planos e preços</a>
         </div>
         <div class="pillars"><span>LGPD</span><span>Governança</span><span>Segurança da Informação</span><span>Conformidade</span></div>
     </div>

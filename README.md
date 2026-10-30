@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo (versão 1.0.0)
+## Situação: MVP completo + planos e assinatura (versão 1.1.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -18,6 +18,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 3 | Solicitações de titulares (protocolo, prazo de 15 dias, resposta por e-mail, dados criptografados), canal público `/titular/<empresa>` com acompanhamento e incidentes de segurança (classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD) | **pronta** |
 | 4 | Fornecedores (avaliação com nota e risco, contratos, revisão), políticas e documentos (versões, aprovação, validade, ciência, modelos) e treinamentos (avaliação, designação, certificado com verificação pública em `/certificado/<código>`) | **pronta** |
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
+| 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e página pública de preços (`/precos`) | **pronta** |
 
 ## Requisitos
 
@@ -73,9 +74,67 @@ php bin/isis audit:verify   # confere a integridade da trilha de auditoria de to
 
 **A `APP_KEY` do servidor precisa ser a mesma usada para gravar os dados criptografados.** Isso vale para os dados do titular, os detalhes de incidentes e os dados demonstrativos gravados a partir de outra máquina. Se a chave for diferente, esses campos aparecem como "conteúdo protegido indisponível".
 
+## E-mail (SMTP)
+
+O ÍSIS envia e-mails para:
+- confirmar o cadastro e recuperar a senha;
+- convidar a equipe;
+- avisar o encarregado sobre novas solicitações de titulares e novos incidentes;
+- mandar ao titular o protocolo e a resposta;
+- enviar os lembretes diários.
+
+**Sem o SMTP configurado, ninguém consegue confirmar o cadastro nem recuperar a senha**: com `MAIL_DRIVER=log`, as mensagens só ficam gravadas em `storage/logs/mail.log`.
+
+### O que fazer, passo a passo
+
+1. **Crie a conta de e-mail remetente** no painel da hospedagem (cPanel → *Contas de e-mail*), por exemplo `nao-responda@aicode.dev.br`, com uma senha forte. O domínio do remetente precisa ser um domínio de e-mail da sua hospedagem. Se `isis.aicode.dev.br` não recebe e-mails, use o domínio principal (`aicode.dev.br`).
+2. **Anote os dados do servidor de saída.** No cPanel, abra *Contas de e-mail → Connect Devices*; os campos de "Servidor de saída (SMTP)" mostram o host e as portas.
+3. **Ative a autenticação do domínio.** No cPanel, em *Email Deliverability*, confira se **SPF** e **DKIM** estão válidos e clique em *Repair* se estiverem com problema. Se possível, crie também um registro **DMARC** (TXT `_dmarc`), por exemplo `v=DMARC1; p=none; rua=mailto:dmarc@aicode.dev.br`. Sem isso, os e-mails tendem a cair no spam ou ser recusados por Gmail e Outlook.
+4. **Garanta que o PHPMailer está no servidor.** Ele é instalado pelo Composer:
+   - com SSH, rode `composer install --no-dev --optimize-autoloader` na pasta do ÍSIS;
+   - sem SSH, envie a pasta `vendor/` gerada no seu computador.
+5. **Preencha o `.env` do servidor:**
+   ```ini
+   MAIL_DRIVER=smtp
+   MAIL_HOST=mail.aicode.dev.br
+   MAIL_PORT=465
+   MAIL_ENCRYPTION=ssl
+   MAIL_USERNAME=nao-responda@aicode.dev.br
+   MAIL_PASSWORD="senha-da-conta-de-email"
+   MAIL_FROM_ADDRESS=nao-responda@aicode.dev.br
+   MAIL_FROM_NAME="ÍSIS"
+   APP_URL=https://isis.aicode.dev.br
+   ```
+   - **Porta e criptografia:** use `465` com `ssl` (SMTPS) **ou** `587` com `tls` (STARTTLS), conforme o que a hospedagem indicar. Se uma não funcionar, teste a outra.
+   - **Usuário:** é o endereço de e-mail completo.
+   - **Remetente:** `MAIL_FROM_ADDRESS` deve ser o mesmo e-mail autenticado, ou o servidor pode recusar ou marcar como spam.
+   - **Senha:** coloque entre aspas se tiver espaços ou caracteres especiais. Ela só fica no `.env`, que nunca deve ser versionado nem enviado a terceiros.
+   - **`APP_URL`:** precisa ser o endereço público com `https`, porque os links dos e-mails (confirmação, convite, recuperação, canal do titular) são montados a partir dele.
+6. **Teste o envio:**
+   ```bash
+   php bin/isis email:teste seu-email@exemplo.com
+   ```
+   O comando mostra a configuração em uso (sem a senha) e envia uma mensagem. Se falhar, o motivo fica em `storage/logs/app-AAAA-MM-DD.log`, na linha "Falha no envio de e-mail".
+7. **Confirme pelo sistema:** peça "Esqueci minha senha" com um usuário real, ou convide um usuário de teste, e veja se o e-mail chega com o link correto.
+8. **Rode `php bin/isis verificar`.** O item "E-mail por SMTP" deve aparecer como `ok`.
+
+### Problemas comuns
+
+| Sintoma | Causa provável e solução |
+|---|---|
+| `Could not authenticate` | Usuário ou senha errados. O usuário é o e-mail completo; confira também as aspas da senha no `.env`. |
+| `Could not connect to SMTP host` / tempo esgotado | Host ou porta errados, ou a hospedagem bloqueia a porta. Troque entre 465/ssl e 587/tls, ou use `localhost` com porta 25 ou 587 se a hospedagem orientar assim para scripts no próprio servidor. |
+| Certificado SSL inválido | Use como `MAIL_HOST` o nome que consta no certificado do servidor de e-mail (às vezes é o nome do servidor da hospedagem, não `mail.seudominio`). |
+| E-mail chega no spam | Configure SPF, DKIM e DMARC (passo 3) e use um remetente do mesmo domínio autenticado. |
+| Links do e-mail apontam para `localhost` | Corrija `APP_URL` no `.env` do servidor. |
+| "PHPMailer não encontrado" | Faltou o `vendor/` (passo 4). |
+| Nada é enviado e não há erro | `MAIL_DRIVER` ainda está como `log`. |
+
+Alternativa: se a hospedagem limitar o envio, use um serviço SMTP transacional (Amazon SES, Brevo, SendGrid, Mailgun etc.). Basta trocar `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME` e `MAIL_PASSWORD` pelos dados do serviço e validar o domínio nele.
+
 ## Operação (rotina diária)
 
-Agende **uma vez por dia**, de madrugada, o comando que faz backup, rotação, lembretes e limpeza:
+Agende **uma vez por dia**, de madrugada, o comando que faz backup, rotação, lembretes, avisos de assinatura e limpeza:
 
 ```bash
 cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
@@ -110,6 +169,48 @@ cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
 | `php bin/isis lembretes` | Envia o resumo diário de pendências por e-mail: um por pessoa por dia, só para quem tem pendências |
 | `php bin/isis manutencao` | Remove tentativas de login antigas, tokens vencidos, sessões expiradas e temporários |
 | `php bin/isis verificar` | Confere requisitos, banco, migrations, integridade da auditoria, backup recente, SMTP e modo de depuração |
+| `php bin/isis email:teste <destino>` | Envia um e-mail de teste com a configuração atual (veja [E-mail (SMTP)](#e-mail-smtp)) |
+| `php bin/isis assinaturas` | Envia os avisos de assinatura pendentes e lista a situação de cada empresa |
+| `php bin/isis plataforma:admin <email> "<Nome>"` | Cria ou atualiza um acesso ao painel da plataforma |
+
+## Planos e cobrança (manual)
+
+Todos os planos têm todos os módulos. O que muda é o porte:
+
+| Plano | Mensal | Anual | Usuários | Fornecedores | Treinamentos |
+|---|---|---|---|---|---|
+| Essencial | R$ 199 | R$ 1.990 | 5 | 10 | 2 |
+| Profissional | R$ 549 | R$ 5.490 | 25 | sem limite | sem limite |
+| Empresarial | sob consulta | sob consulta | sem limite | sem limite | sem limite |
+
+Valores, limites e destaques são editados no painel da plataforma, sem mexer no código.
+
+- **Teste grátis:** toda empresa nova ganha `BILLING_TRIAL_DAYS` dias (padrão 14) do plano `BILLING_TRIAL_PLAN` (padrão `profissional`). As empresas que já existiam quando a migration 006 rodou ganharam 30 dias de teste do Profissional.
+- **Limites:** usuários ativos + convites pendentes, fornecedores não encerrados e treinamentos não arquivados. Ao atingir o limite, o ÍSIS recusa a inclusão com uma mensagem clara; nada é apagado.
+- **Situação calculada pelas datas** (não depende do cron): teste → teste encerrado; ativa → em atraso (até `BILLING_GRACE_DAYS`, padrão 7, com acesso normal) → vencida. "Suspensa" e "cancelada" são definidas pela AiCode.
+- **Somente leitura** (teste encerrado, vencida, suspensa ou cancelada): consultar e exportar continua liberado; incluir e alterar fica bloqueado. **Solicitações de titulares e incidentes continuam funcionando sempre**, porque são obrigações legais da empresa.
+- **Avisos:** a rotina diária (`php bin/isis diario`) manda e-mail aos administradores 7, 3 e 1 dia antes do fim do teste, no fim do teste, 5 dias antes do vencimento, no atraso e no vencimento (um de cada). Também aparece um aviso no topo das telas.
+
+### Painel da plataforma (`/plataforma`)
+
+Uso exclusivo da equipe AiCode, com login e sessão **separados** das contas das empresas. Crie o primeiro acesso no servidor:
+
+```bash
+php bin/isis plataforma:admin voce@aicode.dev.br "Seu Nome"
+```
+
+O comando pede a senha (mínimo 12 caracteres). Se você deixar em branco, ele gera uma senha e mostra uma única vez. O mesmo comando troca a senha de quem esqueceu.
+
+No painel:
+
+1. **Empresas e assinaturas:** receita mensal recorrente, empresas em teste, as que pedem atenção e os pedidos de mudança de plano. Filtre por situação ou busque por nome/CNPJ.
+2. **Empresa → Lançar cobrança:** a fatura cobre o próximo período (continua do fim do período pago, ou começa hoje). Marque "Já foi pago" para lançar e registrar de uma vez.
+3. **Empresa → Faturas → Pago:** informe a data, a forma (Pix, boleto, transferência, cartão) e a referência do comprovante. A assinatura passa a "ativa" até o fim do período da fatura.
+4. **Empresa → Alterar assinatura:** plano, ciclo, situação, fim do teste (para prorrogar), "pago até" e preço combinado (desconto). Salvar com o plano pedido pela empresa dá o pedido como atendido.
+5. **Planos e preços:** valores mensal e anual, limites (em branco = sem limite), destaques da página pública, "sob consulta" e visibilidade.
+6. **Configurações:** instruções de pagamento mostradas às empresas (chave Pix, dados bancários) e o e-mail de cobrança, que recebe os pedidos de plano junto com os administradores da plataforma.
+
+Tudo o que a AiCode altera numa empresa entra na trilha de auditoria **dela**, com o autor "AiCode · Nome". Ainda não há integração com meio de pagamento: a confirmação é manual.
 
 ## Contas de demonstração (fictícias)
 
@@ -127,6 +228,8 @@ Criadas com `--demo`. Senha de todas: `Demo@Isis2026`.
 | | Gestor | andre.martins@bompreco.example |
 | | Colaborador | fernanda.alves@bompreco.example |
 | | Auditor | ricardo.teles@bompreco.example |
+
+Na demonstração, a clínica tem o plano Profissional pago (com uma fatura) e a loja está no teste grátis do Essencial.
 
 Não use as contas de demonstração num ambiente com dados reais.
 
@@ -148,7 +251,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 95 testes. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
+São 104 testes. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):

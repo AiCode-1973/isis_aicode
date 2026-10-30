@@ -6,10 +6,12 @@ namespace Isis\Core;
 
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
+use Isis\Auth\PlatformAuth;
 use Isis\Auth\Role;
+use Isis\Services\SubscriptionService;
 
 /**
- * Filtros de rota: auth, guest, onboarded e perm:<permissão>.
+ * Filtros de rota: auth, guest, onboarded, billing, perm:<permissão> e platform (equipe AiCode).
  */
 final class Middleware
 {
@@ -21,7 +23,9 @@ final class Middleware
             'auth' => Auth::check() ? null : self::toLogin($request),
             'guest' => Auth::check() ? Response::redirect('/painel') : null,
             'onboarded' => self::onboarded(),
+            'billing' => self::billing($request),
             'perm' => self::permission((string) $arg, $request),
+            'platform' => PlatformAuth::check() ? null : self::toPlatformLogin($request),
             default => throw new \LogicException("Middleware desconhecido: {$name}"),
         };
     }
@@ -43,6 +47,29 @@ final class Middleware
             return Response::redirect('/configuracao-inicial');
         }
         return null;
+    }
+
+    /**
+     * Assinatura vencida, suspensa ou teste encerrado: a empresa só consulta e exporta.
+     * Atendimento a titulares e incidentes continua liberado (obrigações legais).
+     */
+    private static function billing(Request $request): ?Response
+    {
+        if ($request->method !== 'POST' || SubscriptionService::writableInReadOnly($request->path) || !SubscriptionService::isReadOnly()) {
+            return null;
+        }
+        Session::flash('error', Auth::role() === Role::Admin
+            ? 'A assinatura está em modo somente leitura. Regularize em Plano e assinatura para voltar a incluir e alterar dados.'
+            : 'A assinatura da empresa está em modo somente leitura. Fale com o administrador do ÍSIS na sua empresa.');
+        return Response::redirect(Auth::role() === Role::Admin ? '/plano' : '/painel');
+    }
+
+    private static function toPlatformLogin(Request $request): Response
+    {
+        if ($request->method === 'GET') {
+            Session::set('platform_intended', $request->path);
+        }
+        return Response::redirect('/plataforma/entrar');
     }
 
     /** perm:a|b libera quem tiver qualquer uma das permissões. */

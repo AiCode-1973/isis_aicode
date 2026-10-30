@@ -25,6 +25,7 @@ $sections = [
     'evidencias' => 'Evidências',
     'usuarios' => 'Usuários e convites',
     'configuracoes' => 'Configurações da empresa',
+    'plano' => 'Plano e assinatura',
     'auditoria' => 'Trilha de auditoria',
     'perfil' => 'Meu perfil',
     'duvidas' => 'Dúvidas frequentes',
@@ -57,7 +58,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         <header class="manual-head">
             <p class="eyebrow">ÍSIS · Gestão da Privacidade e Proteção de Dados</p>
             <h1>Manual do sistema</h1>
-            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · MVP completo (fases 1 a 5)</p>
+            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 30/10/2026 · MVP completo (fases 1 a 5) + planos e assinatura</p>
             <div class="disclaimer"><?= icon('info') ?><span>O ÍSIS apoia a organização da conformidade com a LGPD e <strong>não substitui análise jurídica especializada nem garante conformidade legal</strong>. As orientações automáticas exibidas no sistema servem de apoio ao preenchimento.</span></div>
         </header>
 
@@ -66,7 +67,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
-            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
+            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, planos e assinatura, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
@@ -580,6 +581,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 </li>
             </ul>
             <p>Os lembretes dependem da rotina diária configurada no servidor pelo responsável técnico.</p>
+            <p><strong>Os e-mails não chegam?</strong> Confira a caixa de spam. Se continuar sem receber, avise o responsável técnico: o envio depende da configuração de e-mail (SMTP) do servidor, descrita no README do sistema.</p>
         </section>
 
         <section id="evidencias">
@@ -624,8 +626,41 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <?= $fig('configuracoes', 'Configurações da empresa e setores') ?>
         </section>
 
+        <section id="plano">
+            <h2>21. Plano e assinatura</h2>
+            <p>Todos os planos têm <strong>todos os módulos</strong>. O que muda é o tamanho da equipe e alguns limites. Os valores atuais estão na página pública <a href="/precos">Planos e preços</a>.</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Plano</th><th>Usuários</th><th>Fornecedores</th><th>Treinamentos</th></tr></thead>
+                    <tbody>
+                        <tr><td>Essencial</td><td>até 5</td><td>até 10</td><td>até 2</td></tr>
+                        <tr><td>Profissional</td><td>até 25</td><td>sem limite</td><td>sem limite</td></tr>
+                        <tr><td>Empresarial (sob consulta)</td><td>sem limite</td><td>sem limite</td><td>sem limite</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="hint">O limite de usuários conta os usuários ativos e os convites ainda pendentes. Fornecedores encerrados e treinamentos arquivados não contam.</p>
+            <ul>
+                <li><strong>Teste grátis:</strong> toda empresa nova começa com 14 dias grátis do plano Profissional, sem cartão.</li>
+                <li><strong>Contratar ou mudar de plano:</strong> o administrador abre <strong>Plano e assinatura</strong> (menu Governança), escolhe o plano e o ciclo (mensal, ou anual com 2 meses grátis) e clica em <strong>Enviar pedido</strong>. A equipe AiCode confirma e lança a cobrança.</li>
+                <li><strong>Pagamento:</strong> as instruções (Pix, boleto ou transferência) aparecem na mesma tela, em <strong>Como pagar</strong>. Quando o pagamento é confirmado pela AiCode, a fatura aparece como paga e a validade da assinatura é atualizada.</li>
+                <li><strong>Faturas:</strong> a lista mostra número, período, valor, vencimento e situação de cada cobrança.</li>
+                <li><strong>Avisos:</strong> o administrador recebe e-mail 7, 3 e 1 dia antes do fim do teste, 5 dias antes do vencimento e quando o pagamento atrasa. Um aviso também aparece no topo das telas.</li>
+            </ul>
+            <?= $fig('plano', 'Plano e assinatura: situação, uso dos limites, como pagar e mudança de plano') ?>
+            <p><strong>Se o teste terminar ou o pagamento atrasar:</strong></p>
+            <ul>
+                <li>nos primeiros 7 dias depois do vencimento, tudo continua funcionando, com um aviso;</li>
+                <li>depois disso, o ÍSIS entra em <strong>somente leitura</strong>: tudo pode ser consultado e exportado (inclusive relatórios e a trilha de auditoria), mas não é possível incluir nem alterar dados;</li>
+                <li><strong>solicitações de titulares e incidentes de segurança continuam funcionando</strong> em qualquer situação, porque são obrigações legais da empresa;</li>
+                <li>ao regularizar, o acesso completo volta na hora, sem perda de dados.</li>
+            </ul>
+            <p>Ao atingir um limite do plano, o ÍSIS avisa e não deixa incluir mais um item daquele tipo. Os dados que já existem continuam disponíveis.</p>
+            <?= $fig('precos', 'Página pública de planos e preços') ?>
+        </section>
+
         <section id="auditoria">
-            <h2>21. Trilha de auditoria</h2>
+            <h2>22. Trilha de auditoria</h2>
             <p>Registra automaticamente os acessos e as ações feitas no ÍSIS. Cada registro guarda:</p>
             <ul>
                 <li>usuário, data e hora;</li>
@@ -643,7 +678,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="perfil">
-            <h2>22. Meu perfil</h2>
+            <h2>23. Meu perfil</h2>
             <p>Em <strong>Meu perfil</strong>, cada usuário:</p>
             <ul>
                 <li>atualiza o nome e o cargo;</li>
@@ -655,7 +690,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="duvidas">
-            <h2>23. Dúvidas frequentes</h2>
+            <h2>24. Dúvidas frequentes</h2>
             <dl class="faq">
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
@@ -673,6 +708,10 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <dd>O canal só funciona para empresas ativas que concluíram a configuração inicial. Confira o endereço em Configurações.</dd>
                 <dt>Comuniquei um incidente e não vejo os detalhes da investigação.</dt>
                 <dd>É esperado: quem comunica acompanha a situação; os detalhes ficam com o encarregado e o administrador.</dd>
+                <dt>Apareceu "A assinatura está em modo somente leitura".</dt>
+                <dd>O teste grátis terminou ou o pagamento venceu há mais de 7 dias. O administrador regulariza em <a href="#plano">Plano e assinatura</a>. Enquanto isso, titulares e incidentes continuam funcionando.</dd>
+                <dt>Não consigo convidar mais usuários.</dt>
+                <dd>O plano chegou ao limite de usuários (convites pendentes também contam). Cancele convites que não serão usados, desative quem saiu da empresa ou mude de plano.</dd>
                 <dt>Posso usar o ÍSIS para várias empresas com o mesmo e-mail?</dt>
                 <dd>Ainda não. Nesta versão, cada e-mail pertence a uma empresa.</dd>
                 <dt>O ÍSIS garante que minha empresa está em conformidade?</dt>
@@ -681,7 +720,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="proximos">
-            <h2>24. Próximas melhorias</h2>
+            <h2>25. Próximas melhorias</h2>
             <p>Com a versão 1.0, todos os módulos previstos para o MVP estão disponíveis. Melhorias em estudo:</p>
             <ul>
                 <li>verificação em duas etapas no login;</li>
@@ -692,11 +731,13 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="historico">
-            <h2>25. Histórico de alterações</h2>
+            <h2>26. Histórico de alterações</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.1.0</td><td>30/10/2026</td><td><strong>Planos e assinatura:</strong> planos Essencial, Profissional e Empresarial com todos os módulos; teste grátis de 14 dias; limites de usuários, fornecedores e treinamentos; tela Plano e assinatura com faturas, instruções de pagamento e pedido de mudança de plano; avisos por e-mail e no topo das telas; modo somente leitura quando a assinatura vence (sem bloquear titulares e incidentes); página pública de preços. Pagamento registrado manualmente pela AiCode.</td></tr>
+                        <tr><td>1.0.1</td><td>30/10/2026</td><td>Para o responsável técnico: comando de teste de envio de e-mail e guia de configuração do SMTP no README (passo a passo, SPF/DKIM/DMARC e problemas comuns).</td></tr>
                         <tr><td>1.0.0</td><td>30/10/2026</td><td>Fase 5, que conclui o MVP:<br>• <strong>Relatório de conformidade</strong> para impressão ou PDF e exportações em planilha de riscos, ações, solicitações (sem dados pessoais), incidentes, fornecedores e treinamentos.<br>• <strong>Lembrete diário por e-mail</strong>, um por pessoa, só quando há pendências.<br>• <strong>Cópias de segurança diárias criptografadas</strong>, com rotação e restauração.<br>• Limpeza automática de registros temporários e verificação do ambiente.</td></tr>
                         <tr><td>0.4.0</td><td>29/10/2026</td><td>Fase 4, com três módulos novos:<br>• <strong>Fornecedores:</strong> avaliação de proteção de dados com nota e nível de risco, contratos com cláusulas de dados, vínculo com o inventário e revisão periódica.<br>• <strong>Políticas e documentos:</strong> rascunho, aprovação, versões, validade, ciência dos colaboradores e modelos iniciais.<br>• <strong>Treinamentos:</strong> conteúdo, avaliação, designação com prazo, certificado com código e verificação pública, além de um treinamento modelo de LGPD.<br>O painel ganhou o quadro "Para você" e novos alertas e indicadores.</td></tr>
                         <tr><td>0.3.0</td><td>29/10/2026</td><td>Fase 3, com dois módulos novos:<br>• <strong>Solicitações de titulares:</strong> protocolo, prazo de 15 dias, verificação de identidade, resposta por e-mail e dados criptografados.<br>• <strong>Incidentes de segurança:</strong> comunicação por qualquer colaborador, classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD e registro das comunicações.<br>Também entraram o canal on-line do titular com acompanhamento por protocolo, ações corretivas ligadas a incidentes e novos alertas e indicadores no painel. Corrigida a exclusão de setores e de operações que tinham registros vinculados.</td></tr>

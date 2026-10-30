@@ -20,6 +20,7 @@ declare(strict_types=1);
  *
  * Suporte
  *   php bin/isis verificar         Verifica requisitos, banco, migrations, auditoria, backup e e-mail
+ *   php bin/isis email:teste <destino@exemplo.com>   Envia um e-mail de teste com a configuração atual
  *   php bin/isis audit:verify      Verifica a cadeia de hashes da auditoria de todas as empresas
  *   php bin/isis backup:listar
  *   php bin/isis backup:decifrar <arquivo.isisbak> <saida.zip>
@@ -177,8 +178,63 @@ try {
             backup(true);
             $stats = ReminderService::run();
             out(sprintf('Lembretes: %d enviado(s).', $stats['sent']));
+            out(sprintf('Avisos de assinatura: %d enviado(s).', Isis\Services\SubscriptionService::sendNotices()));
             $clean = MaintenanceService::cleanup();
             out('Manutenção: ' . array_sum($clean) . ' registro(s) temporário(s) removido(s).');
+            break;
+
+        case 'assinaturas':
+            out(sprintf('Avisos de assinatura: %d e-mail(s) enviado(s).', Isis\Services\SubscriptionService::sendNotices()));
+            foreach ((new Isis\Repositories\SubscriptionRepository())->allSubscriptions() as $sub) {
+                $state = Isis\Services\SubscriptionService::state($sub);
+                out(sprintf('  empresa %d · %s · %s até %s', $sub['tenant_id'], $sub['plan_name'], $state['label'], $state['ends_at'] ?? '-'));
+            }
+            break;
+
+        case 'plataforma:admin':
+            $email = mb_strtolower(trim($positional[0] ?? ''));
+            $name = trim($positional[1] ?? '');
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($name) < 3) {
+                throw new RuntimeException('Uso: php bin/isis plataforma:admin <email> "<Nome completo>"');
+            }
+            fwrite(STDOUT, 'Senha (mínimo 12 caracteres; deixe vazio para gerar uma): ');
+            $password = trim((string) preg_replace('/^\xEF\xBB\xBF/', '', (string) fgets(STDIN))); // ignora BOM de terminais Windows
+            $generated = $password === '';
+            if ($generated) {
+                $password = rtrim(strtr(base64_encode(random_bytes(15)), '+/', 'Kx'), '=');
+            }
+            if (mb_strlen($password) < 12) {
+                throw new RuntimeException('A senha precisa ter pelo menos 12 caracteres.');
+            }
+            $id = (new Isis\Repositories\PlatformRepository())->saveAdmin($name, $email, Isis\Auth\Auth::hashPassword($password));
+            out("Administrador da plataforma #{$id} salvo: {$email}. Entre em /plataforma/entrar.");
+            if ($generated) {
+                out("Senha gerada (aparece só agora; troque depois em Configurações da plataforma): {$password}");
+            }
+            break;
+
+        case 'email:teste':
+            $to = $positional[0] ?? '';
+            if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                throw new RuntimeException('Uso: php bin/isis email:teste <destino@exemplo.com>');
+            }
+            $driver = (string) Config::get('mail.driver');
+            out(sprintf('Driver: %s · servidor: %s:%s (%s) · usuário: %s · remetente: %s <%s>',
+                $driver, Config::get('mail.host') ?: '-', Config::get('mail.port'), Config::get('mail.encryption') ?: 'sem criptografia',
+                Config::get('mail.username') ?: '-', Config::get('mail.from_name'), Config::get('mail.from_address')));
+            if ($driver === 'smtp' && !class_exists(\PHPMailer\PHPMailer\PHPMailer::class)) {
+                throw new RuntimeException('PHPMailer não encontrado. Rode "composer install --no-dev" no servidor ou envie a pasta vendor/.');
+            }
+            $ok = Isis\Core\Mailer::send($to, 'Teste de e-mail do ÍSIS',
+                '<p>Este é um e-mail de teste do <strong>ÍSIS</strong>, enviado em ' . date('d/m/Y H:i') . '.</p><p>Se você recebeu, o envio está funcionando.</p>');
+            if ($driver === 'log') {
+                out('MAIL_DRIVER=log: a mensagem foi gravada em storage/logs/mail.log (nada foi enviado). Para enviar de verdade, use MAIL_DRIVER=smtp.');
+            } elseif ($ok) {
+                out("Enviado para {$to}. Confira a caixa de entrada e o spam.");
+            } else {
+                out('Falha no envio. O motivo está em storage/logs/app-' . date('Y-m-d') . '.log (linha "Falha no envio de e-mail").');
+                exit(4);
+            }
             break;
 
         case 'verificar':
@@ -206,7 +262,7 @@ try {
             exit($failures > 0 ? 2 : 0);
 
         default:
-            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | diario | backup | backup:listar | backup:decifrar | backup:restaurar | lembretes | manutencao | verificar | audit:verify');
+            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | diario | backup | backup:listar | backup:decifrar | backup:restaurar | lembretes | manutencao | verificar | email:teste | assinaturas | plataforma:admin | audit:verify');
     }
 } catch (Throwable $e) {
     fwrite(STDERR, 'Erro: ' . $e->getMessage() . PHP_EOL);

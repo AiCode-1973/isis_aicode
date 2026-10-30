@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Isis\Controllers;
 
+use Isis\Services\SubscriptionService;
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
 use Isis\Auth\Permission as P;
@@ -48,6 +49,9 @@ final class VendorController extends Controller
 
     public function store(Request $request): Response
     {
+        if (($limit = SubscriptionService::limitReached('vendors')) !== null) {
+            return $this->failure('/fornecedores', $limit);
+        }
         [$data, $activities, $errors] = $this->parse($request);
         if ($errors !== []) {
             return $this->backWithErrors('/fornecedores/novo', $errors, $request->all());

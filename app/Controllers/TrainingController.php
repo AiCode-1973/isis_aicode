@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Isis\Controllers;
 
+use Isis\Services\SubscriptionService;
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
 use Isis\Auth\Permission as P;
@@ -46,6 +47,9 @@ final class TrainingController extends Controller
 
     public function store(Request $request): Response
     {
+        if (($limit = SubscriptionService::limitReached('trainings')) !== null) {
+            return $this->failure('/treinamentos', $limit);
+        }
         [$data, $questions, $errors] = $this->parse($request);
         if ($errors !== []) {
             return $this->backWithErrors('/treinamentos/novo', $errors, $request->all());
@@ -205,6 +209,9 @@ final class TrainingController extends Controller
 
     public function importTemplate(Request $request): Response
     {
+        if (($limit = SubscriptionService::limitReached('trainings')) !== null) {
+            return $this->failure('/treinamentos', $limit);
+        }
         $template = Templates::lgpdTraining();
         $repo = new TrainingRepository();
         if ($repo->titleExists($template['title'])) {

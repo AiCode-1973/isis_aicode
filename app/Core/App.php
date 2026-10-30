@@ -26,6 +26,9 @@ final class App
             (require APP_ROOT . '/config/routes.php')($router);
 
             // Só consulta o banco quando há sessão autenticada; o instalador roda antes do banco existir.
+            if ($request->path === '/plataforma' || str_starts_with($request->path, '/plataforma/')) {
+                \Isis\Auth\PlatformAuth::boot();
+            }
             if ($request->path !== '/instalar') {
                 $reason = Auth::boot();
                 if ($reason !== null) {
@@ -69,7 +72,7 @@ final class App
                 'title' => $titles[$status] ?? 'Erro',
                 'status' => $status,
                 'message' => $message,
-            ], Auth::check() ? 'app' : 'guest');
+            ], Auth::check() ? 'app' : (\Isis\Auth\PlatformAuth::check() ? 'platform' : 'guest'));
         } catch (\Throwable) {
             $html = '<!doctype html><meta charset="utf-8"><title>Erro</title><p>' . htmlspecialchars($message) . '</p>';
         }

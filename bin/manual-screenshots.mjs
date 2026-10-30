@@ -165,6 +165,7 @@ try {
   await go('/'); await shot('inicio', 768);
   await go('/cadastro'); await shot('cadastro', 900);
   await go('/entrar'); await shot('login', 768);
+  await go('/precos'); await shot('precos', 900);
 
   // Cadastro de uma empresa de exemplo -> confirmação -> configuração inicial
   const email = `lucia.andrade${Date.now() % 1000}@escolaexemplo.example`;
@@ -223,6 +224,7 @@ try {
   }
   await go('/usuarios'); await shot('usuarios', 900);
   await go('/configuracoes'); await shot('configuracoes', 820);
+  await go('/plano'); await shot('plano', 1100);
   await go('/auditoria'); await shot('auditoria', 900);
   await go('/perfil'); await shot('perfil', 768);
   await evaluate("localStorage.setItem('isis.sidebar', 'collapsed')");

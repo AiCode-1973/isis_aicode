@@ -27,6 +27,7 @@ $menu = [
     'Governança' => [
         [P::USERS_VIEW, '/usuarios', 'users', 'Usuários e perfis'],
         [P::SETTINGS_MANAGE, '/configuracoes', 'settings', 'Configurações'],
+        [P::SETTINGS_MANAGE, '/plano', 'layers', 'Plano e assinatura'],
         [P::AUDIT_VIEW, '/auditoria', 'audit', 'Trilha de auditoria'],
     ],
     'Conta' => [
@@ -93,6 +94,7 @@ $menu = [
             <div class="menu-pop">
                 <a href="/perfil"><?= icon('user') ?> Meu perfil</a>
                 <a href="/manual"><?= icon('info') ?> Manual do sistema</a>
+                <?php if (can(P::SETTINGS_MANAGE)): ?><a href="/plano"><?= icon('layers') ?> Plano e assinatura</a><?php endif; ?>
                 <form method="post" action="/sair" class="inline-form">
                     <?= csrf_field() ?>
                     <button type="submit"><?= icon('logout') ?> Sair</button>
@@ -103,6 +105,7 @@ $menu = [
     </header>
 
     <main id="main" class="content" tabindex="-1">
+        <?= Isis\Core\View::partial('partials/billing-banner') ?>
         <?= Isis\Core\View::partial('partials/flash') ?>
         <?= $content ?>
     </main>

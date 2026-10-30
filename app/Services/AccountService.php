@@ -43,6 +43,7 @@ final class AccountService
                     'password_hash' => Auth::hashPassword($data['password']),
                     'role' => Role::Admin->value,
                 ]);
+                SubscriptionService::startTrial($tenantId);
                 AuditLogger::log('tenant.registered', 'tenant', $tenantId, null, [
                     'razao_social' => $data['legal_name'],
                     'cnpj' => $data['cnpj'],
@@ -140,6 +141,9 @@ final class AccountService
     {
         if (UserRepository::emailExists($data['email'])) {
             return 'Este e-mail já tem uma conta no ÍSIS e não pode ser convidado.';
+        }
+        if (($limit = SubscriptionService::limitReached('users')) !== null) {
+            return $limit;
         }
         $repo = new InvitationRepository();
         if ($repo->pendingForEmail($data['email']) !== null) {
