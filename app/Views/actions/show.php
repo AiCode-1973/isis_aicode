@@ -28,6 +28,9 @@ $riskText = $x['risk_id'] ? e(code('RSK', (int) $x['risk_seq']) . ' · ' . $x['r
 $activityText = $x['activity_id'] ? e(code('OP', (int) $x['activity_seq']) . ' · ' . $x['activity_name']) : null;
 ?>
                 <div class="detail"><span class="label">Risco tratado</span><div class="value"><?= $riskText === null ? '—' : (can(Isis\Auth\Permission::RISKS_VIEW) ? '<a href="/riscos/' . (int) $x['risk_id'] . '">' . $riskText . '</a>' : $riskText) . ' ' . risk_badge((int) $x['risk_likelihood'], (int) $x['risk_impact']) ?></div></div>
+                <?php if ($x['incident_id']): ?>
+                <div class="detail"><span class="label">Incidente</span><div class="value"><?= can(Isis\Auth\Permission::INCIDENTS_VIEW) ? '<a href="/incidentes/' . (int) $x['incident_id'] . '">' . e(code('INC', (int) $x['incident_seq']) . ' · ' . $x['incident_title']) . '</a>' : e(code('INC', (int) $x['incident_seq']) . ' · ' . $x['incident_title']) ?></div></div>
+                <?php endif; ?>
                 <div class="detail"><span class="label">Operação</span><div class="value"><?= $activityText === null ? '—' : (can(Isis\Auth\Permission::INVENTORY_VIEW) ? '<a href="/inventario/' . (int) $x['activity_id'] . '">' . $activityText . '</a>' : $activityText) ?></div></div>
             </div>
         </section>

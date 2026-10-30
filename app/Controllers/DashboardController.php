@@ -38,6 +38,8 @@ final class DashboardController extends Controller
         $inventory = Auth::can(P::INVENTORY_VIEW) ? (new ActivityRepository())->stats() : null;
         $risks = Auth::can(P::RISKS_VIEW) ? (new RiskRepository())->stats() : null;
         $actionStats = Auth::can(P::ACTIONS_VIEW) ? $actions->stats($onlyOwn ? Auth::id() : null) : null;
+        $requestStats = Auth::can(P::REQUESTS_VIEW) ? (new \Isis\Repositories\RequestRepository())->stats() : null;
+        $incidentStats = Auth::can(P::INCIDENTS_VIEW) ? (new \Isis\Repositories\IncidentRepository())->stats() : null;
 
         // Jornada: reflete só o que já existe no sistema.
         $journey = [
@@ -53,6 +55,20 @@ final class DashboardController extends Controller
 
         // Pendências que pedem atenção agora
         $alerts = [];
+        if ($incidentStats && $incidentStats['anpd_overdue'] > 0) {
+            $alerts[] = ['danger', $incidentStats['anpd_overdue'] . ' incidente(s) com prazo de comunicação à ANPD vencido.', '/incidentes?abertos=1'];
+        } elseif ($incidentStats && $incidentStats['anpd_pending'] > 0) {
+            $alerts[] = ['danger', $incidentStats['anpd_pending'] . ' incidente(s) com risco relevante aguardando comunicação à ANPD.', '/incidentes?abertos=1'];
+        }
+        if ($requestStats && $requestStats['overdue'] > 0) {
+            $alerts[] = ['danger', $requestStats['overdue'] . ' solicitação(ões) de titular fora do prazo.', '/titulares?vencidas=1'];
+        }
+        if ($incidentStats && $incidentStats['untriaged'] > 0) {
+            $alerts[] = ['warn', $incidentStats['untriaged'] . ' incidente(s) comunicado(s) aguardando análise.', '/incidentes?status=comunicado'];
+        }
+        if ($requestStats && $requestStats['due_soon'] > 0) {
+            $alerts[] = ['warn', $requestStats['due_soon'] . ' solicitação(ões) de titular vencendo nos próximos 3 dias.', '/titulares?abertas=1'];
+        }
         if ($actionStats && $actionStats['overdue'] > 0) {
             $alerts[] = ['danger', $actionStats['overdue'] . ' ação(ões) com prazo vencido.', '/planos?vencidas=1'];
         }
@@ -79,6 +95,8 @@ final class DashboardController extends Controller
             'inventory' => $inventory,
             'risks' => $risks,
             'actionStats' => $actionStats,
+            'requestStats' => $requestStats,
+            'incidentStats' => $incidentStats,
             'heatmap' => $risks !== null ? (new RiskRepository())->heatmap() : null,
             'upcoming' => $actionStats !== null ? $actions->upcoming(30, 8, $onlyOwn ? Auth::id() : null) : [],
             'byOwner' => $actionStats !== null && !$onlyOwn ? $actions->byOwner() : [],

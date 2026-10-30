@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Isis\Database\Seeds;
 
 require_once __DIR__ . '/DemoComplianceSeeder.php';
+require_once __DIR__ . '/DemoPrivacySeeder.php';
 
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
@@ -75,6 +76,10 @@ final class DemoSeeder
             $summary[] = $created
                 ? "{$company['trade_name']}: inventário, riscos e planos de ação demonstrativos criados."
                 : "{$company['trade_name']}: já tinha inventário; dados de conformidade mantidos.";
+            $privacy = TenantContext::runAs($tenantId, static fn (): bool => DemoPrivacySeeder::run($company['segment_code']));
+            $summary[] = $privacy
+                ? "{$company['trade_name']}: solicitações de titulares e incidentes demonstrativos criados."
+                : "{$company['trade_name']}: já tinha solicitações ou incidentes; mantidos.";
         }
         return $summary;
     }

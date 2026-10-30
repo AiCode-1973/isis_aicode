@@ -7,14 +7,16 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: fase 1 de 5 (núcleo)
+## Situação: fase 3 de 5 (versão 0.3.0)
+
+O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | 1 | Cadastro da empresa, confirmação de e-mail, login, recuperação de acesso, convites, perfis e permissões, configuração inicial por segmento, usuários, setores, painel, perfil, trilha de auditoria com verificação de integridade | **pronta** |
-| 2 | Inventário de operações de tratamento, riscos, planos de ação e painel completo | próxima |
-| 3 | Solicitações de titulares (com canal público) e incidentes de segurança | — |
-| 4 | Fornecedores, políticas e documentos, treinamentos com certificado | — |
+| 2 | Inventário de operações de tratamento (registro do art. 37 com exportação CSV), catálogos, riscos (matriz 5×5), planos de ação com histórico, evidências com hash SHA-256 e painel de conformidade completo | **pronta** |
+| 3 | Solicitações de titulares (protocolo, prazo de 15 dias, resposta por e-mail, dados criptografados), canal público `/titular/<empresa>` com acompanhamento e incidentes de segurança (classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD) | **pronta** |
+| 4 | Fornecedores, políticas e documentos, treinamentos com certificado | próxima |
 | 5 | Backup automatizado, relatórios e refinamentos | — |
 
 ## Requisitos
@@ -61,10 +63,15 @@ server {
 
 ### Atualizações
 
+Envie os arquivos novos sem sobrescrever o `.env` e a pasta `storage/` do servidor. Depois rode:
+
 ```bash
-php bin/isis migrate        # aplica migrations novas e atualiza o catálogo de segmentos
+php bin/isis migrate        # aplica migrations novas e atualiza os catálogos (segmentos e hipóteses legais)
+php bin/isis seed:demo      # opcional: completa as empresas fictícias com os dados dos módulos novos
 php bin/isis audit:verify   # confere a integridade da trilha de auditoria de todas as empresas
 ```
+
+**A `APP_KEY` do servidor precisa ser a mesma usada para gravar os dados criptografados.** Isso vale para os dados do titular, os detalhes de incidentes e os dados demonstrativos gravados a partir de outra máquina. Se a chave for diferente, esses campos aparecem como "conteúdo protegido indisponível".
 
 ## Contas de demonstração (fictícias)
 
@@ -103,8 +110,19 @@ composer install
 vendor/bin/phpunit
 ```
 
-- **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF e redirecionamentos.
-- **Integração** (banco próprio, **apagado e recriado** a cada execução): isolamento entre empresas, cadastro, confirmação de e-mail, bloqueio de login, expiração e revogação de sessão, recuperação de senha, convites e detecção de adulteração na auditoria.
+São 75 testes.
+
+- **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
+- **Integração** (banco próprio, **apagado e recriado** a cada execução):
+  - isolamento entre empresas em todos os módulos;
+  - cadastro, confirmação de e-mail, bloqueio de login, sessão e recuperação de senha;
+  - convites e adulteração da auditoria;
+  - escopo do gestor e do colaborador;
+  - evidências (tipos recusados e hash);
+  - criptografia dos dados do titular e dos incidentes;
+  - canal público e acompanhamento por protocolo;
+  - prazos da ANPD;
+  - exclusão de setores e operações com vínculos.
   Por padrão usa o banco `isis_test` com as credenciais do `.env`. Para outro servidor, use `ISIS_TEST_DB_HOST`, `ISIS_TEST_DB_PORT`, `ISIS_TEST_DB_DATABASE`, `ISIS_TEST_DB_USERNAME` e `ISIS_TEST_DB_PASSWORD`. O nome precisa conter `test` (proteção contra apagar o banco de produção). Sem banco disponível, esses testes são ignorados.
 
 ## Arquitetura
@@ -115,12 +133,14 @@ app/Core/          App, Router, Request, Response, View, Session, Csrf, Validato
 app/Auth/          Auth (login e sessão), Role (perfis), Permission, TenantContext (empresa da sessão)
 app/Audit/         AuditLogger (registro) e AuditHasher (cadeia de hashes)
 app/Repositories/  TenantScopedRepository (filtro obrigatório por tenant_id) e repositórios
-app/Services/      AccountService (cadastro, convites, recuperação), Installer
+app/Services/      AccountService, RequestService, EvidenceService, RiskMatrix, AccessScope, CatalogService, Installer
+app/Support/       Labels (rótulos), Deadline (prazos), Text
 app/Controllers/   telas
 app/Views/         templates PHP (toda saída escapada com e())
 config/            config.php e routes.php
 database/          migrations SQL e seeds (segmentos e demonstração)
 bin/isis           comandos de linha de comando
+bin/manual-screenshots.mjs  gera as imagens do manual (Chrome headless, só contra o ÍSIS local)
 storage/           logs, sessões, uploads e backups (fora da raiz pública)
 tests/             PHPUnit
 ```
@@ -141,11 +161,11 @@ tests/             PHPUnit
 - **CSRF**: token em todo POST.
 - **XSS**: saída escapada, CSP sem scripts ou estilos inline, `X-Frame-Options`, HSTS, `nosniff` e `Referrer-Policy`.
 - **SQL injection**: prepared statements reais em tudo e identificadores validados.
-- **Criptografia de campos sensíveis**: libsodium XChaCha20-Poly1305, com a empresa como dado associado, e índice cego HMAC para buscas. Os módulos das próximas fases (titulares, incidentes) usam esse recurso.
+- **Criptografia de campos sensíveis**: libsodium XChaCha20-Poly1305, com a empresa como dado associado, e índice cego HMAC para buscas. São criptografados os dados do titular (nome, contatos, documento, pedido e resposta) e os detalhes de incidentes (descrição, contenção, causa e lições).
 - **Tokens** de confirmação, recuperação e convite: aleatórios, de uso único, com validade e guardados só como hash SHA-256.
 - **Auditoria** somente de inclusão, com usuário, data e hora (microssegundos), IP, navegador e alterações (antes/depois, com segredos mascarados). A cadeia de hashes por empresa detecta alteração ou exclusão.
 - **CSV exportado** protegido contra injeção de fórmulas.
-- **Cadastro** com campo-isca contra robôs e limite por IP.
+- **Cadastro e canal do titular** com campo-isca contra robôs e limite por IP. O acompanhamento exige protocolo e e-mail.
 
 ### Perfis
 
@@ -153,6 +173,20 @@ tests/             PHPUnit
 |---|---|
 | Administrador | Tudo, inclusive usuários e configurações |
 | Encarregado (DPO) | Todos os módulos de conformidade e a auditoria; não administra usuários nem configurações |
-| Gestor | Inventário, riscos e planos de ação; leitura dos demais |
-| Colaborador | Tarefas atribuídas, treinamentos, políticas e comunicação de incidentes |
+| Gestor | Inventário, riscos e planos de ação: vê tudo, mas só altera o que é do seu setor, o que criou ou o que está sob sua responsabilidade. Vê solicitações e incidentes. |
+| Colaborador | Vê e atualiza só as próprias tarefas. Comunica incidentes e acompanha os que comunicou. |
 | Auditor | Somente leitura de tudo, inclusive da trilha de auditoria |
+
+### Evidências
+
+- **Formatos:** PDF, PNG/JPG, TXT/CSV, Office e LibreOffice, até 10 MB. O tipo é conferido pelo conteúdo real do arquivo.
+- **Armazenamento:** `storage/uploads/<empresa>/`, com nome aleatório e fora da raiz pública. O hash SHA-256 de cada arquivo é registrado.
+- **Download:** só depois de conferir a empresa e a permissão.
+- **Servidor:** se o PHP limitar uploads a 2 MB, ajuste `upload_max_filesize` e `post_max_size` (ex.: 12M).
+
+### Prazos de referência
+
+- **Solicitações de titulares:** 15 dias corridos (art. 19, II).
+- **Comunicação de incidente à ANPD:** 3 dias úteis (Res. CD/ANPD nº 15/2024). Feriados não são considerados.
+
+São referências de apoio, não parecer jurídico.

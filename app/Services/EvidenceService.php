@@ -33,7 +33,7 @@ final class EvidenceService
     ];
 
     /** Tipos de registro que aceitam evidências. */
-    public const array ENTITIES = ['action', 'risk', 'activity'];
+    public const array ENTITIES = ['action', 'risk', 'activity', 'request', 'incident'];
 
     /**
      * Valida e grava o arquivo. Retorna o id do anexo ou lança \DomainException com mensagem para o usuário.

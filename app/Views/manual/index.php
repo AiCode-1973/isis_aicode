@@ -14,6 +14,9 @@ $sections = [
     'catalogos' => 'Catálogos do inventário',
     'riscos' => 'Gestão de riscos',
     'planos' => 'Planos de ação',
+    'titulares' => 'Solicitações de titulares',
+    'canal' => 'Canal on-line do titular',
+    'incidentes' => 'Incidentes de segurança',
     'evidencias' => 'Evidências',
     'usuarios' => 'Usuários e convites',
     'configuracoes' => 'Configurações da empresa',
@@ -49,7 +52,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         <header class="manual-head">
             <p class="eyebrow">ÍSIS · Gestão da Privacidade e Proteção de Dados</p>
             <h1>Manual do sistema</h1>
-            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · módulos das fases 1 e 2</p>
+            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · módulos das fases 1, 2 e 3</p>
             <div class="disclaimer"><?= icon('info') ?><span>O ÍSIS apoia a organização da conformidade com a LGPD e <strong>não substitui análise jurídica especializada nem garante conformidade legal</strong>. As orientações automáticas exibidas no sistema servem de apoio ao preenchimento.</span></div>
         </header>
 
@@ -58,7 +61,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
-            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, evidências e trilha de auditoria.</p>
+            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, evidências e trilha de auditoria.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
@@ -137,6 +140,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                         <tr><td>Inventário de dados</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Riscos</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Planos de ação</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>Só as próprias tarefas: andamento e evidências</td><td>Ver</td></tr>
+                        <tr><td>Solicitações de titulares</td><td>Ver e atender</td><td>Ver e atender</td><td>Ver</td><td>—</td><td>Ver</td></tr>
+                        <tr><td>Incidentes de segurança</td><td>Comunicar e conduzir</td><td>Comunicar e conduzir</td><td>Comunicar e ver todos</td><td>Comunicar e acompanhar os próprios</td><td>Ver</td></tr>
                         <tr><td>Usuários</td><td>Ver e administrar</td><td>Ver</td><td>—</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Configurações da empresa</td><td>Sim</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
                         <tr><td>Trilha de auditoria</td><td>Sim</td><td>Sim</td><td>—</td><td>—</td><td>Sim</td></tr>
@@ -151,8 +156,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>É a tela inicial depois de entrar. Reúne, num só lugar, o que precisa de atenção:</p>
             <?= $fig('painel', 'Painel de conformidade da administradora (dados fictícios)') ?>
             <ul>
-                <li><strong>Pendências:</strong> ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
-                <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas) e percentual de execução dos planos.</li>
+                <li><strong>Pendências:</strong> comunicação à ANPD pendente ou vencida, solicitações de titulares fora do prazo ou vencendo em 3 dias, incidentes aguardando análise, ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
+                <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas), percentual de execução dos planos, solicitações de titulares em aberto e incidentes em aberto.</li>
                 <li><strong>Prazos:</strong> ações vencidas e as que vencem nos próximos 30 dias, com o responsável.</li>
                 <li><strong>Riscos:</strong> matriz de probabilidade × impacto e quantidade por nível.</li>
                 <li><strong>Inventário, o que falta completar:</strong> operações com informações pendentes.</li>
@@ -295,20 +300,132 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <?= $fig('minhas-tarefas', 'Minhas tarefas, na visão do colaborador') ?>
         </section>
 
+        <section id="titulares">
+            <h2>10. Solicitações de titulares</h2>
+            <p>Reúne os pedidos das pessoas sobre os próprios dados, conforme o art. 18 da LGPD:</p>
+            <ul>
+                <li>confirmação de que a empresa trata dados delas;</li>
+                <li>acesso, correção, anonimização, bloqueio ou eliminação;</li>
+                <li>portabilidade;</li>
+                <li>informação sobre compartilhamentos;</li>
+                <li>revogação do consentimento e oposição;</li>
+                <li>revisão de decisões automatizadas (art. 20).</li>
+            </ul>
+            <p>Os pedidos chegam pelo <a href="#canal">canal on-line do titular</a> ou são registrados pela equipe.</p>
+            <?= $fig('titulares', 'Lista de solicitações, com o endereço do canal on-line e os indicadores de prazo') ?>
+            <h3>10.1 Prazo de referência</h3>
+            <p>Cada solicitação recebe um <strong>protocolo</strong>, no formato XXXX-XXXX, e um prazo de referência de <strong>15 dias</strong> a partir do recebimento (art. 19, II).</p>
+            <ul>
+                <li>A lista mostra quantos dias faltam.</li>
+                <li>Pedidos fora do prazo aparecem em vermelho.</li>
+                <li>Os que vencem em até 3 dias aparecem como alerta no painel.</li>
+            </ul>
+            <h3>10.2 Registrar um pedido recebido por outro canal</h3>
+            <p>Para pedidos que chegaram por e-mail, telefone ou presencialmente, use <strong>Registrar solicitação</strong>:</p>
+            <ul>
+                <li>informe o tipo de pedido, o canal, a data de recebimento (o prazo conta a partir dela) e os dados do titular;</li>
+                <li>é preciso ao menos um contato: e-mail ou telefone;</li>
+                <li>se o titular tiver e-mail, ele recebe o protocolo automaticamente.</li>
+            </ul>
+            <h3>10.3 Atender</h3>
+            <p>Na página da solicitação:</p>
+            <ul>
+                <li><strong>Atendimento:</strong> defina o responsável, marque se a identidade do titular foi confirmada (e como) e ligue o pedido à operação de tratamento relacionada.</li>
+                <li><strong>Registrar andamento:</strong> mude a situação (recebida, verificando identidade, em atendimento ou cancelada) e deixe observações. Marque <em>Mostrar ao titular</em> para que a observação apareça no acompanhamento on-line.</li>
+                <li><strong>Responder ao titular:</strong> escreva a resposta e escolha o resultado, <em>atendida</em> ou <em>indeferida</em>. Na recusa, informe os motivos (art. 18, § 4º). A resposta pode ser enviada por e-mail e sempre fica visível no acompanhamento on-line.</li>
+                <li><strong>Evidências:</strong> anexe o que foi enviado ao titular ou o que comprova o atendimento.</li>
+            </ul>
+            <?= $fig('titular-detalhe', 'Página da solicitação: pedido, resposta, atendimento e histórico') ?>
+            <h3>10.4 Proteção dos dados do titular</h3>
+            <ul>
+                <li>Nome, e-mail, telefone, documento, descrição e resposta ficam <strong>criptografados</strong> no banco de dados.</li>
+                <li>Cada vez que alguém abre uma solicitação, o acesso fica registrado na trilha de auditoria.</li>
+                <li>O aviso enviado ao encarregado sobre um novo pedido traz só o protocolo e o tipo, nunca os dados pessoais.</li>
+                <li>Antes de enviar dados pessoais na resposta, confirme a identidade de quem pediu.</li>
+            </ul>
+        </section>
+
+        <section id="canal">
+            <h2>11. Canal on-line do titular</h2>
+            <p>Cada empresa tem um endereço público, no mesmo domínio do ÍSIS, para os titulares fazerem pedidos sem precisar de conta: <span class="mono">https://isis.aicode.dev.br/titular/<em>nome-da-empresa</em></span>.</p>
+            <ul>
+                <li>O endereço exato aparece em <strong>Solicitações de titulares</strong> e em <strong>Configurações</strong>.</li>
+                <li>Divulgue-o no aviso de privacidade, no site e nos contratos.</li>
+                <li>O canal só funciona depois que a configuração inicial da empresa é concluída.</li>
+            </ul>
+            <div class="shot-pair">
+                <?= $fig('canal-titular', 'Formulário público para o titular fazer o pedido') ?>
+                <?= $fig('canal-acompanhar', 'Acompanhamento pelo protocolo e e-mail', 'shot-phone') ?>
+            </div>
+            <h3>11.1 Como funciona para o titular</h3>
+            <ol>
+                <li>Escolhe o tipo de pedido, descreve o que precisa e informa nome e e-mail.</li>
+                <li>Recebe na tela e por e-mail o número do protocolo e o prazo.</li>
+                <li>Em <strong>Acompanhar solicitação</strong>, com o protocolo e o e-mail, vê:
+                    <ul>
+                        <li>a situação do pedido;</li>
+                        <li>as observações marcadas como visíveis;</li>
+                        <li>a resposta, quando houver.</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>O encarregado recebe um e-mail a cada novo pedido. Para evitar abusos, o canal limita a quantidade de envios e de consultas por rede.</p>
+        </section>
+
+        <section id="incidentes">
+            <h2>12. Incidentes de segurança</h2>
+            <p>Registra e acompanha eventos que podem comprometer dados pessoais ou sistemas: acesso não autorizado, vazamento, perda, ransomware, phishing, erro humano, furto de equipamento e outros.</p>
+            <?= $fig('incidentes', 'Lista de incidentes com gravidade e prazo de comunicação à ANPD') ?>
+            <h3>12.1 Comunicar um incidente</h3>
+            <p>Qualquer colaborador pode comunicar, pelo botão <strong>Comunicar incidente</strong>, mesmo sem ter certeza de que é um incidente. Basta informar:</p>
+            <ul>
+                <li>um resumo e o tipo;</li>
+                <li>o que aconteceu;</li>
+                <li>quando foi percebido;</li>
+                <li>se há dados pessoais envolvidos.</li>
+            </ul>
+            <p>O encarregado recebe um e-mail na hora. Quem comunicou acompanha a situação em <strong>Meus comunicados</strong>, mas não vê os detalhes da investigação. Não apague e-mails, arquivos ou registros relacionados: eles são evidências.</p>
+            <?= $fig('incidente-comunicar', 'Comunicação de incidente por um colaborador') ?>
+            <h3>12.2 Classificar e investigar</h3>
+            <p>O encarregado e o administrador conduzem o incidente:</p>
+            <ul>
+                <li><strong>Classificação:</strong>
+                    <ul>
+                        <li>gravidade (baixa, média, alta ou crítica);</li>
+                        <li>se há dados pessoais e se há dados sensíveis;</li>
+                        <li>estimativa de titulares afetados;</li>
+                        <li>operação de tratamento afetada e responsável;</li>
+                        <li>a <strong>avaliação de risco aos titulares</strong>.</li>
+                    </ul>
+                </li>
+                <li><strong>Investigação e providências:</strong> medidas de contenção, causa identificada e lições aprendidas. Esses textos ficam criptografados.</li>
+                <li><strong>Situação e providências:</strong> comunicado, em análise, contido, resolvido ou encerrado, com registro de cada providência no histórico.</li>
+                <li><strong>Ação corretiva:</strong> cria no plano de ação uma tarefa ligada ao incidente.</li>
+            </ul>
+            <h3>12.3 Comunicação à ANPD e aos titulares</h3>
+            <p>Quando o incidente <strong>pode acarretar risco ou dano relevante aos titulares</strong> (art. 48):</p>
+            <ul>
+                <li>o ÍSIS calcula o prazo de referência de <strong>3 dias úteis</strong> a partir do conhecimento do incidente (Resolução CD/ANPD nº 15/2024);</li>
+                <li>o prazo aparece em destaque e entra como alerta no painel. Feriados não são considerados no cálculo; confira o calendário.</li>
+            </ul>
+            <p>Em <strong>Comunicações externas</strong>, registre a data e o protocolo da comunicação à ANPD e a data da comunicação aos titulares. Um incidente com risco relevante só pode ser encerrado depois de registrada a comunicação à ANPD.</p>
+            <?= $fig('incidente-detalhe', 'Incidente com risco relevante: prazo da ANPD, classificação e providências') ?>
+        </section>
+
         <section id="evidencias">
-            <h2>10. Evidências</h2>
-            <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos e operações do inventário, no quadro <strong>Evidências</strong> de cada página.</p>
+            <h2>13. Evidências</h2>
+            <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos, operações do inventário, solicitações de titulares e incidentes, no quadro <strong>Evidências</strong> de cada página.</p>
             <ul>
                 <li><strong>Formatos aceitos:</strong> PDF, PNG, JPG, TXT, CSV, DOCX, XLSX, PPTX, ODT e ODS, até 10 MB. O ÍSIS confere o conteúdo real do arquivo, não só a extensão.</li>
                 <li><strong>Integridade:</strong> cada arquivo guarda uma impressão digital (hash SHA-256), que permite comprovar que ele não foi alterado.</li>
-                <li><strong>Quem pode anexar:</strong> quem pode alterar o registro e, nas ações, o próprio responsável.</li>
+                <li><strong>Quem pode anexar:</strong> quem pode alterar o registro. Nas ações, também o responsável; nos incidentes, também quem comunicou.</li>
                 <li><strong>Registro:</strong> todo envio, download e exclusão fica na trilha de auditoria.</li>
             </ul>
         </section>
 
         <section id="usuarios">
-            <h2>11. Usuários e convites</h2>
-            <h3>11.1 Convidar</h3>
+            <h2>14. Usuários e convites</h2>
+            <h3>14.1 Convidar</h3>
             <ol>
                 <li>Em <strong>Usuários e perfis</strong>, preencha <strong>Convidar colaborador</strong>: nome, e-mail, perfil e, se quiser, o setor.</li>
                 <li>A pessoa recebe um link válido por 7 dias, cria a própria senha e entra direto na empresa.</li>
@@ -316,7 +433,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ol>
             <?= $fig('usuarios', 'Usuários, convites pendentes e formulário de convite') ?>
             <p>Nesta versão, cada e-mail pertence a uma única empresa. Um e-mail que já tem conta no ÍSIS não pode ser convidado.</p>
-            <h3>11.2 Alterar perfil, setor ou situação</h3>
+            <h3>14.2 Alterar perfil, setor ou situação</h3>
             <p>Clique em <strong>Editar</strong> ao lado do usuário. Regras:</p>
             <ul>
                 <li>ninguém altera o próprio perfil nem desativa a própria conta;</li>
@@ -327,7 +444,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="configuracoes">
-            <h2>12. Configurações da empresa</h2>
+            <h2>15. Configurações da empresa</h2>
             <p>Disponível para o administrador:</p>
             <ul>
                 <li><strong>Dados da empresa:</strong> razão social, nome fantasia e segmento. Para alterar o CNPJ, é preciso falar com o suporte.</li>
@@ -338,7 +455,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="auditoria">
-            <h2>13. Trilha de auditoria</h2>
+            <h2>16. Trilha de auditoria</h2>
             <p>Registra automaticamente os acessos e as ações feitas no ÍSIS. Cada registro guarda:</p>
             <ul>
                 <li>usuário, data e hora;</li>
@@ -356,7 +473,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="perfil">
-            <h2>14. Meu perfil</h2>
+            <h2>17. Meu perfil</h2>
             <p>Em <strong>Meu perfil</strong>, cada usuário:</p>
             <ul>
                 <li>atualiza o nome e o cargo;</li>
@@ -368,7 +485,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="duvidas">
-            <h2>15. Dúvidas frequentes</h2>
+            <h2>18. Dúvidas frequentes</h2>
             <dl class="faq">
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
@@ -380,6 +497,12 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <dd>Aguarde 15 minutos ou use "Esqueci minha senha".</dd>
                 <dt>O arquivo de evidência foi recusado.</dt>
                 <dd>Confira o formato e o tamanho: até 10 MB, nos tipos listados na seção <a href="#evidencias">Evidências</a>.</dd>
+                <dt>O titular diz que não encontra a solicitação no acompanhamento.</dt>
+                <dd>O protocolo e o e-mail precisam ser exatamente os usados no pedido; maiúsculas não importam. Confirme também se ele está usando o endereço da empresa certa.</dd>
+                <dt>O canal do titular mostra "não encontrado".</dt>
+                <dd>O canal só funciona para empresas ativas que concluíram a configuração inicial. Confira o endereço em Configurações.</dd>
+                <dt>Comuniquei um incidente e não vejo os detalhes da investigação.</dt>
+                <dd>É esperado: quem comunica acompanha a situação; os detalhes ficam com o encarregado e o administrador.</dd>
                 <dt>Posso usar o ÍSIS para várias empresas com o mesmo e-mail?</dt>
                 <dd>Ainda não. Nesta versão, cada e-mail pertence a uma empresa.</dd>
                 <dt>O ÍSIS garante que minha empresa está em conformidade?</dt>
@@ -388,11 +511,9 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="proximos">
-            <h2>16. Próximos módulos</h2>
+            <h2>19. Próximos módulos</h2>
             <p>Em desenvolvimento, nesta ordem:</p>
             <ul>
-                <li><strong>Solicitações de titulares:</strong> canal público para os pedidos previstos no art. 18, com protocolo, prazos e histórico.</li>
-                <li><strong>Incidentes de segurança:</strong> registro, classificação, investigação, evidências, providências e prazos de comunicação.</li>
                 <li><strong>Fornecedores:</strong> cadastro, avaliação, contratos e documentos de proteção de dados.</li>
                 <li><strong>Políticas e documentos:</strong> versões, aprovações, validade e ciência dos colaboradores.</li>
                 <li><strong>Treinamentos:</strong> módulos, avaliações, progresso e certificados.</li>
@@ -401,11 +522,12 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="historico">
-            <h2>17. Histórico de alterações</h2>
+            <h2>20. Histórico de alterações</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>0.3.0</td><td>29/10/2026</td><td>Fase 3, com dois módulos novos:<br>• <strong>Solicitações de titulares:</strong> protocolo, prazo de 15 dias, verificação de identidade, resposta por e-mail e dados criptografados.<br>• <strong>Incidentes de segurança:</strong> comunicação por qualquer colaborador, classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD e registro das comunicações.<br>Também entraram o canal on-line do titular com acompanhamento por protocolo, ações corretivas ligadas a incidentes e novos alertas e indicadores no painel. Corrigida a exclusão de setores e de operações que tinham registros vinculados.</td></tr>
                         <tr><td>0.2.4</td><td>29/10/2026</td><td>Barras de rolagem finas e discretas nas telas, tabelas e no menu lateral; no menu, a barra só aparece ao passar o mouse.</td></tr>
                         <tr><td>0.2.3</td><td>29/10/2026</td><td>As telas passam a ocupar toda a largura disponível, inclusive com o menu lateral recolhido. Os indicadores se distribuem para preencher a linha.</td></tr>
                         <tr><td>0.2.2</td><td>29/10/2026</td><td>Nome do sistema grafado com acento, ÍSIS, em todas as telas, e-mails e documentos. Imagens do manual atualizadas.</td></tr>

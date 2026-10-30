@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 
 define('APP_ROOT', dirname(__DIR__));
-define('APP_VERSION', '0.2.4');
+define('APP_VERSION', '0.3.0');
 
 if (is_file(APP_ROOT . '/vendor/autoload.php')) {
     require APP_ROOT . '/vendor/autoload.php';

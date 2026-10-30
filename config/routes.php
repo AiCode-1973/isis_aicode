@@ -11,6 +11,9 @@ use Isis\Controllers\RiskController;
 use Isis\Controllers\AuthController;
 use Isis\Controllers\DashboardController;
 use Isis\Controllers\HomeController;
+use Isis\Controllers\IncidentController;
+use Isis\Controllers\PublicRequestController;
+use Isis\Controllers\RequestController;
 use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
 use Isis\Controllers\OnboardingController;
@@ -32,6 +35,13 @@ return static function (Router $r): void {
     $r->get('/', [HomeController::class, 'index']);
     $r->get('/termos', [HomeController::class, 'terms']);
     $r->get('/manual', [HomeController::class, 'manual']);
+
+    // Canal público do titular (mesmo domínio; a empresa vem do endereço)
+    $r->get('/titular/{slug}', [PublicRequestController::class, 'form']);
+    $r->post('/titular/{slug}', [PublicRequestController::class, 'store']);
+    $r->get('/titular/{slug}/enviado', [PublicRequestController::class, 'sent']);
+    $r->get('/titular/{slug}/acompanhar', [PublicRequestController::class, 'track']);
+    $r->post('/titular/{slug}/acompanhar', [PublicRequestController::class, 'track']);
     $r->get('/instalar', [InstallController::class, 'show']);
     $r->post('/instalar', [InstallController::class, 'run']);
 
@@ -91,6 +101,25 @@ return static function (Router $r): void {
     $r->post('/planos/{id}', [ActionController::class, 'update'], $app(P::ACTIONS_EDIT));
     $r->post('/planos/{id}/andamento', [ActionController::class, 'progress'], $app(P::ACTIONS_VIEW));
     $r->post('/planos/{id}/excluir', [ActionController::class, 'delete'], $app(P::ACTIONS_EDIT));
+
+    // Solicitações de titulares
+    $r->get('/titulares', [RequestController::class, 'index'], $app(P::REQUESTS_VIEW));
+    $r->get('/titulares/nova', [RequestController::class, 'create'], $app(P::REQUESTS_MANAGE));
+    $r->post('/titulares', [RequestController::class, 'store'], $app(P::REQUESTS_MANAGE));
+    $r->get('/titulares/{id}', [RequestController::class, 'show'], $app(P::REQUESTS_VIEW));
+    $r->post('/titulares/{id}/atendimento', [RequestController::class, 'handling'], $app(P::REQUESTS_MANAGE));
+    $r->post('/titulares/{id}/andamento', [RequestController::class, 'progress'], $app(P::REQUESTS_MANAGE));
+    $r->post('/titulares/{id}/resposta', [RequestController::class, 'respond'], $app(P::REQUESTS_MANAGE));
+
+    // Incidentes de segurança (colaboradores comunicam; encarregado e administrador conduzem)
+    $r->get('/incidentes', [IncidentController::class, 'index'], $app(P::INCIDENTS_VIEW . '|' . P::INCIDENTS_REPORT));
+    $r->get('/incidentes/novo', [IncidentController::class, 'create'], $app(P::INCIDENTS_REPORT . '|' . P::INCIDENTS_MANAGE));
+    $r->post('/incidentes', [IncidentController::class, 'store'], $app(P::INCIDENTS_REPORT . '|' . P::INCIDENTS_MANAGE));
+    $r->get('/incidentes/{id}', [IncidentController::class, 'show'], $app(P::INCIDENTS_VIEW . '|' . P::INCIDENTS_REPORT));
+    $r->post('/incidentes/{id}/classificacao', [IncidentController::class, 'classify'], $app(P::INCIDENTS_MANAGE));
+    $r->post('/incidentes/{id}/tratamento', [IncidentController::class, 'treatment'], $app(P::INCIDENTS_MANAGE));
+    $r->post('/incidentes/{id}/andamento', [IncidentController::class, 'progress'], $app(P::INCIDENTS_MANAGE));
+    $r->post('/incidentes/{id}/comunicacao', [IncidentController::class, 'communication'], $app(P::INCIDENTS_MANAGE));
 
     // Evidências (permissão conferida sobre o registro de origem)
     $r->post('/evidencias', [EvidenceController::class, 'upload'], $app(P::DASHBOARD_VIEW));

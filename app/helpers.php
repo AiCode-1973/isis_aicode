@@ -202,7 +202,8 @@ function icon(string $name, string $class = 'icon'): string
         'trash' => '<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>',
         'refresh' => '<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
         'arrow-right' => '<path d="M5 12h14M13 5l7 7-7 7"/>',
-        'lock' => '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+        'search' => '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>',
+        'lock' =>'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     ];
     return '<svg class="' . e($class) . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
         . ($paths[$name] ?? '') . '</svg>';
@@ -253,6 +254,16 @@ function audit_label(string $action): string
         'evidence.uploaded' => 'Evidência anexada',
         'evidence.downloaded' => 'Evidência baixada',
         'evidence.deleted' => 'Evidência excluída',
+        'request.created' => 'Solicitação de titular registrada',
+        'request.viewed' => 'Dados de solicitação de titular consultados',
+        'request.updated' => 'Atendimento de solicitação atualizado',
+        'request.progress' => 'Andamento de solicitação registrado',
+        'request.responded' => 'Solicitação de titular respondida',
+        'incident.reported' => 'Incidente comunicado',
+        'incident.classified' => 'Incidente classificado',
+        'incident.treatment' => 'Investigação de incidente atualizada',
+        'incident.progress' => 'Andamento de incidente registrado',
+        'incident.communication' => 'Comunicação de incidente registrada',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

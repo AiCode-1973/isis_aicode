@@ -71,6 +71,11 @@
     });
   });
 
+  // Campos só de leitura que se selecionam inteiros ao clicar (ex.: link do canal do titular)
+  document.querySelectorAll('[data-select-on-focus]').forEach(function (input) {
+    input.addEventListener('focus', function () { input.select(); });
+  });
+
   // Imprimir (ou salvar em PDF) — usado no manual
   document.querySelectorAll('[data-print]').forEach(function (btn) {
     btn.addEventListener('click', function () { window.print(); });

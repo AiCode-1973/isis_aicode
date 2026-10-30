@@ -54,6 +54,11 @@
                 <?= field_error('privacy_email') ?>
             </div>
         </div>
+        <div class="field section-gap">
+            <label for="f-channel">Canal on-line do titular</label>
+            <input type="text" id="f-channel" class="mono" value="<?= e(absolute_url('/titular/' . $tenant['slug'])) ?>" readonly data-select-on-focus>
+            <p class="hint">Divulgue este endereço no aviso de privacidade. Os pedidos chegam em Solicitações de titulares.</p>
+        </div>
         <div class="actions section-gap">
             <button type="submit" class="btn btn-primary" data-loading="Salvando...">Salvar dados</button>
         </div>

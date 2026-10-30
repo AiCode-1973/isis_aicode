@@ -61,7 +61,7 @@ abstract class DatabaseTestCase extends TestCase
         $pdo = Database::pdo();
         $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
         foreach ([
-            'attachments', 'action_updates', 'actions', 'risks', 'activity_sharings', 'activity_departments', 'activity_systems',
+            'dsar_events', 'dsar_requests', 'incident_events', 'attachments', 'action_updates', 'actions', 'incidents', 'risks', 'activity_sharings', 'activity_departments', 'activity_systems',
             'activity_subject_categories', 'activity_data_categories', 'processing_activities', 'systems', 'subject_categories',
             'data_categories', 'audit_logs', 'audit_chain', 'rate_limit_hits', 'user_tokens', 'invitations', 'users',
             'departments', 'tenant_settings', 'tenants',

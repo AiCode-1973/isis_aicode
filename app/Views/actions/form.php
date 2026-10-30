@@ -41,6 +41,13 @@ $val = static fn (string $key): string => old($key, (string) ($x[$key] ?? ''));
             </select>
         </div>
         <div class="field">
+            <label for="f-incident">Incidente relacionado</label>
+            <select id="f-incident" name="incident_id"<?= error_attrs('incident_id') ?>>
+                <option value="">—</option>
+                <?php foreach ($incidents as $id => $name): ?><option value="<?= (int) $id ?>"<?= $val('incident_id') === (string) $id ? ' selected' : '' ?>><?= e($name) ?></option><?php endforeach; ?>
+            </select>
+        </div>
+        <div class="field">
             <label for="f-owner">Responsável</label>
             <select id="f-owner" name="owner_user_id"<?= error_attrs('owner_user_id') ?>>
                 <option value="">— definir depois —</option>

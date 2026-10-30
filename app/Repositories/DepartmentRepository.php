@@ -44,12 +44,16 @@ final class DepartmentRepository extends TenantScopedRepository
         $this->update($id, ['name' => $name]);
     }
 
-    /** Remove o setor desvinculando usuários e convites antes (FKs compostas são RESTRICT). */
+    /** Tabelas com coluna department_id (FKs compostas RESTRICT), desvinculadas antes de excluir o setor. */
+    private const array LINKED = ['users', 'invitations', 'processing_activities', 'risks', 'actions', 'incidents'];
+
+    /** Remove o setor; os registros ligados a ele ficam sem setor. */
     public function remove(int $id): void
     {
         Database::transaction(function () use ($id): void {
-            Database::execute('UPDATE users SET department_id = NULL WHERE tenant_id = ? AND department_id = ?', [$this->tenantId(), $id]);
-            Database::execute('UPDATE invitations SET department_id = NULL WHERE tenant_id = ? AND department_id = ?', [$this->tenantId(), $id]);
+            foreach (self::LINKED as $table) {
+                Database::execute("UPDATE `{$table}` SET department_id = NULL WHERE tenant_id = ? AND department_id = ?", [$this->tenantId(), $id]);
+            }
             $this->delete($id);
         });
     }

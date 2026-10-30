@@ -98,6 +98,8 @@ small, .small { font-size: .85rem; }
 .btn-ghost:hover { background: var(--surface-2); color: var(--ink); border-color: #b9c4d4; }
 .btn-danger { background: var(--surface); color: var(--danger); border-color: #efc3c8; }
 .btn-danger:hover { background: var(--danger-soft); color: var(--danger); }
+.btn-danger-solid { background: var(--danger); color: #fff; }
+.btn-danger-solid:hover { background: #941b26; color: #fff; }
 .btn-link { background: none; border: 0; color: var(--brand); padding: 0; min-height: 0; font-weight: 600; }
 .btn-sm { min-height: 32px; padding: .3rem .7rem; font-size: .84rem; }
 .btn-block { width: 100%; }
@@ -521,6 +523,22 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
   .manual-content h2 { break-after: avoid; }
   body { background: #fff; }
 }
+
+/* ---------- Titulares e incidentes ---------- */
+.public-form { max-width: 760px; }
+.public-form-head { margin-bottom: 1.25rem; }
+.public-form-head h1 { font-size: 1.8rem; }
+.text-center { text-align: center; }
+.center-icon { margin: 0 auto 1rem; }
+.protocol { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 2rem; font-weight: 800; letter-spacing: .12em; color: var(--brand); margin: .25rem 0 1rem; }
+.mono-title { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; letter-spacing: .06em; }
+.response-box { white-space: pre-line; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .9rem 1rem; margin-top: .5rem; }
+.public-channel { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; border-left: 4px solid var(--teal); }
+.public-channel h2 { display: flex; align-items: center; gap: .45rem; margin: 0; }
+.public-channel .actions { flex: 1 1 380px; }
+.text-warn { color: var(--warn); font-weight: 600; }
+.anpd-box { border-left: 4px solid var(--danger); }
+.anpd-box.ok { border-left-color: var(--ok); }
 
 /* ---------- Erros ---------- */
 .error-page { text-align: center; padding: 3rem 1rem; }

@@ -111,12 +111,14 @@ final class ActivityRepository extends TenantScopedRepository
         });
     }
 
-    /** Exclui a operação; riscos e ações vinculados permanecem, sem o vínculo. */
+    /** Exclui a operação; riscos, ações, solicitações e incidentes vinculados permanecem, sem o vínculo. */
     public function remove(int $id): void
     {
         Database::transaction(function () use ($id): void {
             Database::execute('UPDATE risks SET activity_id = NULL WHERE tenant_id = ? AND activity_id = ?', [$this->tenantId(), $id]);
             Database::execute('UPDATE actions SET activity_id = NULL WHERE tenant_id = ? AND activity_id = ?', [$this->tenantId(), $id]);
+            Database::execute('UPDATE dsar_requests SET activity_id = NULL WHERE tenant_id = ? AND activity_id = ?', [$this->tenantId(), $id]);
+            Database::execute('UPDATE incidents SET activity_id = NULL WHERE tenant_id = ? AND activity_id = ?', [$this->tenantId(), $id]);
             $this->delete($id);
         });
     }

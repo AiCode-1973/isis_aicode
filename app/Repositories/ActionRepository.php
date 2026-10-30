@@ -18,7 +18,7 @@ final class ActionRepository extends TenantScopedRepository
     private const string BASE_SELECT = "
         SELECT x.*, u.name AS owner_name, d.name AS department_name,
                r.seq AS risk_seq, r.title AS risk_title, r.likelihood AS risk_likelihood, r.impact AS risk_impact,
-               a.seq AS activity_seq, a.name AS activity_name,
+               a.seq AS activity_seq, a.name AS activity_name, inc.seq AS incident_seq, inc.title AS incident_title,
                (x.due_date IS NOT NULL AND x.due_date < CURDATE() AND x.status IN ('pendente','em_andamento')) AS overdue,
                (SELECT COUNT(*) FROM attachments t WHERE t.tenant_id = x.tenant_id AND t.entity_type = 'action' AND t.entity_id = x.id) AS evidence_count
           FROM actions x
@@ -26,6 +26,7 @@ final class ActionRepository extends TenantScopedRepository
      LEFT JOIN departments d ON d.tenant_id = x.tenant_id AND d.id = x.department_id
      LEFT JOIN risks r ON r.tenant_id = x.tenant_id AND r.id = x.risk_id
      LEFT JOIN processing_activities a ON a.tenant_id = x.tenant_id AND a.id = x.activity_id
+     LEFT JOIN incidents inc ON inc.tenant_id = x.tenant_id AND inc.id = x.incident_id
          WHERE x.tenant_id = ?";
 
     /** @param array{q?: ?string, status?: ?string, owner_id?: ?int, risk_id?: ?int, overdue?: bool, open?: bool, only_owner?: ?int} $f */

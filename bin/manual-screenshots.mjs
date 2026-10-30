@@ -199,6 +199,14 @@ try {
   await go('/planos'); await shot('planos', 900);
   const action = await hrefOf('Revisar perfis');
   if (action) { await go(action); await shot('acao-detalhe', 1100); }
+  await go('/titulares'); await shot('titulares', 1000);
+  const request = await evaluate(`(() => { const tr = [...document.querySelectorAll('tbody tr')].find((r) => r.textContent.includes('João Pereira'));
+    const a = tr && tr.querySelector('a'); return a ? { href: a.getAttribute('href'), protocol: a.textContent.trim() } : null; })()`);
+  if (request) { await go(request.href); await shot('titular-detalhe', 1150); }
+  await go('/incidentes'); await shot('incidentes', 820);
+  const incident = await hrefOf('Planilha de pacientes');
+  if (incident) { await go(incident); await shot('incidente-detalhe', 1150); }
+  await go('/titular/clinica-vida-plena'); await shot('canal-titular', 1050);
   await go('/usuarios'); await shot('usuarios', 900);
   await go('/configuracoes'); await shot('configuracoes', 820);
   await go('/auditoria'); await shot('auditoria', 900);
@@ -210,6 +218,7 @@ try {
   // Colaborador: só as próprias tarefas
   await login('carlos.souza@vidaplena.example');
   await go('/planos'); await shot('minhas-tarefas', 768);
+  await go('/incidentes/novo'); await shot('incidente-comunicar', 860);
 
   // Celular
   await viewport(390, 844, true);
@@ -218,6 +227,12 @@ try {
   await evaluate("document.querySelector('[data-toggle-sidebar]').click()");
   await sleep(400);
   await shot('celular-menu', 844);
+  if (request) {
+    await go('/titular/clinica-vida-plena/acompanhar');
+    await submit(`(() => { const f = document.querySelector('form[action$="/acompanhar"]'); f.protocol.value = ${JSON.stringify(request.protocol)};
+      f.email.value = 'joao.pereira@exemplo.example'; f.requestSubmit(); })()`);
+    await shot('canal-acompanhar', 1400);
+  }
 
   console.log('Pronto.');
 } catch (error) {

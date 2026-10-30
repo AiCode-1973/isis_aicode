@@ -6,7 +6,7 @@ use Isis\Auth\Permission as P;
 $user = Auth::user();
 $tenant = Auth::tenant();
 
-// Menu lateral: seção => itens [permissão (null = todos), caminho, ícone, rótulo]
+// Menu lateral: seção => itens [permissão (null = todos; lista = qualquer uma), caminho, ícone, rótulo]
 $menu = [
     'Visão geral' => [
         [P::DASHBOARD_VIEW, '/painel', 'dashboard', 'Painel de conformidade'],
@@ -15,6 +15,8 @@ $menu = [
         [P::INVENTORY_VIEW, '/inventario', 'database', 'Inventário de dados'],
         [P::RISKS_VIEW, '/riscos', 'target', 'Riscos'],
         [P::ACTIONS_VIEW, '/planos', 'check', Isis\Services\AccessScope::onlyOwnActions() ? 'Minhas tarefas' : 'Planos de ação'],
+        [P::REQUESTS_VIEW, '/titulares', 'inbox', 'Solicitações de titulares'],
+        [[P::INCIDENTS_VIEW, P::INCIDENTS_REPORT], '/incidentes', 'siren', 'Incidentes de segurança'],
     ],
     'Governança' => [
         [P::USERS_VIEW, '/usuarios', 'users', 'Usuários e perfis'],
@@ -50,7 +52,8 @@ $menu = [
 
     <nav>
         <?php foreach ($menu as $section => $items):
-            $visible = array_filter($items, static fn (array $i): bool => $i[0] === null || can($i[0]));
+            $visible = array_filter($items, static fn (array $i): bool => $i[0] === null
+                || array_filter((array) $i[0], static fn (string $p): bool => can($p)) !== []);
             if (!$visible) {
                 continue;
             }

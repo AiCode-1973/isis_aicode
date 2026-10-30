@@ -16,6 +16,7 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
     <div class="actions">
         <?php if (can(P::INVENTORY_EDIT)): ?><a class="btn btn-ghost" href="/inventario/nova"><?= icon('plus') ?> Operação</a><?php endif; ?>
         <?php if (can(P::RISKS_EDIT)): ?><a class="btn btn-ghost" href="/riscos/novo"><?= icon('plus') ?> Risco</a><?php endif; ?>
+        <?php if (can(P::INCIDENTS_REPORT)): ?><a class="btn btn-ghost" href="/incidentes/novo"><?= icon('siren') ?> Comunicar incidente</a><?php endif; ?>
         <?php if (can(P::USERS_MANAGE)): ?><a class="btn btn-primary" href="/usuarios#convidar"><?= icon('users') ?> Convidar</a><?php endif; ?>
     </div>
 </div>
@@ -45,6 +46,12 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
         $execution = (int) round((int) $actionStats['done'] / $base * 100);
     ?>
     <a class="card kpi" href="/planos"><span class="kpi-icon teal"><?= icon('check', 'icon-lg') ?></span><div><div class="kpi-value"><?= $execution ?>%</div><div class="kpi-label">Execução dos planos</div></div></a>
+    <?php endif; ?>
+    <?php if ($requestStats !== null): ?>
+    <a class="card kpi" href="/titulares?abertas=1"><span class="kpi-icon"><?= icon('inbox', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $requestStats['open'] ?></div><div class="kpi-label">Solicitações de titulares em aberto · <?= (int) $requestStats['overdue'] ?> fora do prazo</div></div></a>
+    <?php endif; ?>
+    <?php if ($incidentStats !== null): ?>
+    <a class="card kpi" href="/incidentes?abertos=1"><span class="kpi-icon warn"><?= icon('siren', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $incidentStats['open'] ?></div><div class="kpi-label">Incidentes em aberto · <?= (int) $incidentStats['severe'] ?> graves</div></div></a>
     <?php endif; ?>
     <?php if ($inventory === null && $risks === null): ?>
     <div class="card kpi"><span class="kpi-icon"><?= icon('users', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['users'] ?></div><div class="kpi-label">Usuários ativos</div></div></div>

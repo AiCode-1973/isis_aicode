@@ -160,6 +160,21 @@ final class ComplianceModulesTest extends DatabaseTestCase
         self::assertSame(0, (int) Database::value('SELECT COUNT(*) FROM activity_sharings WHERE activity_id = ?', [$activityId]));
     }
 
+    public function testExcluirSetorEmUsoDesvinculaRegistros(): void
+    {
+        [$clinic] = $this->seedTwoCompanies();
+        Auth::actAs($clinic['users']['admin']);
+        $dept = (int) Database::value("SELECT id FROM departments WHERE tenant_id = ? AND name = 'Recepção e Atendimento'", [$clinic['tenant']['id']]);
+        self::assertGreaterThan(0, (int) Database::value('SELECT COUNT(*) FROM processing_activities WHERE department_id = ?', [$dept]));
+
+        (new \Isis\Repositories\DepartmentRepository())->remove($dept);
+
+        self::assertNull(Database::value('SELECT id FROM departments WHERE id = ?', [$dept]));
+        foreach (['users', 'processing_activities', 'risks', 'actions'] as $table) {
+            self::assertSame(0, (int) Database::value("SELECT COUNT(*) FROM {$table} WHERE department_id = ?", [$dept]), $table);
+        }
+    }
+
     private function noRelations(): array
     {
         return ['data' => [], 'subjects' => [], 'systems' => [], 'departments' => [], 'sharings' => []];

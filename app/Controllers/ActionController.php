@@ -69,9 +69,12 @@ final class ActionController extends Controller
         $me = Auth::user();
         $riskId = ctype_digit((string) $request->query('risco')) ? (int) $request->query('risco') : null;
         $activityId = ctype_digit((string) $request->query('operacao')) ? (int) $request->query('operacao') : null;
+        $incidentId = ctype_digit((string) $request->query('incidente')) ? (int) $request->query('incidente') : null;
         $risk = $riskId !== null ? (new RiskRepository())->find($riskId) : null;
+        $incident = $incidentId !== null ? (new \Isis\Repositories\IncidentRepository())->find($incidentId) : null;
         return $this->form([
-            'id' => null, 'risk_id' => $risk['id'] ?? null, 'activity_id' => $risk['activity_id'] ?? $activityId,
+            'id' => null, 'risk_id' => $risk['id'] ?? null, 'incident_id' => $incident['id'] ?? null,
+            'activity_id' => $risk['activity_id'] ?? $incident['activity_id'] ?? $activityId,
             'department_id' => $risk['department_id'] ?? $me['department_id'], 'owner_user_id' => null,
             'priority' => ($risk !== null && $risk['likelihood'] * $risk['impact'] >= 10) ? 'alta' : 'media', 'status' => 'pendente',
         ], 'Nova ação');
@@ -165,6 +168,7 @@ final class ActionController extends Controller
             'x' => $action,
             'risks' => (new RiskRepository())->options() + ($action['risk_id'] ? [(int) $action['risk_id'] => code('RSK', (int) ($action['risk_seq'] ?? 0)) . ' · ' . ($action['risk_title'] ?? '')] : []),
             'activities' => (new ActivityRepository())->options(),
+            'incidents' => (new \Isis\Repositories\IncidentRepository())->options(),
             'departments' => (new DepartmentRepository())->options(),
             'users' => (new UserRepository())->options(),
         ]);
@@ -186,6 +190,7 @@ final class ActionController extends Controller
             'description' => 'nullable|max:5000',
             'risk_id' => 'nullable|int',
             'activity_id' => 'nullable|int',
+            'incident_id' => 'nullable|int',
             'department_id' => 'nullable|int',
             'owner_user_id' => 'nullable|int',
             'priority' => 'required|' . Labels::rule(Labels::PRIORITY),
@@ -200,6 +205,7 @@ final class ActionController extends Controller
         $allowed = [
             'risk_id' => array_flip(array_map('intval', $riskIds)),
             'activity_id' => (new ActivityRepository())->options(),
+            'incident_id' => (new \Isis\Repositories\IncidentRepository())->options(),
             'department_id' => (new DepartmentRepository())->options(),
             'owner_user_id' => array_column((new UserRepository())->options(), 'name', 'id'),
         ];

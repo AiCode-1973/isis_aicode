@@ -22,7 +22,9 @@ use Isis\Services\EvidenceService;
  */
 final class EvidenceController extends Controller
 {
-    private const array PATHS = ['action' => '/planos/', 'risk' => '/riscos/', 'activity' => '/inventario/'];
+    private const array PATHS = [
+        'action' => '/planos/', 'risk' => '/riscos/', 'activity' => '/inventario/', 'request' => '/titulares/', 'incident' => '/incidentes/',
+    ];
 
     public function upload(Request $request): Response
     {
@@ -73,6 +75,17 @@ final class EvidenceController extends Controller
             'activity' => (function () use ($id, $write): bool {
                 $activity = (new ActivityRepository())->findOrFail($id);
                 return $write ? AccessScope::canEditActivity($activity) : Auth::can(P::INVENTORY_VIEW);
+            })(),
+            'request' => (function () use ($id, $write): bool {
+                (new \Isis\Repositories\RequestRepository())->findOrFail($id);
+                return Auth::can($write ? P::REQUESTS_MANAGE : P::REQUESTS_VIEW);
+            })(),
+            'incident' => (function () use ($id, $write): bool {
+                $incident = (new \Isis\Repositories\IncidentRepository())->findOrFail($id);
+                $isReporter = (int) $incident['reported_by'] === Auth::id();
+                return $write
+                    ? Auth::can(P::INCIDENTS_MANAGE) || $isReporter
+                    : Auth::can(P::INCIDENTS_VIEW) || $isReporter;
             })(),
             default => throw new HttpException(404),
         };

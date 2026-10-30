@@ -45,10 +45,13 @@ final class Middleware
         return null;
     }
 
+    /** perm:a|b libera quem tiver qualquer uma das permissões. */
     private static function permission(string $permission, Request $request): ?Response
     {
-        if (Auth::can($permission)) {
-            return null;
+        foreach (explode('|', $permission) as $option) {
+            if (Auth::can($option)) {
+                return null;
+            }
         }
         AuditLogger::log('access.denied', 'route', null, null, ['rota' => $request->method . ' ' . $request->path, 'permissao' => $permission]);
         throw new HttpException(403);
