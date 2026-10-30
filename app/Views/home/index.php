@@ -47,7 +47,7 @@
         <div class="section-head">
             <p class="eyebrow">Para qualquer segmento</p>
             <h2>Sugestões adaptadas ao seu setor, sem limitar a sua realidade</h2>
-            <p class="muted">Ao escolher o segmento, o ISIS sugere setores, exemplos e orientações. Tudo pode ser ajustado.</p>
+            <p class="muted">Ao escolher o segmento, o ÍSIS sugere setores, exemplos e orientações. Tudo pode ser ajustado.</p>
         </div>
         <div class="segments">
             <span>Saúde</span><span>Comércio e Varejo</span><span>Educação</span><span>Tecnologia</span><span>Indústria</span><span>Serviços</span><span>Outros segmentos</span>

@@ -1,4 +1,4 @@
--- ISIS - Fase 1: núcleo multiempresa, acesso e auditoria
+-- ÍSIS - Fase 1: núcleo multiempresa, acesso e auditoria
 -- Compatível com MySQL 8.0+ e MariaDB 10.4+. Toda tabela institucional tem tenant_id
 -- e chaves estrangeiras compostas (tenant_id, id), para o banco impedir vínculos entre empresas.
 

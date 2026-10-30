@@ -6,7 +6,7 @@ use Isis\Core\Env;
 
 return [
     'app' => [
-        'name' => Env::get('APP_NAME', 'ISIS'),
+        'name' => Env::get('APP_NAME', 'ÍSIS'),
         'tagline' => 'Gestão da Privacidade e Proteção de Dados',
         'pillars' => 'LGPD • Governança • Segurança da Informação • Conformidade',
         'env' => Env::get('APP_ENV', 'production'),
@@ -45,6 +45,6 @@ return [
         'password' => Env::get('MAIL_PASSWORD'),
         'encryption' => Env::get('MAIL_ENCRYPTION', 'tls'),
         'from_address' => Env::get('MAIL_FROM_ADDRESS', 'nao-responda@isis.aicode.dev.br'),
-        'from_name' => Env::get('MAIL_FROM_NAME', 'ISIS'),
+        'from_name' => Env::get('MAIL_FROM_NAME', 'ÍSIS'),
     ],
 ];

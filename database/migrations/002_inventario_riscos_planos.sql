@@ -1,4 +1,4 @@
--- ISIS - Fase 2: inventário de operações de tratamento, riscos, planos de ação e evidências.
+-- ÍSIS - Fase 2: inventário de operações de tratamento, riscos, planos de ação e evidências.
 
 -- Hipóteses legais da LGPD (catálogo global). is_sensitive = 1 para as do art. 11 (dados sensíveis).
 -- ("SENSITIVE" é palavra reservada no MySQL/MariaDB, por isso o prefixo is_.)

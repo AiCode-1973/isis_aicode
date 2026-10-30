@@ -1,17 +1,11 @@
-
-
-
-
-
-
-# ISIS · Gestão da Privacidade e Proteção de Dados
+# ÍSIS · Gestão da Privacidade e Proteção de Dados
 
 **LGPD • Governança • Segurança da Informação • Conformidade**
 
 SaaS multiempresa para implantar e gerir a LGPD em organizações de qualquer segmento.
 Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam o mesmo domínio, sem subdomínios.
 
-> O ISIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
+> O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
 ## Situação: fase 1 de 5 (núcleo)
 

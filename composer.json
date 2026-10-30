@@ -1,6 +1,6 @@
 {
     "name": "aicode/isis",
-    "description": "ISIS - Gestão da Privacidade e Proteção de Dados (LGPD, governança, segurança da informação e conformidade)",
+    "description": "ÍSIS - Gestão da Privacidade e Proteção de Dados (LGPD, governança, segurança da informação e conformidade)",
     "type": "project",
     "license": "proprietary",
     "require": {

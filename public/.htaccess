@@ -1,4 +1,4 @@
-# ISIS - Apache (DocumentRoot deve apontar para esta pasta public/)
+# ÍSIS - Apache (DocumentRoot deve apontar para esta pasta public/)
 Options -Indexes -MultiViews
 DirectoryIndex index.php
 

@@ -58,7 +58,7 @@
     <div class="field">
         <label class="check">
             <input type="checkbox" name="accept_terms" value="1"<?= old('accept_terms') === '1' ? ' checked' : '' ?><?= error_attrs('accept_terms') ?>>
-            <span>Li os <a href="/termos" target="_blank" rel="noopener">termos de uso e o aviso de privacidade</a> e entendo que o ISIS apoia a organização da conformidade, sem substituir análise jurídica nem garantir conformidade legal.</span>
+            <span>Li os <a href="/termos" target="_blank" rel="noopener">termos de uso e o aviso de privacidade</a> e entendo que o ÍSIS apoia a organização da conformidade, sem substituir análise jurídica nem garantir conformidade legal.</span>
         </label>
         <?= field_error('accept_terms') ?>
     </div>
@@ -68,5 +68,5 @@
 
 <div class="auth-links">
     <span>Já tem conta? <a href="/entrar">Entrar</a></span>
-    <span>Sua empresa já usa o ISIS? Peça um convite ao administrador.</span>
+    <span>Sua empresa já usa o ÍSIS? Peça um convite ao administrador.</span>
 </div>

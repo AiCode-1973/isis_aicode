@@ -4,12 +4,12 @@
         <h1>Termos de uso e aviso de privacidade</h1>
         <p class="muted">Versão inicial do MVP. Este texto é um modelo e deve ser revisado pela assessoria jurídica da AiCode antes da operação comercial.</p>
 
-        <h2>1. O que é o ISIS</h2>
-        <p>O ISIS é uma ferramenta de apoio à organização da gestão de privacidade e proteção de dados. Ele <strong>não substitui análise jurídica especializada</strong> e <strong>não garante conformidade legal</strong>. As decisões sobre bases legais, prazos, comunicações e medidas de segurança são de responsabilidade de cada empresa usuária.</p>
+        <h2>1. O que é o ÍSIS</h2>
+        <p>O ÍSIS é uma ferramenta de apoio à organização da gestão de privacidade e proteção de dados. Ele <strong>não substitui análise jurídica especializada</strong> e <strong>não garante conformidade legal</strong>. As decisões sobre bases legais, prazos, comunicações e medidas de segurança são de responsabilidade de cada empresa usuária.</p>
 
         <h2>2. Papéis</h2>
         <ul>
-            <li>Cada empresa cadastrada é controladora dos dados pessoais que registra no ISIS.</li>
+            <li>Cada empresa cadastrada é controladora dos dados pessoais que registra no ÍSIS.</li>
             <li>A AiCode atua como operadora desses dados, tratando-os somente para prestar o serviço.</li>
             <li>Para os dados das contas de acesso (nome, e-mail, registros de acesso), a AiCode é controladora, com base na execução do contrato e no cumprimento de obrigação legal de guarda de registros.</li>
         </ul>
@@ -22,7 +22,7 @@
         </ul>
 
         <h2>4. Segurança</h2>
-        <p>O ISIS aplica isolamento lógico entre empresas, controle de acesso por perfil, criptografia de dados sensíveis, senhas protegidas por hash forte, proteção contra ataques comuns, cópias de segurança e trilha de auditoria com verificação de integridade.</p>
+        <p>O ÍSIS aplica isolamento lógico entre empresas, controle de acesso por perfil, criptografia de dados sensíveis, senhas protegidas por hash forte, proteção contra ataques comuns, cópias de segurança e trilha de auditoria com verificação de integridade.</p>
 
         <h2>5. Direitos dos titulares</h2>
         <p>Usuários podem solicitar acesso, correção ou eliminação dos seus dados de conta ao administrador da sua empresa ou pelo e-mail de privacidade da AiCode. Pedidos sobre dados registrados por uma empresa devem ser dirigidos a ela, como controladora.</p>

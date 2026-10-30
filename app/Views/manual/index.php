@@ -23,6 +23,14 @@ $sections = [
     'proximos' => 'Próximos módulos',
     'historico' => 'Histórico de alterações',
 ];
+
+// Figura com imagem de tela (geradas por: node bin/manual-screenshots.mjs). Clique abre a imagem inteira.
+$fig = static function (string $file, string $caption, string $class = ''): string {
+    $src = asset('img/manual/' . $file . '.webp');
+    return '<figure class="shot' . ($class !== '' ? ' ' . e($class) : '') . '"><a href="' . e($src) . '" target="_blank" rel="noopener">'
+        . '<img src="' . e($src) . '" alt="' . e('Tela do ÍSIS: ' . $caption) . '" loading="lazy" decoding="async"></a>'
+        . '<figcaption>' . e($caption) . '</figcaption></figure>';
+};
 ?>
 <div class="manual">
     <aside class="manual-toc" aria-label="Sumário do manual">
@@ -49,6 +57,7 @@ $sections = [
             <h2>1. Apresentação</h2>
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
+            <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
             <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, evidências e trilha de auditoria.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
@@ -56,6 +65,10 @@ $sections = [
                 <li><strong>No computador:</strong> o menu recolhe para uma faixa só com ícones, deixando mais espaço para o conteúdo. Passe o mouse sobre um ícone para ver o nome. O ÍSIS lembra a sua escolha nas próximas visitas, naquele navegador.</li>
                 <li><strong>No celular e em telas estreitas:</strong> o menu abre por cima do conteúdo. Para fechar, toque fora dele ou pressione <span class="kbd">Esc</span>.</li>
             </ul>
+            <div class="shot-pair">
+                <?= $fig('menu-recolhido', 'Computador: menu recolhido, só com ícones') ?>
+                <?= $fig('celular-menu', 'Celular: menu aberto sobre o conteúdo', 'shot-phone') ?>
+            </div>
         </section>
 
         <section id="primeiros-passos">
@@ -67,6 +80,7 @@ $sections = [
                 <li>Informe seu nome, e-mail corporativo e uma senha forte. Quem cria a conta passa a ser o <strong>administrador</strong> da empresa.</li>
                 <li>Confirme a leitura dos termos e clique em <strong>Criar conta da empresa</strong>.</li>
             </ol>
+            <?= $fig('cadastro', 'Cadastro da empresa e do administrador') ?>
             <p>Cada CNPJ só pode ser cadastrado uma vez. Se a sua empresa já usa o ÍSIS, peça um convite ao administrador em vez de criar outra conta.</p>
             <h3>2.2 Confirmar o e-mail</h3>
             <p>Você receberá um e-mail com o link de confirmação, válido por 48 horas e de uso único. Só é possível entrar depois de confirmar. Se não chegar, verifique o spam ou peça um novo link na própria tela ou tentando entrar.</p>
@@ -77,6 +91,7 @@ $sections = [
                 <li><strong>Setores:</strong> marque os setores sugeridos que existem na empresa e acrescente outros, um por linha.</li>
                 <li><strong>Encarregado e canal de privacidade:</strong> nome e e-mail do encarregado (DPO) e o e-mail público para os titulares. O encarregado pode ser você, outra pessoa da equipe ou um serviço externo.</li>
             </ol>
+            <?= $fig('configuracao-inicial', 'Assistente de configuração inicial (exemplo de uma escola)') ?>
             <p>Ao concluir, o ÍSIS também cria as <strong>categorias de dados e de titulares sugeridas</strong> para o segmento. Tudo pode ser alterado depois em Configurações e em Catálogos. Enquanto a configuração não termina, o administrador volta para o assistente ao entrar.</p>
             <h3>2.4 Convidar a equipe</h3>
             <p>Em <strong>Usuários e perfis</strong>, convide o encarregado, os gestores, os colaboradores e, se houver, o auditor. Veja a seção <a href="#usuarios">Usuários e convites</a>.</p>
@@ -94,6 +109,7 @@ $sections = [
             <h2>3. Acesso e segurança da conta</h2>
             <h3>3.1 Entrar e sair</h3>
             <p>Entre com e-mail e senha em <strong>Entrar</strong>. Para sair, use o menu com seu nome, no canto superior direito, e clique em <strong>Sair</strong>.</p>
+            <?= $fig('login', 'Tela de entrada') ?>
             <h3>3.2 Regras de segurança</h3>
             <ul>
                 <li><strong>Senha:</strong> de 10 a 128 caracteres, com letras maiúsculas, minúsculas e números.</li>
@@ -133,6 +149,7 @@ $sections = [
         <section id="painel">
             <h2>5. Painel de conformidade</h2>
             <p>É a tela inicial depois de entrar. Reúne, num só lugar, o que precisa de atenção:</p>
+            <?= $fig('painel', 'Painel de conformidade da administradora (dados fictícios)') ?>
             <ul>
                 <li><strong>Pendências:</strong> ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
                 <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas) e percentual de execução dos planos.</li>
@@ -144,6 +161,7 @@ $sections = [
                 <li><strong>Atividade recente</strong> (perfis com acesso à auditoria), dados do encarregado e orientações do segmento.</li>
             </ul>
             <p>Para o colaborador, o painel mostra apenas as tarefas atribuídas a ele.</p>
+            <?= $fig('celular-painel', 'O painel no celular', 'shot-phone') ?>
         </section>
 
         <section id="inventario">
@@ -151,6 +169,7 @@ $sections = [
             <p>O inventário registra as <strong>operações de tratamento</strong>: cada atividade da empresa que usa dados pessoais, como cadastro de clientes, folha de pagamento, prontuário ou newsletter. Ele serve de base para o registro das operações exigido pelo art. 37 da LGPD.</p>
             <h3>6.1 Consultar</h3>
             <p>Em <strong>Inventário de dados</strong>, a lista mostra código (OP-001, OP-002…), nome, setor, hipótese legal, responsável, situação e quantidade de riscos. É possível buscar por nome ou finalidade e filtrar por situação, setor ou apenas operações com dados sensíveis.</p>
+            <?= $fig('inventario', 'Lista de operações de tratamento') ?>
             <h3>6.2 Registrar uma operação</h3>
             <p>Clique em <strong>Nova operação</strong>. Só o nome e a finalidade são obrigatórios: salve como <em>Rascunho</em> e complete depois. O formulário tem seis partes:</p>
             <ol>
@@ -174,6 +193,7 @@ $sections = [
                 <li><strong>Compartilhamentos:</strong> destinatário, tipo (operador, outro controlador, órgão público, empresa do grupo), finalidade e se fica no Brasil ou no exterior. Deixe em branco as linhas sem uso. Marque a transferência internacional e descreva o país e o mecanismo (art. 33).</li>
                 <li><strong>Retenção, descarte e segurança:</strong> por quanto tempo os dados são guardados, como são eliminados e quais medidas de segurança protegem a operação.</li>
             </ol>
+            <?= $fig('inventario-form', 'Formulário de nova operação (início)') ?>
             <h3>6.3 Pontos de atenção</h3>
             <p>Na página de cada operação, o quadro <strong>Pontos de atenção</strong> lista o que falta ou merece revisão:</p>
             <ul>
@@ -187,6 +207,7 @@ $sections = [
                 <li>titulares vulneráveis sem as salvaguardas registradas.</li>
             </ul>
             <p>São orientações de preenchimento, não um parecer jurídico.</p>
+            <?= $fig('inventario-detalhe', 'Detalhe de uma operação, com pontos de atenção e responsabilidade') ?>
             <h3>6.4 Riscos e ações da operação</h3>
             <p>A página da operação mostra os riscos e as ações vinculados. O botão <strong>Registrar risco</strong> já abre o formulário ligado a ela.</p>
             <h3>6.5 Exportar o registro das operações</h3>
@@ -208,6 +229,7 @@ $sections = [
                 <li><strong>Categorias de titulares:</strong> marque como <em>vulnerável</em> grupos como crianças, adolescentes e idosos.</li>
                 <li><strong>Sistemas e locais de armazenamento:</strong> nuvem/SaaS, servidor próprio, sistema de terceiro ou papel.</li>
             </ul>
+            <?= $fig('catalogos', 'Catálogos do inventário') ?>
             <p>O botão <strong>Importar sugestões do segmento</strong> acrescenta as categorias sugeridas para o segmento da empresa, sem duplicar as que já existem. Excluir um item o remove das operações em que ele aparece. O sistema avisa quantas operações serão afetadas.</p>
         </section>
 
@@ -246,10 +268,13 @@ $sections = [
                 <li>Escolha o tratamento: <strong>mitigar</strong>, <strong>aceitar</strong>, <strong>transferir</strong> ou <strong>evitar</strong>. Para aceitar um risco, é obrigatório escrever a justificativa.</li>
                 <li>Defina o responsável, o setor, a situação e a data da próxima revisão.</li>
             </ol>
+            <?= $fig('risco-form', 'Formulário de novo risco, com a escala de referência') ?>
             <h3>8.3 Matriz de riscos</h3>
             <p>A matriz mostra quantos riscos abertos estão em cada combinação de probabilidade e impacto. Clique numa célula para ver só esses riscos. Riscos abertos são os que estão como <em>Identificado</em> ou <em>Em tratamento</em>.</p>
+            <?= $fig('riscos', 'Matriz de riscos e quantidade por nível') ?>
             <h3>8.4 Plano de ação do risco</h3>
             <p>Na página do risco, <strong>Nova ação</strong> cria uma medida já vinculada a ele. A prioridade vem sugerida como alta para riscos altos e críticos. O quadro mostra quantas ações do risco já foram concluídas.</p>
+            <?= $fig('risco-detalhe', 'Detalhe de um risco com seu plano de ação') ?>
         </section>
 
         <section id="planos">
@@ -261,10 +286,13 @@ $sections = [
                 <li>Descreva o que será feito e qual critério comprova a conclusão.</li>
                 <li>A lista pode ser filtrada por situação, responsável, "só vencidas" e "só as minhas". As vencidas aparecem destacadas em vermelho.</li>
             </ul>
+            <?= $fig('planos', 'Lista de ações dos planos') ?>
             <h3>9.2 Registrar andamento</h3>
             <p>Na página da ação, use <strong>Registrar andamento</strong> para mudar a situação ou deixar uma observação. Tudo vai para o <strong>Histórico</strong>, com data e autor. A data de conclusão é preenchida automaticamente quando a ação passa a <em>Concluída</em>.</p>
+            <?= $fig('acao-detalhe', 'Detalhe da ação: andamento, evidências e histórico') ?>
             <h3>9.3 Minhas tarefas (colaborador)</h3>
             <p>O colaborador vê, em <strong>Minhas tarefas</strong>, apenas as ações atribuídas a ele. Pode registrar o andamento e anexar evidências, mas não edita os demais campos da ação.</p>
+            <?= $fig('minhas-tarefas', 'Minhas tarefas, na visão do colaborador') ?>
         </section>
 
         <section id="evidencias">
@@ -286,6 +314,7 @@ $sections = [
                 <li>A pessoa recebe um link válido por 7 dias, cria a própria senha e entra direto na empresa.</li>
                 <li>Convites pendentes podem ser <strong>reenviados</strong> (com novo prazo) ou <strong>cancelados</strong>.</li>
             </ol>
+            <?= $fig('usuarios', 'Usuários, convites pendentes e formulário de convite') ?>
             <p>Nesta versão, cada e-mail pertence a uma única empresa. Um e-mail que já tem conta no ÍSIS não pode ser convidado.</p>
             <h3>11.2 Alterar perfil, setor ou situação</h3>
             <p>Clique em <strong>Editar</strong> ao lado do usuário. Regras:</p>
@@ -305,6 +334,7 @@ $sections = [
                 <li><strong>Encarregado e canal de privacidade:</strong> nome e e-mail do encarregado e o e-mail público para os titulares.</li>
                 <li><strong>Setores:</strong> criar, renomear e excluir. Excluir um setor deixa sem setor os usuários que estavam nele.</li>
             </ul>
+            <?= $fig('configuracoes', 'Configurações da empresa e setores') ?>
         </section>
 
         <section id="auditoria">
@@ -322,6 +352,7 @@ $sections = [
                 <li><strong>Exportar CSV:</strong> gera o arquivo com os filtros aplicados.</li>
                 <li><strong>Verificar integridade:</strong> cada registro carrega o código (hash) do anterior, formando uma cadeia. A verificação confirma que nenhum registro foi alterado ou apagado diretamente no banco de dados. Se houver violação, o sistema indica a partir de qual registro.</li>
             </ul>
+            <?= $fig('auditoria', 'Trilha de auditoria com filtros') ?>
         </section>
 
         <section id="perfil">
@@ -333,6 +364,7 @@ $sections = [
                 <li>pode clicar em <strong>Sair de todos os outros dispositivos</strong>, o que é útil se esqueceu a sessão aberta em outro computador.</li>
             </ul>
             <p>Para trocar o e-mail, peça ao administrador.</p>
+            <?= $fig('perfil', 'Meu perfil') ?>
         </section>
 
         <section id="duvidas">
@@ -374,7 +406,8 @@ $sections = [
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
-                        <tr><td>0.2.1</td><td>29/10/2026</td><td>Menu lateral recolhível no computador, com lembrança da escolha. Atalho para o manual no menu do usuário.</td></tr>
+                        <tr><td>0.2.2</td><td>29/10/2026</td><td>Nome do sistema grafado com acento, ÍSIS, em todas as telas, e-mails e documentos. Imagens do manual atualizadas.</td></tr>
+                        <tr><td>0.2.1</td><td>29/10/2026</td><td>Menu lateral recolhível no computador, com lembrança da escolha. Atalho para o manual no menu do usuário. Manual ilustrado com 22 imagens das telas, feitas com dados fictícios.</td></tr>
                         <tr><td>0.2.0</td><td>29/10/2026</td><td>Inventário de dados pessoais, catálogos, exportação do registro das operações, gestão de riscos com matriz 5×5, planos de ação com histórico, evidências com hash e painel de conformidade completo. Escopo por setor para gestores e "Minhas tarefas" para colaboradores. Primeira edição deste manual.</td></tr>
                         <tr><td>0.1.0</td><td>29/10/2026</td><td>Cadastro da empresa, confirmação de e-mail, login com bloqueio de tentativas, recuperação de acesso, convites, perfis e permissões, configuração inicial por segmento, usuários, setores, perfil e trilha de auditoria com verificação de integridade.</td></tr>
                     </tbody>

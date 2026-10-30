@@ -1,4 +1,4 @@
-/* ISIS - interações da interface (sem dependências; CSP: script-src 'self'). */
+/* ÍSIS - interações da interface (sem dependências; CSP: script-src 'self'). */
 (function () {
   'use strict';
 

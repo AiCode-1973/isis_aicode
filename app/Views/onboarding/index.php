@@ -104,7 +104,7 @@ $suggested = $template['departments'] ?? [];
     <div class="field">
         <label class="check">
             <input type="checkbox" name="acknowledge" value="1"<?= error_attrs('acknowledge') ?>>
-            <span>Entendo que o ISIS apoia a organização da conformidade e que as decisões jurídicas continuam sob responsabilidade da empresa.</span>
+            <span>Entendo que o ÍSIS apoia a organização da conformidade e que as decisões jurídicas continuam sob responsabilidade da empresa.</span>
         </label>
         <?= field_error('acknowledge') ?>
     </div>

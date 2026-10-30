@@ -1,4 +1,4 @@
-/* ISIS - Gestão da Privacidade e Proteção de Dados
+/* ÍSIS - Gestão da Privacidade e Proteção de Dados
    Folha única, sem dependências externas (CSP: style-src 'self'). */
 
 :root {
@@ -471,6 +471,16 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .manual-content li { margin-bottom: .35rem; }
 .manual-content .table-wrap { margin: .75rem 0 1rem; }
 .manual-head .disclaimer { margin-top: 1rem; }
+.shot { margin: 1rem 0 1.25rem; }
+.shot a { display: block; border: 1px solid var(--line-2); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); background: var(--surface-2); }
+.shot a:hover { border-color: var(--teal); }
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption { font-size: .82rem; color: var(--muted); text-align: center; margin-top: .45rem; }
+.shot-phone { max-width: 260px; margin-left: auto; margin-right: auto; }
+.shot-pair { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.shot-pair .shot-phone { max-width: none; }
+@media (max-width: 640px) { .shot-pair { grid-template-columns: minmax(0, 1fr); } }
+@media print { .shot { break-inside: avoid; } .shot a { box-shadow: none; } }
 .kbd { display: inline-block; padding: 0 .4rem; border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 5px; font-size: .85em; background: var(--surface-2); }
 .faq dt { font-weight: 700; margin-top: 1rem; }
 .faq dd { margin: .25rem 0 0; color: var(--ink-2); }

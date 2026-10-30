@@ -55,6 +55,6 @@ final class InvitationController extends Controller
             return $this->failure('/entrar', 'Convite inválido, expirado ou já utilizado. Peça um novo ao administrador.');
         }
         Auth::login($user);
-        return $this->success('/painel', 'Bem-vindo(a) ao ISIS! Sua conta foi criada.');
+        return $this->success('/painel', 'Bem-vindo(a) ao ÍSIS! Sua conta foi criada.');
     }
 }

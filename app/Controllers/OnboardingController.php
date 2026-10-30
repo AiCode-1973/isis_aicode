@@ -54,7 +54,7 @@ final class OnboardingController extends Controller
             'dpo_email' => 'o e-mail do encarregado',
             'privacy_email' => 'o e-mail do canal de privacidade',
             'other_departments' => 'outros setores',
-            'acknowledge' => 'a ciência sobre o papel do ISIS',
+            'acknowledge' => 'a ciência sobre o papel do ÍSIS',
         ]);
 
         $names = array_map('trim', $request->inputArray('departments'));

@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 /*
- * ISIS - comandos de linha de comando.
+ * ÍSIS - comandos de linha de comando.
  *   php bin/isis key:generate      Gera APP_KEY no .env (somente se estiver vazia)
  *   php bin/isis migrate           Aplica migrations pendentes e atualiza os catálogos globais
  *   php bin/isis install [--demo]  migrate + bloqueio do instalador web (+ dados fictícios)

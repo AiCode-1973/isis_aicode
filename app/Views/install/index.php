@@ -1,4 +1,4 @@
-<h1>Instalação do ISIS</h1>
+<h1>Instalação do ÍSIS</h1>
 <p class="lead">Confira os requisitos e informe o token de instalação definido no arquivo <span class="mono">.env</span>.</p>
 
 <div class="table-wrap">

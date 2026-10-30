@@ -1,6 +1,6 @@
 <h1>Você foi convidado</h1>
 <p class="lead">
-    <strong><?= e($invitation['trade_name'] ?: $invitation['legal_name']) ?></strong> convidou você para o ISIS
+    <strong><?= e($invitation['trade_name'] ?: $invitation['legal_name']) ?></strong> convidou você para o ÍSIS
     com o perfil <span class="badge badge-brand"><?= e($roleLabel) ?></span>.
 </p>
 

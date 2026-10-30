@@ -53,6 +53,6 @@ final class AuthController extends Controller
     public function logout(Request $request): Response
     {
         Auth::logout();
-        return $this->success('/entrar', 'Você saiu do ISIS com segurança.');
+        return $this->success('/entrar', 'Você saiu do ÍSIS com segurança.');
     }
 }

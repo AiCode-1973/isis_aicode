@@ -63,7 +63,7 @@ final class AccountService
     public static function sendVerification(array $user): void
     {
         $token = UserTokenRepository::issue((int) $user['id'], UserTokenRepository::VERIFY_EMAIL, (int) Config::get('security.verify_token_hours', 48) * 60);
-        Mailer::sendTemplate($user['email'], 'Confirme seu e-mail no ISIS', 'verify', [
+        Mailer::sendTemplate($user['email'], 'Confirme seu e-mail no ÍSIS', 'verify', [
             'name' => $user['name'],
             'link' => absolute_url('/verificar-email/' . $token),
         ]);
@@ -95,7 +95,7 @@ final class AccountService
             return;
         }
         $token = UserTokenRepository::issue((int) $user['id'], UserTokenRepository::PASSWORD_RESET, (int) Config::get('security.reset_token_minutes', 60));
-        Mailer::sendTemplate($user['email'], 'Redefinição de senha do ISIS', 'reset', [
+        Mailer::sendTemplate($user['email'], 'Redefinição de senha do ÍSIS', 'reset', [
             'name' => $user['name'],
             'link' => absolute_url('/redefinir-senha/' . $token),
             'minutes' => (int) Config::get('security.reset_token_minutes', 60),
@@ -139,7 +139,7 @@ final class AccountService
     public static function invite(array $data): ?string
     {
         if (UserRepository::emailExists($data['email'])) {
-            return 'Este e-mail já tem uma conta no ISIS e não pode ser convidado.';
+            return 'Este e-mail já tem uma conta no ÍSIS e não pode ser convidado.';
         }
         $repo = new InvitationRepository();
         if ($repo->pendingForEmail($data['email']) !== null) {
@@ -214,7 +214,7 @@ final class AccountService
     private static function mailInvitation(string $email, string $name, string $role, string $token): void
     {
         $tenant = Auth::tenant() ?? [];
-        Mailer::sendTemplate($email, 'Você foi convidado para o ISIS', 'invite', [
+        Mailer::sendTemplate($email, 'Você foi convidado para o ÍSIS', 'invite', [
             'name' => $name,
             'company' => $tenant['trade_name'] ?? $tenant['legal_name'] ?? 'sua empresa',
             'inviter' => Auth::user()['name'] ?? 'O administrador',
