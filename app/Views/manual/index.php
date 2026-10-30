@@ -62,7 +62,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
-                <li><strong>No computador:</strong> o menu recolhe para uma faixa só com ícones, deixando mais espaço para o conteúdo. Passe o mouse sobre um ícone para ver o nome. O ÍSIS lembra a sua escolha nas próximas visitas, naquele navegador.</li>
+                <li><strong>No computador:</strong> o menu recolhe para uma faixa só com ícones, e o conteúdo se expande para ocupar toda a largura da tela. Passe o mouse sobre um ícone para ver o nome. O ÍSIS lembra a sua escolha nas próximas visitas, naquele navegador.</li>
                 <li><strong>No celular e em telas estreitas:</strong> o menu abre por cima do conteúdo. Para fechar, toque fora dele ou pressione <span class="kbd">Esc</span>.</li>
             </ul>
             <div class="shot-pair">
@@ -406,6 +406,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>0.2.3</td><td>29/10/2026</td><td>As telas passam a ocupar toda a largura disponível, inclusive com o menu lateral recolhido. Os indicadores se distribuem para preencher a linha.</td></tr>
                         <tr><td>0.2.2</td><td>29/10/2026</td><td>Nome do sistema grafado com acento, ÍSIS, em todas as telas, e-mails e documentos. Imagens do manual atualizadas.</td></tr>
                         <tr><td>0.2.1</td><td>29/10/2026</td><td>Menu lateral recolhível no computador, com lembrança da escolha. Atalho para o manual no menu do usuário. Manual ilustrado com 22 imagens das telas, feitas com dados fictícios.</td></tr>
                         <tr><td>0.2.0</td><td>29/10/2026</td><td>Inventário de dados pessoais, catálogos, exportação do registro das operações, gestão de riscos com matriz 5×5, planos de ação com histórico, evidências com hash e painel de conformidade completo. Escopo por setor para gestores e "Minhas tarefas" para colaboradores. Primeira edição deste manual.</td></tr>

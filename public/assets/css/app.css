@@ -146,7 +146,8 @@ legend { font-weight: 700; margin-bottom: .5rem; }
 .grid { display: grid; gap: 1rem; }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* Indicadores: quantos couberem por linha, sempre preenchendo a largura (3 ou 4 cartões, menu aberto ou recolhido). */
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .grid-main { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
 .stack > * + * { margin-top: 1rem; }
 .section-gap { margin-top: 1rem; }
@@ -387,7 +388,8 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
   color: var(--ink-2); text-decoration: none; background: none; border: 0; font: inherit; font-size: .9rem; cursor: pointer; text-align: left;
 }
 .menu-pop a:hover, .menu-pop button:hover { background: var(--surface-2); color: var(--ink); }
-.content { padding: 1.5rem; flex: 1; width: 100%; max-width: 1320px; }
+/* O conteúdo ocupa toda a largura disponível (inclusive quando o menu lateral é recolhido). */
+.content { padding: 1.5rem; flex: 1; width: 100%; min-width: 0; }
 .app-footer { padding: 1rem 1.5rem 1.5rem; color: var(--muted); font-size: .78rem; border-top: 1px solid var(--line); }
 .app-footer strong { color: var(--ink-2); }
 
@@ -456,14 +458,14 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .wizard-body { flex: 1; min-width: 0; }
 
 /* ---------- Manual ---------- */
-.manual { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2rem; align-items: start; max-width: 1160px; margin: 0 auto; }
-.site-header ~ main .manual { padding: 2rem 1.25rem 3rem; }
+.manual { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.site-header ~ main .manual { padding: 2rem 1.25rem 3rem; max-width: 1440px; margin: 0 auto; }
 .manual-toc { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; }
 .manual-toc ol { margin: 0; padding-left: 1.2rem; font-size: .88rem; }
 .manual-toc li { margin: .3rem 0; }
 .manual-toc a { color: var(--ink-2); text-decoration: none; }
 .manual-toc a:hover { color: var(--teal); text-decoration: underline; }
-.manual-content { max-width: 820px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 2.25rem; }
+.manual-content, .manual-content.prose { max-width: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 2.25rem; }
 .manual-content section { padding-top: 1.75rem; margin-top: 1.75rem; border-top: 1px solid var(--line); scroll-margin-top: 80px; }
 .manual-content h2 { font-size: 1.3rem; margin-bottom: .75rem; }
 .manual-content h3 { font-size: 1rem; margin: 1.25rem 0 .4rem; color: var(--brand); }
@@ -471,7 +473,7 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .manual-content li { margin-bottom: .35rem; }
 .manual-content .table-wrap { margin: .75rem 0 1rem; }
 .manual-head .disclaimer { margin-top: 1rem; }
-.shot { margin: 1rem 0 1.25rem; }
+.shot { margin: 1rem 0 1.25rem; max-width: 1366px; }
 .shot a { display: block; border: 1px solid var(--line-2); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); background: var(--surface-2); }
 .shot a:hover { border-color: var(--teal); }
 .shot img { display: block; width: 100%; height: auto; }
@@ -510,7 +512,6 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
   .grid-2.wide-split { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 1100px) {
-  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
