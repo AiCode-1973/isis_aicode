@@ -1,0 +1,11 @@
+# Fallback para hospedagens em que o DocumentRoot não pode apontar para public/.
+# O ideal é configurar o domínio isis.aicode.dev.br com DocumentRoot = .../isis/public
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Nunca servir arquivos internos diretamente
+<FilesMatch "^\.|\.(env|sql|log|lock|md|json|xml|dist)$|^(composer|phpunit)">
+    Require all denied
+</FilesMatch>

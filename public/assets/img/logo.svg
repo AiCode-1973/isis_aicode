@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ISIS">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a4f8f"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 4 9 12.5v17.2C9 44.6 18.9 55.6 32 60c13.1-4.4 23-15.4 23-30.3V12.5L32 4z" fill="url(#g)"/>
+  <path d="M15.5 32.5c4.2-6.6 10-10 16.5-10s12.3 3.4 16.5 10c-4.2 6.6-10 10-16.5 10s-12.3-3.4-16.5-10z" fill="#fff" opacity=".95"/>
+  <circle cx="32" cy="32.5" r="6.6" fill="#1d3a6e"/>
+  <circle cx="32" cy="32.5" r="2.6" fill="#5eead4"/>
+</svg>

@@ -1,0 +1,108 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * ISIS - comandos de linha de comando.
+ *   php bin/isis key:generate      Gera APP_KEY no .env (somente se estiver vazia)
+ *   php bin/isis migrate           Aplica migrations pendentes e atualiza o catálogo de segmentos
+ *   php bin/isis install [--demo]  migrate + bloqueio do instalador web (+ dados fictícios)
+ *   php bin/isis seed:demo         Cria as empresas e usuários fictícios de demonstração
+ *   php bin/isis audit:verify      Verifica a integridade (cadeia de hashes) da auditoria de todas as empresas
+ */
+
+if (PHP_SAPI !== 'cli') {
+    exit(1);
+}
+
+require dirname(__DIR__) . '/app/bootstrap.php';
+require APP_ROOT . '/database/seeds/DemoSeeder.php';
+
+use Isis\Audit\AuditHasher;
+use Isis\Core\Crypto;
+use Isis\Core\Database;
+use Isis\Database\Seeds\DemoSeeder;
+use Isis\Services\Installer;
+
+$command = $argv[1] ?? 'help';
+$options = array_slice($argv, 2);
+
+function out(string $text = ''): void
+{
+    fwrite(STDOUT, $text . PHP_EOL);
+}
+
+try {
+    switch ($command) {
+        case 'key:generate':
+            $envFile = APP_ROOT . '/.env';
+            if (!is_file($envFile)) {
+                copy(APP_ROOT . '/.env.example', $envFile);
+                out('.env criado a partir de .env.example');
+            }
+            $env = (string) file_get_contents($envFile);
+            if (preg_match('/^APP_KEY=base64:\S+/m', $env)) {
+                out('APP_KEY já existe. Não foi alterada (trocar a chave tornaria ilegíveis os dados criptografados).');
+                break;
+            }
+            $key = Crypto::generateKey();
+            $env = preg_match('/^APP_KEY=.*$/m', $env)
+                ? (string) preg_replace('/^APP_KEY=.*$/m', 'APP_KEY=' . $key, $env)
+                : $env . PHP_EOL . 'APP_KEY=' . $key . PHP_EOL;
+            file_put_contents($envFile, $env);
+            out('APP_KEY gerada e gravada no .env. Guarde uma cópia segura dela fora do servidor.');
+            break;
+
+        case 'migrate':
+            $ran = Installer::migrate();
+            out($ran ? 'Migrations aplicadas: ' . implode(', ', $ran) : 'Banco já está atualizado.');
+            out('Segmentos no catálogo: ' . Installer::seedSegments());
+            break;
+
+        case 'install':
+            foreach (Installer::requirements() as $label => $check) {
+                out(sprintf('[%s] %s (%s)', $check['ok'] ? 'ok' : '!!', $label, $check['detail']));
+            }
+            $ran = Installer::migrate();
+            out($ran ? 'Migrations aplicadas: ' . implode(', ', $ran) : 'Banco já está atualizado.');
+            out('Segmentos no catálogo: ' . Installer::seedSegments());
+            if (in_array('--demo', $options, true)) {
+                out('Dados demonstrativos (senha de todos: ' . DemoSeeder::PASSWORD . '):');
+                foreach (DemoSeeder::run() as $line) {
+                    out('  ' . $line);
+                }
+            }
+            Installer::lock();
+            out('Instalação concluída. Instalador web bloqueado (storage/install.lock).');
+            break;
+
+        case 'seed:demo':
+            out('Dados demonstrativos (senha de todos: ' . DemoSeeder::PASSWORD . '):');
+            foreach (DemoSeeder::run() as $line) {
+                out('  ' . $line);
+            }
+            break;
+
+        case 'audit:verify':
+            $keys = array_column(Database::fetchAll('SELECT chain_key FROM audit_chain ORDER BY chain_key'), 'chain_key');
+            $failures = 0;
+            foreach ($keys as $key) {
+                $key = (int) $key;
+                $stmt = Database::pdo()->prepare($key === 0
+                    ? 'SELECT * FROM audit_logs WHERE tenant_id IS NULL ORDER BY id'
+                    : 'SELECT * FROM audit_logs WHERE tenant_id = ? ORDER BY id');
+                $stmt->execute($key === 0 ? [] : [$key]);
+                $result = AuditHasher::verify($stmt->fetchAll());
+                out(sprintf('Cadeia %s: %s (%d registros)%s', $key === 0 ? 'global' : "empresa {$key}", $result['ok'] ? 'íntegra' : 'VIOLADA', $result['checked'], $result['broken_id'] ? " - quebra no registro {$result['broken_id']}" : ''));
+                $failures += $result['ok'] ? 0 : 1;
+            }
+            exit($failures > 0 ? 2 : 0);
+
+        default:
+            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | audit:verify');
+    }
+} catch (Throwable $e) {
+    fwrite(STDERR, 'Erro: ' . $e->getMessage() . PHP_EOL);
+    exit(1);
+}
