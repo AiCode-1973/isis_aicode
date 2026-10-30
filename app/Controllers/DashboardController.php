@@ -40,6 +40,16 @@ final class DashboardController extends Controller
         $actionStats = Auth::can(P::ACTIONS_VIEW) ? $actions->stats($onlyOwn ? Auth::id() : null) : null;
         $requestStats = Auth::can(P::REQUESTS_VIEW) ? (new \Isis\Repositories\RequestRepository())->stats() : null;
         $incidentStats = Auth::can(P::INCIDENTS_VIEW) ? (new \Isis\Repositories\IncidentRepository())->stats() : null;
+        $vendorStats = Auth::can(P::VENDORS_VIEW) ? (new \Isis\Repositories\VendorRepository())->stats() : null;
+        $policyRepo = new \Isis\Repositories\PolicyRepository();
+        $policyStats = Auth::can(P::POLICIES_EDIT) || Auth::can(P::POLICIES_APPROVE) ? $policyRepo->stats() : null;
+        $trainingRepo = new \Isis\Repositories\TrainingRepository();
+        $trainingStats = Auth::can(P::TRAININGS_MANAGE) ? $trainingRepo->stats() : null;
+        // Pendências pessoais (todos os perfis)
+        $myAcks = Auth::can(P::POLICIES_VIEW) ? $policyRepo->pendingForUser((int) Auth::id()) : [];
+        $myTrainings = Auth::can(P::TRAININGS_VIEW)
+            ? array_values(array_filter($trainingRepo->forUser((int) Auth::id()), static fn (array $t): bool => $t['enrollment_status'] !== 'concluido'))
+            : [];
 
         // Jornada: reflete só o que já existe no sistema.
         $journey = [
@@ -49,6 +59,8 @@ final class DashboardController extends Controller
             ['label' => 'Mapear as operações de tratamento', 'hint' => $inventory ? $inventory['total'] . ' operação(ões) no inventário.' : 'Inventário de dados pessoais.', 'done' => ($inventory['active'] ?? 0) >= 3, 'link' => '/inventario'],
             ['label' => 'Definir as hipóteses legais', 'hint' => $inventory && $inventory['no_basis'] > 0 ? $inventory['no_basis'] . ' operação(ões) sem hipótese legal.' : 'Toda operação com sua base legal.', 'done' => $inventory !== null && $inventory['total'] > 0 && $inventory['no_basis'] === 0, 'link' => '/inventario'],
             ['label' => 'Avaliar os riscos', 'hint' => $risks ? $risks['total'] . ' risco(s) avaliado(s).' : 'Probabilidade e impacto.', 'done' => ($risks['total'] ?? 0) > 0, 'link' => '/riscos'],
+            ['label' => 'Avaliar os fornecedores', 'hint' => $vendorStats ? $vendorStats['active'] . ' fornecedor(es); ' . $vendorStats['unassessed'] . ' sem avaliação.' : 'Terceiros que tratam dados.', 'done' => ($vendorStats['active'] ?? 0) > 0 && ($vendorStats['unassessed'] ?? 1) === 0, 'link' => '/fornecedores'],
+            ['label' => 'Aprovar políticas e treinar a equipe', 'hint' => $policyStats || $trainingStats ? ($policyStats['published'] ?? 0) . ' política(s) vigente(s); ' . ($trainingStats['completed'] ?? 0) . ' treinamento(s) concluído(s).' : 'Políticas vigentes e equipe capacitada.', 'done' => ($policyStats['published'] ?? 0) > 0 && ($trainingStats['completed'] ?? 0) > 0, 'link' => '/politicas'],
             ['label' => 'Executar os planos de ação', 'hint' => $actionStats ? $actionStats['done'] . ' de ' . $actionStats['total'] . ' ação(ões) concluída(s).' : 'Medidas com responsável e prazo.', 'done' => ($actionStats['total'] ?? 0) > 0 && $actionStats['overdue'] === 0 && $actionStats['done'] >= ($actionStats['total'] - $actionStats['cancelled']) / 2, 'link' => '/planos'],
         ];
         $done = count(array_filter($journey, static fn (array $s): bool => $s['done']));
@@ -87,6 +99,24 @@ final class DashboardController extends Controller
         if ($actionStats && !$onlyOwn && $actionStats['unowned'] > 0) {
             $alerts[] = ['warn', $actionStats['unowned'] . ' ação(ões) sem responsável.', '/planos?abertas=1'];
         }
+        if ($policyStats && $policyStats['expired'] > 0) {
+            $alerts[] = ['danger', $policyStats['expired'] . ' política(s) com validade vencida.', '/politicas'];
+        }
+        if ($policyStats && $policyStats['awaiting'] > 0 && Auth::can(P::POLICIES_APPROVE)) {
+            $alerts[] = ['warn', $policyStats['awaiting'] . ' política(s) aguardando sua aprovação.', '/politicas'];
+        }
+        if ($vendorStats && $vendorStats['high'] > 0) {
+            $alerts[] = ['warn', $vendorStats['high'] . ' fornecedor(es) de risco alto.', '/fornecedores?risco=alto'];
+        }
+        if ($vendorStats && $vendorStats['no_dpa'] > 0) {
+            $alerts[] = ['warn', $vendorStats['no_dpa'] . ' fornecedor(es) que tratam dados sem contrato com cláusulas de proteção.', '/fornecedores'];
+        }
+        if ($vendorStats && $vendorStats['contracts_expiring'] > 0) {
+            $alerts[] = ['warn', $vendorStats['contracts_expiring'] . ' contrato(s) de fornecedor vencendo em 30 dias.', '/fornecedores'];
+        }
+        if ($trainingStats && $trainingStats['overdue'] > 0) {
+            $alerts[] = ['warn', $trainingStats['overdue'] . ' participação(ões) em treinamento com prazo vencido.', '/treinamentos'];
+        }
 
         return $this->view('dashboard/index', [
             'title' => 'Painel de conformidade',
@@ -96,6 +126,10 @@ final class DashboardController extends Controller
             'risks' => $risks,
             'actionStats' => $actionStats,
             'requestStats' => $requestStats,
+            'vendorStats' => $vendorStats,
+            'trainingStats' => $trainingStats,
+            'myAcks' => $myAcks,
+            'myTrainings' => $myTrainings,
             'incidentStats' => $incidentStats,
             'heatmap' => $risks !== null ? (new RiskRepository())->heatmap() : null,
             'upcoming' => $actionStats !== null ? $actions->upcoming(30, 8, $onlyOwn ? Auth::id() : null) : [],

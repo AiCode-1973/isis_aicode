@@ -207,6 +207,19 @@ try {
   const incident = await hrefOf('Planilha de pacientes');
   if (incident) { await go(incident); await shot('incidente-detalhe', 1150); }
   await go('/titular/clinica-vida-plena'); await shot('canal-titular', 1050);
+  await go('/fornecedores'); await shot('fornecedores', 900);
+  const vendor = await hrefOf('Laboratório');
+  if (vendor) { await go(vendor); await shot('fornecedor-detalhe', 1300); }
+  await go('/politicas'); await shot('politicas', 760);
+  const policy = await hrefOf('Política de Privacidade');
+  if (policy) { await go(policy); await shot('politica-detalhe', 1000); }
+  await go('/treinamentos'); await shot('treinamentos', 900);
+  const trainingHref = await evaluate(`document.querySelector('a.title-link[href^="/treinamentos/"]')?.getAttribute('href') ?? null`);
+  if (trainingHref) {
+    await go(trainingHref);
+    const cert = await evaluate(`document.querySelector('a[href^="/treinamentos/certificado/"]')?.getAttribute('href') ?? null`);
+    if (cert) { await go(cert); await shot('certificado', 860); }
+  }
   await go('/usuarios'); await shot('usuarios', 900);
   await go('/configuracoes'); await shot('configuracoes', 820);
   await go('/auditoria'); await shot('auditoria', 900);
@@ -219,6 +232,12 @@ try {
   await login('carlos.souza@vidaplena.example');
   await go('/planos'); await shot('minhas-tarefas', 768);
   await go('/incidentes/novo'); await shot('incidente-comunicar', 860);
+
+  // Auditora: avaliação do treinamento (ela ainda pode refazer)
+  if (trainingHref) {
+    await login('helena.prado@vidaplena.example');
+    await go(trainingHref + '/avaliacao'); await shot('treinamento-avaliacao', 1100);
+  }
 
   // Celular
   await viewport(390, 844, true);

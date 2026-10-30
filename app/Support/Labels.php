@@ -145,6 +145,51 @@ final class Labels
         'encerrado' => 'Encerrado',
     ];
 
+    public const array VENDOR_ROLE = [
+        'operador' => 'Operador (trata dados em nome da empresa)',
+        'controlador' => 'Outro controlador (recebe dados para uso próprio)',
+        'co_controlador' => 'Controlador conjunto',
+        'outro' => 'Outro',
+    ];
+
+    public const array VENDOR_STATUS = [
+        'em_avaliacao' => 'Em avaliação',
+        'ativo' => 'Ativo',
+        'suspenso' => 'Suspenso',
+        'encerrado' => 'Contrato encerrado',
+    ];
+
+    public const array LEVEL = ['baixo' => 'Baixo', 'medio' => 'Médio', 'alto' => 'Alto'];
+
+    public const array POLICY_CATEGORY = [
+        'privacidade_interna' => 'Política de privacidade e proteção de dados',
+        'aviso_privacidade' => 'Aviso de privacidade (público externo)',
+        'seguranca' => 'Política de segurança da informação',
+        'retencao' => 'Retenção e descarte de dados',
+        'incidentes' => 'Plano de resposta a incidentes',
+        'uso_aceitavel' => 'Uso aceitável de recursos',
+        'cookies' => 'Política de cookies',
+        'direitos_titulares' => 'Procedimento de atendimento a titulares',
+        'outro' => 'Outro documento',
+    ];
+
+    public const array POLICY_VERSION_STATUS = [
+        'rascunho' => 'Rascunho',
+        'em_aprovacao' => 'Aguardando aprovação',
+        'aprovada' => 'Vigente',
+        'rejeitada' => 'Devolvida para ajustes',
+        'substituida' => 'Substituída',
+    ];
+
+    public const array TRAINING_STATUS = ['rascunho' => 'Rascunho', 'publicado' => 'Publicado', 'arquivado' => 'Arquivado'];
+
+    public const array ENROLLMENT_STATUS = [
+        'pendente' => 'Não iniciado',
+        'em_andamento' => 'Em andamento',
+        'concluido' => 'Concluído',
+        'reprovado' => 'Não aprovado (pode refazer)',
+    ];
+
     public const array RISK_TO_SUBJECTS = [
         'indeterminado' => 'Ainda não avaliado',
         'baixo' => 'Sem risco ou dano relevante aos titulares',

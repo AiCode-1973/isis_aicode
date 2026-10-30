@@ -32,6 +32,20 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
 </section>
 <?php endif; ?>
 
+<?php if ($myAcks || $myTrainings): ?>
+<section class="card for-you section-gap" aria-labelledby="you-title">
+    <h2 id="you-title"><?= icon('user') ?> Para você</h2>
+    <ul class="issue-groups section-gap-sm">
+        <?php foreach ($myTrainings as $t): $late = $t['due_date'] && $t['due_date'] < date('Y-m-d'); ?>
+        <li><?= icon('graduation') ?> Treinamento <a class="title-link" href="/treinamentos/<?= (int) $t['id'] ?>"><?= e($t['title']) ?></a> <span class="small <?= $late ? 'text-danger' : 'muted' ?>"><?= $t['due_date'] ? '· prazo ' . e(fmt_date($t['due_date'])) . ($late ? ' (vencido)' : '') : '' ?></span></li>
+        <?php endforeach; ?>
+        <?php foreach ($myAcks as $p): ?>
+        <li><?= icon('file') ?> Ler e dar ciência: <a class="title-link" href="/politicas/<?= (int) $p['id'] ?>"><?= e($p['title']) ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</section>
+<?php endif; ?>
+
 <div class="grid grid-4 section-gap">
     <?php if ($inventory !== null): ?>
     <a class="card kpi" href="/inventario"><span class="kpi-icon"><?= icon('database', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $inventory['active'] ?><span class="kpi-sub">/<?= (int) $inventory['total'] ?></span></div><div class="kpi-label">Operações ativas</div></div></a>
@@ -52,6 +66,12 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
     <?php endif; ?>
     <?php if ($incidentStats !== null): ?>
     <a class="card kpi" href="/incidentes?abertos=1"><span class="kpi-icon warn"><?= icon('siren', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $incidentStats['open'] ?></div><div class="kpi-label">Incidentes em aberto · <?= (int) $incidentStats['severe'] ?> graves</div></div></a>
+    <?php endif; ?>
+    <?php if ($vendorStats !== null): ?>
+    <a class="card kpi" href="/fornecedores"><span class="kpi-icon"><?= icon('truck', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $vendorStats['active'] ?></div><div class="kpi-label">Fornecedores · <?= (int) $vendorStats['high'] ?> de risco alto</div></div></a>
+    <?php endif; ?>
+    <?php if ($trainingStats !== null): $tp = $trainingStats['enrolled'] > 0 ? (int) round($trainingStats['completed'] / $trainingStats['enrolled'] * 100) : null; ?>
+    <a class="card kpi" href="/treinamentos"><span class="kpi-icon teal"><?= icon('graduation', 'icon-lg') ?></span><div><div class="kpi-value"><?= $tp === null ? '—' : $tp . '%' ?></div><div class="kpi-label">Conclusão dos treinamentos</div></div></a>
     <?php endif; ?>
     <?php if ($inventory === null && $risks === null): ?>
     <div class="card kpi"><span class="kpi-icon"><?= icon('users', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['users'] ?></div><div class="kpi-label">Usuários ativos</div></div></div>

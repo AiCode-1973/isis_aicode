@@ -45,7 +45,7 @@ final class DepartmentRepository extends TenantScopedRepository
     }
 
     /** Tabelas com coluna department_id (FKs compostas RESTRICT), desvinculadas antes de excluir o setor. */
-    private const array LINKED = ['users', 'invitations', 'processing_activities', 'risks', 'actions', 'incidents'];
+    private const array LINKED = ['users', 'invitations', 'processing_activities', 'risks', 'actions', 'incidents', 'vendors'];
 
     /** Remove o setor; os registros ligados a ele ficam sem setor. */
     public function remove(int $id): void

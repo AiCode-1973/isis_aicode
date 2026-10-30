@@ -17,6 +17,9 @@ $sections = [
     'titulares' => 'Solicitações de titulares',
     'canal' => 'Canal on-line do titular',
     'incidentes' => 'Incidentes de segurança',
+    'fornecedores' => 'Fornecedores',
+    'politicas' => 'Políticas e documentos',
+    'treinamentos' => 'Treinamentos e certificados',
     'evidencias' => 'Evidências',
     'usuarios' => 'Usuários e convites',
     'configuracoes' => 'Configurações da empresa',
@@ -52,7 +55,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         <header class="manual-head">
             <p class="eyebrow">ÍSIS · Gestão da Privacidade e Proteção de Dados</p>
             <h1>Manual do sistema</h1>
-            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · módulos das fases 1, 2 e 3</p>
+            <p class="muted">Versão <?= e(APP_VERSION) ?> · atualizado em 29/10/2026 · módulos das fases 1 a 4</p>
             <div class="disclaimer"><?= icon('info') ?><span>O ÍSIS apoia a organização da conformidade com a LGPD e <strong>não substitui análise jurídica especializada nem garante conformidade legal</strong>. As orientações automáticas exibidas no sistema servem de apoio ao preenchimento.</span></div>
         </header>
 
@@ -61,7 +64,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
-            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, evidências e trilha de auditoria.</p>
+            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências e trilha de auditoria.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
@@ -142,6 +145,9 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                         <tr><td>Planos de ação</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver tudo; alterar o do seu setor</td><td>Só as próprias tarefas: andamento e evidências</td><td>Ver</td></tr>
                         <tr><td>Solicitações de titulares</td><td>Ver e atender</td><td>Ver e atender</td><td>Ver</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Incidentes de segurança</td><td>Comunicar e conduzir</td><td>Comunicar e conduzir</td><td>Comunicar e ver todos</td><td>Comunicar e acompanhar os próprios</td><td>Ver</td></tr>
+                        <tr><td>Fornecedores</td><td>Ver e alterar</td><td>Ver e alterar</td><td>Ver</td><td>—</td><td>Ver</td></tr>
+                        <tr><td>Políticas e documentos</td><td>Editar, aprovar e dar ciência</td><td>Editar, aprovar e dar ciência</td><td>Ler vigentes e dar ciência</td><td>Ler vigentes e dar ciência</td><td>Ler vigentes</td></tr>
+                        <tr><td>Treinamentos</td><td>Criar, designar e fazer</td><td>Criar, designar e fazer</td><td>Fazer os designados</td><td>Fazer os designados</td><td>Fazer os designados</td></tr>
                         <tr><td>Usuários</td><td>Ver e administrar</td><td>Ver</td><td>—</td><td>—</td><td>Ver</td></tr>
                         <tr><td>Configurações da empresa</td><td>Sim</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
                         <tr><td>Trilha de auditoria</td><td>Sim</td><td>Sim</td><td>—</td><td>—</td><td>Sim</td></tr>
@@ -153,11 +159,11 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
 
         <section id="painel">
             <h2>5. Painel de conformidade</h2>
-            <p>É a tela inicial depois de entrar. Reúne, num só lugar, o que precisa de atenção:</p>
+            <p>É a tela inicial depois de entrar. Reúne, num só lugar, o que precisa de atenção. No topo, o quadro <strong>Para você</strong> lista os treinamentos designados e as políticas que ainda pedem sua ciência; ele aparece para todos os perfis.</p>
             <?= $fig('painel', 'Painel de conformidade da administradora (dados fictícios)') ?>
             <ul>
-                <li><strong>Pendências:</strong> comunicação à ANPD pendente ou vencida, solicitações de titulares fora do prazo ou vencendo em 3 dias, incidentes aguardando análise, ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
-                <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas), percentual de execução dos planos, solicitações de titulares em aberto e incidentes em aberto.</li>
+                <li><strong>Pendências:</strong> políticas vencidas ou aguardando aprovação, fornecedores de risco alto ou sem cláusulas contratuais, contratos vencendo, treinamentos atrasados, comunicação à ANPD pendente ou vencida, solicitações de titulares fora do prazo ou vencendo em 3 dias, incidentes aguardando análise, ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
+                <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas), percentual de execução dos planos, solicitações de titulares em aberto, incidentes em aberto, fornecedores (quantos de risco alto) e conclusão dos treinamentos.</li>
                 <li><strong>Prazos:</strong> ações vencidas e as que vencem nos próximos 30 dias, com o responsável.</li>
                 <li><strong>Riscos:</strong> matriz de probabilidade × impacto e quantidade por nível.</li>
                 <li><strong>Inventário, o que falta completar:</strong> operações com informações pendentes.</li>
@@ -412,9 +418,109 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <?= $fig('incidente-detalhe', 'Incidente com risco relevante: prazo da ANPD, classificação e providências') ?>
         </section>
 
+        <section id="fornecedores">
+            <h2>13. Fornecedores</h2>
+            <p>Cadastre os terceiros que tratam ou recebem dados pessoais da empresa, como sistemas em nuvem, contabilidade, laboratórios, transportadoras e agências de marketing. Para cada um, registre:</p>
+            <ul>
+                <li>o papel em relação aos dados: <em>operador</em>, que trata em nome da empresa, ou outro controlador;</li>
+                <li>se acessa dados sensíveis e se os dados ficam no exterior;</li>
+                <li>as operações do inventário em que participa;</li>
+                <li>o contato no fornecedor e o responsável interno.</li>
+            </ul>
+            <?= $fig('fornecedores', 'Lista de fornecedores com risco, contratos e revisão') ?>
+            <h3>13.1 Avaliação de proteção de dados</h3>
+            <p>Na página do fornecedor, responda às 12 perguntas da <strong>avaliação</strong> com <em>sim</em>, <em>parcialmente</em>, <em>não</em> ou <em>não se aplica</em>. Elas tratam de:</p>
+            <ul>
+                <li>contrato, instruções e suboperadores;</li>
+                <li>controles de segurança: acesso, criptografia, cópias de segurança e certificações;</li>
+                <li>comunicação de incidentes;</li>
+                <li>transferência internacional;</li>
+                <li>treinamento da equipe e devolução dos dados ao fim do contrato.</li>
+            </ul>
+            <p>O ÍSIS calcula uma nota de 0 a 100, em que as perguntas mais importantes pesam mais, e classifica o risco:</p>
+            <ul>
+                <li><strong>Baixo:</strong> nota de 80 a 100.</li>
+                <li><strong>Médio:</strong> nota de 50 a 79.</li>
+                <li><strong>Alto:</strong> nota abaixo de 50.</li>
+            </ul>
+            <p>Duas regras sobem o nível:</p>
+            <ul>
+                <li>quem trata dados sensíveis com nota abaixo de 80 é classificado como risco alto;</li>
+                <li>quem não tem cláusulas contratuais de proteção de dados nunca fica com risco baixo.</li>
+            </ul>
+            <p>A próxima revisão é marcada automaticamente: em 6 meses para risco alto e em 12 meses nos demais casos. O histórico das avaliações fica guardado.</p>
+            <?= $fig('fornecedor-detalhe', 'Página do fornecedor: dados, contratos, avaliação e resultado') ?>
+            <h3>13.2 Contratos e documentos</h3>
+            <ul>
+                <li>Registre cada contrato com vigência e marque se tem cláusulas de proteção de dados (ou um acordo de tratamento de dados).</li>
+                <li>Anexe o contrato assinado, questionários e certificados em <strong>Evidências</strong>.</li>
+                <li>O painel avisa sobre fornecedores que tratam dados sem contrato com cláusulas e sobre contratos que vencem em 30 dias.</li>
+            </ul>
+        </section>
+
+        <section id="politicas">
+            <h2>14. Políticas e documentos</h2>
+            <p>Reúne as políticas internas, os avisos de privacidade e os procedimentos da empresa. Cada documento passa pelas mesmas etapas:</p>
+            <ol>
+                <li><strong>Rascunho:</strong> o encarregado ou o administrador escreve ou ajusta o texto.</li>
+                <li><strong>Envio para aprovação.</strong></li>
+                <li><strong>Aprovação</strong> pelo encarregado ou pelo administrador. A versão passa a ser a <em>vigente</em>, com validade (3 a 36 meses), e a anterior fica como <em>substituída</em>.</li>
+                <li>Se a versão for <strong>devolvida</strong>, o motivo fica registrado e ela volta para ajustes.</li>
+            </ol>
+            <p>Para começar rápido, use <strong>Usar modelos do ÍSIS</strong>. Ele cria rascunhos de três documentos, já com o nome da empresa:</p>
+            <ul>
+                <li>política de privacidade e proteção de dados;</li>
+                <li>política de segurança da informação;</li>
+                <li>procedimento de resposta a incidentes.</li>
+            </ul>
+            <p>Os modelos são pontos de partida: adapte-os à realidade da empresa e revise com a assessoria jurídica antes de aprovar.</p>
+            <?= $fig('politicas', 'Políticas com versão vigente, validade, aprovação pendente e ciência') ?>
+            <h3>14.1 Ciência dos colaboradores</h3>
+            <ul>
+                <li>Quando o documento exige ciência, cada usuário vê o aviso <strong>Leitura obrigatória</strong> e confirma com <strong>Li e estou ciente</strong>. A confirmação fica registrada com data e hora.</li>
+                <li>O responsável acompanha quem já deu ciência e quem está pendente.</li>
+                <li>Cada nova versão aprovada pede uma nova ciência.</li>
+                <li>Colaboradores só veem as versões vigentes; rascunhos e versões em aprovação ficam com quem edita.</li>
+            </ul>
+            <?= $fig('politica-detalhe', 'Documento vigente com o registro de ciência e o acompanhamento por usuário') ?>
+        </section>
+
+        <section id="treinamentos">
+            <h2>15. Treinamentos e certificados</h2>
+            <p>O encarregado e o administrador criam treinamentos com <strong>conteúdo em texto</strong> e <strong>avaliação de múltipla escolha</strong>. Em cada um, definem:</p>
+            <ul>
+                <li>até 10 perguntas, com até 4 alternativas cada;</li>
+                <li>a nota mínima para aprovação;</li>
+                <li>a validade do certificado.</li>
+            </ul>
+            <p>O botão <strong>Usar treinamento modelo de LGPD</strong> cria um treinamento pronto, que você pode revisar e publicar: "Fundamentos da LGPD para colaboradores", com 5 perguntas.</p>
+            <h3>15.1 Publicar e designar</h3>
+            <ul>
+                <li>O treinamento nasce como rascunho. Depois de <strong>publicado</strong>, pode ser designado a todos os usuários ativos, a setores ou a pessoas específicas, com prazo para concluir.</li>
+                <li>A página do treinamento mostra, por participante, o prazo, as tentativas, a nota e a situação.</li>
+                <li>O painel avisa sobre prazos vencidos.</li>
+            </ul>
+            <?= $fig('treinamentos', 'Treinamentos: indicadores, módulos e conclusão') ?>
+            <h3>15.2 Fazer o treinamento</h3>
+            <ol>
+                <li>Cada usuário vê em <strong>Meus treinamentos</strong>, e no quadro <strong>Para você</strong> do painel, os treinamentos designados a ele.</li>
+                <li>Leia o conteúdo e clique em <strong>Fazer a avaliação</strong>.</li>
+                <li>Se não atingir a nota mínima, revise o conteúdo e tente de novo; não há limite de tentativas.</li>
+                <li>Com a aprovação, o certificado é emitido na hora.</li>
+            </ol>
+            <?= $fig('treinamento-avaliacao', 'Avaliação de múltipla escolha') ?>
+            <h3>15.3 Certificado</h3>
+            <ul>
+                <li>O certificado traz o nome, o treinamento, a empresa, a carga horária, o aproveitamento, as datas de conclusão e de validade e um <strong>código</strong> (formato ISIS-XXXX-XXXX).</li>
+                <li>Pode ser impresso ou salvo em PDF.</li>
+                <li>Qualquer pessoa pode conferir a autenticidade no endereço <span class="mono">/certificado/código</span>, que mostra só o necessário para a verificação.</li>
+            </ul>
+            <?= $fig('certificado', 'Certificado de conclusão com código de verificação') ?>
+        </section>
+
         <section id="evidencias">
-            <h2>13. Evidências</h2>
-            <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos, operações do inventário, solicitações de titulares e incidentes, no quadro <strong>Evidências</strong> de cada página.</p>
+            <h2>16. Evidências</h2>
+            <p>Evidências são documentos que comprovam o que foi feito, como um contrato assinado, a imagem de uma configuração ou uma lista de presença. Podem ser anexadas a ações, riscos, operações do inventário, solicitações de titulares, incidentes, fornecedores e políticas, no quadro <strong>Evidências</strong> de cada página.</p>
             <ul>
                 <li><strong>Formatos aceitos:</strong> PDF, PNG, JPG, TXT, CSV, DOCX, XLSX, PPTX, ODT e ODS, até 10 MB. O ÍSIS confere o conteúdo real do arquivo, não só a extensão.</li>
                 <li><strong>Integridade:</strong> cada arquivo guarda uma impressão digital (hash SHA-256), que permite comprovar que ele não foi alterado.</li>
@@ -424,8 +530,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="usuarios">
-            <h2>14. Usuários e convites</h2>
-            <h3>14.1 Convidar</h3>
+            <h2>17. Usuários e convites</h2>
+            <h3>17.1 Convidar</h3>
             <ol>
                 <li>Em <strong>Usuários e perfis</strong>, preencha <strong>Convidar colaborador</strong>: nome, e-mail, perfil e, se quiser, o setor.</li>
                 <li>A pessoa recebe um link válido por 7 dias, cria a própria senha e entra direto na empresa.</li>
@@ -433,7 +539,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             </ol>
             <?= $fig('usuarios', 'Usuários, convites pendentes e formulário de convite') ?>
             <p>Nesta versão, cada e-mail pertence a uma única empresa. Um e-mail que já tem conta no ÍSIS não pode ser convidado.</p>
-            <h3>14.2 Alterar perfil, setor ou situação</h3>
+            <h3>17.2 Alterar perfil, setor ou situação</h3>
             <p>Clique em <strong>Editar</strong> ao lado do usuário. Regras:</p>
             <ul>
                 <li>ninguém altera o próprio perfil nem desativa a própria conta;</li>
@@ -444,7 +550,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="configuracoes">
-            <h2>15. Configurações da empresa</h2>
+            <h2>18. Configurações da empresa</h2>
             <p>Disponível para o administrador:</p>
             <ul>
                 <li><strong>Dados da empresa:</strong> razão social, nome fantasia e segmento. Para alterar o CNPJ, é preciso falar com o suporte.</li>
@@ -455,7 +561,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="auditoria">
-            <h2>16. Trilha de auditoria</h2>
+            <h2>19. Trilha de auditoria</h2>
             <p>Registra automaticamente os acessos e as ações feitas no ÍSIS. Cada registro guarda:</p>
             <ul>
                 <li>usuário, data e hora;</li>
@@ -473,7 +579,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="perfil">
-            <h2>17. Meu perfil</h2>
+            <h2>20. Meu perfil</h2>
             <p>Em <strong>Meu perfil</strong>, cada usuário:</p>
             <ul>
                 <li>atualiza o nome e o cargo;</li>
@@ -485,7 +591,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="duvidas">
-            <h2>18. Dúvidas frequentes</h2>
+            <h2>21. Dúvidas frequentes</h2>
             <dl class="faq">
                 <dt>Não recebi o e-mail de confirmação, convite ou recuperação.</dt>
                 <dd>Verifique o spam. Os links têm validade: confirmação em 48 horas, recuperação em 60 minutos e convite em 7 dias. Peça um novo link quando necessário.</dd>
@@ -511,22 +617,20 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         </section>
 
         <section id="proximos">
-            <h2>19. Próximos módulos</h2>
+            <h2>22. Próximos módulos</h2>
             <p>Em desenvolvimento, nesta ordem:</p>
             <ul>
-                <li><strong>Fornecedores:</strong> cadastro, avaliação, contratos e documentos de proteção de dados.</li>
-                <li><strong>Políticas e documentos:</strong> versões, aprovações, validade e ciência dos colaboradores.</li>
-                <li><strong>Treinamentos:</strong> módulos, avaliações, progresso e certificados.</li>
                 <li><strong>Backups e relatórios.</strong></li>
             </ul>
         </section>
 
         <section id="historico">
-            <h2>20. Histórico de alterações</h2>
+            <h2>23. Histórico de alterações</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>0.4.0</td><td>29/10/2026</td><td>Fase 4, com três módulos novos:<br>• <strong>Fornecedores:</strong> avaliação de proteção de dados com nota e nível de risco, contratos com cláusulas de dados, vínculo com o inventário e revisão periódica.<br>• <strong>Políticas e documentos:</strong> rascunho, aprovação, versões, validade, ciência dos colaboradores e modelos iniciais.<br>• <strong>Treinamentos:</strong> conteúdo, avaliação, designação com prazo, certificado com código e verificação pública, além de um treinamento modelo de LGPD.<br>O painel ganhou o quadro "Para você" e novos alertas e indicadores.</td></tr>
                         <tr><td>0.3.0</td><td>29/10/2026</td><td>Fase 3, com dois módulos novos:<br>• <strong>Solicitações de titulares:</strong> protocolo, prazo de 15 dias, verificação de identidade, resposta por e-mail e dados criptografados.<br>• <strong>Incidentes de segurança:</strong> comunicação por qualquer colaborador, classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD e registro das comunicações.<br>Também entraram o canal on-line do titular com acompanhamento por protocolo, ações corretivas ligadas a incidentes e novos alertas e indicadores no painel. Corrigida a exclusão de setores e de operações que tinham registros vinculados.</td></tr>
                         <tr><td>0.2.4</td><td>29/10/2026</td><td>Barras de rolagem finas e discretas nas telas, tabelas e no menu lateral; no menu, a barra só aparece ao passar o mouse.</td></tr>
                         <tr><td>0.2.3</td><td>29/10/2026</td><td>As telas passam a ocupar toda a largura disponível, inclusive com o menu lateral recolhido. Os indicadores se distribuem para preencher a linha.</td></tr>

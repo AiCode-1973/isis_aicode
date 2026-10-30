@@ -15,9 +15,11 @@ final class Router
     /** Padrões aceitos por nome de parâmetro; demais aceitam qualquer segmento. */
     private const array PARAM_PATTERNS = [
         'id' => '\d+',
+        'item' => '\d+',
         'token' => '[A-Za-z0-9_-]{20,128}',
         'slug' => '[a-z0-9-]{2,80}',
         'type' => '[a-z]{2,20}',
+        'code' => 'ISIS-[A-Z0-9]{4}-[A-Z0-9]{4}',
     ];
 
     /**
@@ -92,7 +94,7 @@ final class Router
         [$class, $method] = $match['route']['handler'];
         $args = [];
         foreach ($match['params'] as $name => $value) {
-            $args[] = $name === 'id' ? (int) $value : $value;
+            $args[] = (self::PARAM_PATTERNS[$name] ?? null) === '\d+' ? (int) $value : $value;
         }
         return (new $class())->{$method}($request, ...$args);
     }

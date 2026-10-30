@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: fase 3 de 5 (versão 0.3.0)
+## Situação: fase 4 de 5 (versão 0.4.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -16,8 +16,8 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 1 | Cadastro da empresa, confirmação de e-mail, login, recuperação de acesso, convites, perfis e permissões, configuração inicial por segmento, usuários, setores, painel, perfil, trilha de auditoria com verificação de integridade | **pronta** |
 | 2 | Inventário de operações de tratamento (registro do art. 37 com exportação CSV), catálogos, riscos (matriz 5×5), planos de ação com histórico, evidências com hash SHA-256 e painel de conformidade completo | **pronta** |
 | 3 | Solicitações de titulares (protocolo, prazo de 15 dias, resposta por e-mail, dados criptografados), canal público `/titular/<empresa>` com acompanhamento e incidentes de segurança (classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD) | **pronta** |
-| 4 | Fornecedores, políticas e documentos, treinamentos com certificado | próxima |
-| 5 | Backup automatizado, relatórios e refinamentos | — |
+| 4 | Fornecedores (avaliação com nota e risco, contratos, revisão), políticas e documentos (versões, aprovação, validade, ciência, modelos) e treinamentos (avaliação, designação, certificado com verificação pública em `/certificado/<código>`) | **pronta** |
+| 5 | Backup automatizado, relatórios e refinamentos | próxima |
 
 ## Requisitos
 
@@ -110,7 +110,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 75 testes.
+São 89 testes. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):
@@ -174,7 +174,7 @@ tests/             PHPUnit
 | Administrador | Tudo, inclusive usuários e configurações |
 | Encarregado (DPO) | Todos os módulos de conformidade e a auditoria; não administra usuários nem configurações |
 | Gestor | Inventário, riscos e planos de ação: vê tudo, mas só altera o que é do seu setor, o que criou ou o que está sob sua responsabilidade. Vê solicitações e incidentes. |
-| Colaborador | Vê e atualiza só as próprias tarefas. Comunica incidentes e acompanha os que comunicou. |
+| Colaborador | Vê e atualiza só as próprias tarefas. Comunica incidentes e acompanha os que comunicou. Lê as políticas vigentes, registra ciência e faz os treinamentos designados. |
 | Auditor | Somente leitura de tudo, inclusive da trilha de auditoria |
 
 ### Evidências

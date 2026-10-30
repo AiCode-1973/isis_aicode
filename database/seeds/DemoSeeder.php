@@ -6,6 +6,7 @@ namespace Isis\Database\Seeds;
 
 require_once __DIR__ . '/DemoComplianceSeeder.php';
 require_once __DIR__ . '/DemoPrivacySeeder.php';
+require_once __DIR__ . '/DemoProgramSeeder.php';
 
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
@@ -80,6 +81,10 @@ final class DemoSeeder
             $summary[] = $privacy
                 ? "{$company['trade_name']}: solicitações de titulares e incidentes demonstrativos criados."
                 : "{$company['trade_name']}: já tinha solicitações ou incidentes; mantidos.";
+            $program = TenantContext::runAs($tenantId, static fn (): bool => DemoProgramSeeder::run($company['segment_code'], $company['trade_name']));
+            $summary[] = $program
+                ? "{$company['trade_name']}: fornecedores, políticas e treinamento demonstrativos criados."
+                : "{$company['trade_name']}: já tinha fornecedores; mantidos.";
         }
         return $summary;
     }

@@ -12,7 +12,10 @@ use Isis\Controllers\AuthController;
 use Isis\Controllers\DashboardController;
 use Isis\Controllers\HomeController;
 use Isis\Controllers\IncidentController;
+use Isis\Controllers\PolicyController;
 use Isis\Controllers\PublicRequestController;
+use Isis\Controllers\TrainingController;
+use Isis\Controllers\VendorController;
 use Isis\Controllers\RequestController;
 use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
@@ -41,6 +44,7 @@ return static function (Router $r): void {
     $r->post('/titular/{slug}', [PublicRequestController::class, 'store']);
     $r->get('/titular/{slug}/enviado', [PublicRequestController::class, 'sent']);
     $r->get('/titular/{slug}/acompanhar', [PublicRequestController::class, 'track']);
+    $r->get('/certificado/{code}', [TrainingController::class, 'verify']);
     $r->post('/titular/{slug}/acompanhar', [PublicRequestController::class, 'track']);
     $r->get('/instalar', [InstallController::class, 'show']);
     $r->post('/instalar', [InstallController::class, 'run']);
@@ -120,6 +124,45 @@ return static function (Router $r): void {
     $r->post('/incidentes/{id}/tratamento', [IncidentController::class, 'treatment'], $app(P::INCIDENTS_MANAGE));
     $r->post('/incidentes/{id}/andamento', [IncidentController::class, 'progress'], $app(P::INCIDENTS_MANAGE));
     $r->post('/incidentes/{id}/comunicacao', [IncidentController::class, 'communication'], $app(P::INCIDENTS_MANAGE));
+
+    // Fornecedores
+    $r->get('/fornecedores', [VendorController::class, 'index'], $app(P::VENDORS_VIEW));
+    $r->get('/fornecedores/novo', [VendorController::class, 'create'], $app(P::VENDORS_EDIT));
+    $r->post('/fornecedores', [VendorController::class, 'store'], $app(P::VENDORS_EDIT));
+    $r->get('/fornecedores/{id}', [VendorController::class, 'show'], $app(P::VENDORS_VIEW));
+    $r->get('/fornecedores/{id}/editar', [VendorController::class, 'edit'], $app(P::VENDORS_EDIT));
+    $r->post('/fornecedores/{id}', [VendorController::class, 'update'], $app(P::VENDORS_EDIT));
+    $r->post('/fornecedores/{id}/avaliacao', [VendorController::class, 'assess'], $app(P::VENDORS_EDIT));
+    $r->post('/fornecedores/{id}/contratos', [VendorController::class, 'addContract'], $app(P::VENDORS_EDIT));
+    $r->post('/fornecedores/{id}/contratos/{item}/excluir', [VendorController::class, 'removeContract'], $app(P::VENDORS_EDIT));
+
+    // Políticas e documentos
+    $r->get('/politicas', [PolicyController::class, 'index'], $app(P::POLICIES_VIEW));
+    $r->get('/politicas/nova', [PolicyController::class, 'create'], $app(P::POLICIES_EDIT));
+    $r->post('/politicas', [PolicyController::class, 'store'], $app(P::POLICIES_EDIT));
+    $r->post('/politicas/modelos', [PolicyController::class, 'importTemplates'], $app(P::POLICIES_EDIT));
+    $r->get('/politicas/{id}', [PolicyController::class, 'show'], $app(P::POLICIES_VIEW));
+    $r->get('/politicas/{id}/editar', [PolicyController::class, 'edit'], $app(P::POLICIES_EDIT));
+    $r->post('/politicas/{id}', [PolicyController::class, 'update'], $app(P::POLICIES_EDIT));
+    $r->post('/politicas/{id}/enviar', [PolicyController::class, 'submit'], $app(P::POLICIES_EDIT));
+    $r->post('/politicas/{id}/aprovar', [PolicyController::class, 'approve'], $app(P::POLICIES_APPROVE));
+    $r->post('/politicas/{id}/devolver', [PolicyController::class, 'reject'], $app(P::POLICIES_APPROVE));
+    $r->post('/politicas/{id}/ciencia', [PolicyController::class, 'acknowledge'], $app(P::POLICIES_VIEW));
+    $r->post('/politicas/{id}/arquivar', [PolicyController::class, 'archive'], $app(P::POLICIES_EDIT));
+
+    // Treinamentos
+    $r->get('/treinamentos', [TrainingController::class, 'index'], $app(P::TRAININGS_VIEW));
+    $r->get('/treinamentos/novo', [TrainingController::class, 'create'], $app(P::TRAININGS_MANAGE));
+    $r->post('/treinamentos', [TrainingController::class, 'store'], $app(P::TRAININGS_MANAGE));
+    $r->post('/treinamentos/modelo', [TrainingController::class, 'importTemplate'], $app(P::TRAININGS_MANAGE));
+    $r->get('/treinamentos/certificado/{code}', [TrainingController::class, 'certificate'], $app(P::TRAININGS_VIEW));
+    $r->get('/treinamentos/{id}', [TrainingController::class, 'show'], $app(P::TRAININGS_VIEW));
+    $r->get('/treinamentos/{id}/editar', [TrainingController::class, 'edit'], $app(P::TRAININGS_MANAGE));
+    $r->post('/treinamentos/{id}', [TrainingController::class, 'update'], $app(P::TRAININGS_MANAGE));
+    $r->post('/treinamentos/{id}/situacao', [TrainingController::class, 'status'], $app(P::TRAININGS_MANAGE));
+    $r->post('/treinamentos/{id}/designar', [TrainingController::class, 'assign'], $app(P::TRAININGS_MANAGE));
+    $r->get('/treinamentos/{id}/avaliacao', [TrainingController::class, 'quiz'], $app(P::TRAININGS_VIEW));
+    $r->post('/treinamentos/{id}/avaliacao', [TrainingController::class, 'submit'], $app(P::TRAININGS_VIEW));
 
     // Evidências (permissão conferida sobre o registro de origem)
     $r->post('/evidencias', [EvidenceController::class, 'upload'], $app(P::DASHBOARD_VIEW));

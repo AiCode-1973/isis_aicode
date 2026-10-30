@@ -18,6 +18,11 @@ $menu = [
         [P::REQUESTS_VIEW, '/titulares', 'inbox', 'Solicitações de titulares'],
         [[P::INCIDENTS_VIEW, P::INCIDENTS_REPORT], '/incidentes', 'siren', 'Incidentes de segurança'],
     ],
+    'Programa de privacidade' => [
+        [P::VENDORS_VIEW, '/fornecedores', 'truck', 'Fornecedores'],
+        [P::POLICIES_VIEW, '/politicas', 'file', 'Políticas e documentos'],
+        [P::TRAININGS_VIEW, '/treinamentos', 'graduation', can(P::TRAININGS_MANAGE) ? 'Treinamentos' : 'Meus treinamentos'],
+    ],
     'Governança' => [
         [P::USERS_VIEW, '/usuarios', 'users', 'Usuários e perfis'],
         [P::SETTINGS_MANAGE, '/configuracoes', 'settings', 'Configurações'],
