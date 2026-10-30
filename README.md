@@ -1,3 +1,9 @@
+
+
+
+
+
+
 # ISIS · Gestão da Privacidade e Proteção de Dados
 
 **LGPD • Governança • Segurança da Informação • Conformidade**
@@ -7,13 +13,13 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ISIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: fase 2 de 5
+## Situação: fase 1 de 5 (núcleo)
 
 | Fase | Conteúdo | Situação |
 |---|---|---|
-| 1 | Cadastro da empresa, confirmação de e-mail, login, recuperação de acesso, convites, perfis e permissões, configuração inicial por segmento, usuários, setores, perfil, trilha de auditoria com verificação de integridade | **pronta** |
-| 2 | Inventário de operações de tratamento (registro do art. 37 com exportação CSV), catálogos, riscos (matriz 5×5), planos de ação com histórico, evidências com hash SHA-256 e painel de conformidade completo | **pronta** |
-| 3 | Solicitações de titulares (com canal público) e incidentes de segurança | próxima |
+| 1 | Cadastro da empresa, confirmação de e-mail, login, recuperação de acesso, convites, perfis e permissões, configuração inicial por segmento, usuários, setores, painel, perfil, trilha de auditoria com verificação de integridade | **pronta** |
+| 2 | Inventário de operações de tratamento, riscos, planos de ação e painel completo | próxima |
+| 3 | Solicitações de titulares (com canal público) e incidentes de segurança | — |
 | 4 | Fornecedores, políticas e documentos, treinamentos com certificado | — |
 | 5 | Backup automatizado, relatórios e refinamentos | — |
 
@@ -61,11 +67,8 @@ server {
 
 ### Atualizações
 
-Envie os arquivos novos (sem sobrescrever o `.env` e a pasta `storage/` do servidor) e rode:
-
 ```bash
-php bin/isis migrate        # aplica migrations novas e atualiza os catálogos (segmentos e hipóteses legais)
-php bin/isis seed:demo      # opcional: completa as empresas fictícias com inventário, riscos e planos
+php bin/isis migrate        # aplica migrations novas e atualiza o catálogo de segmentos
 php bin/isis audit:verify   # confere a integridade da trilha de auditoria de todas as empresas
 ```
 
@@ -156,11 +159,6 @@ tests/             PHPUnit
 |---|---|
 | Administrador | Tudo, inclusive usuários e configurações |
 | Encarregado (DPO) | Todos os módulos de conformidade e a auditoria; não administra usuários nem configurações |
-| Gestor | Inventário, riscos e planos de ação: vê tudo, mas só altera o que é do seu setor, o que criou ou o que está sob sua responsabilidade |
-| Colaborador | Vê e atualiza só as ações atribuídas a ele (andamento e evidências); treinamentos, políticas e comunicação de incidentes |
+| Gestor | Inventário, riscos e planos de ação; leitura dos demais |
+| Colaborador | Tarefas atribuídas, treinamentos, políticas e comunicação de incidentes |
 | Auditor | Somente leitura de tudo, inclusive da trilha de auditoria |
-
-### Evidências
-
-Arquivos de até 10 MB (PDF, PNG/JPG, TXT/CSV, Office e LibreOffice). O tipo é conferido pelo conteúdo real, não só pela extensão. Os arquivos ficam em `storage/uploads/<empresa>/` com nome aleatório, fora da raiz pública. O download só acontece depois de conferir a empresa e a permissão, e o hash SHA-256 de cada arquivo fica registrado.
-Se o servidor limitar uploads a 2 MB, ajuste `upload_max_filesize` e `post_max_size` do PHP (ex.: 12M).

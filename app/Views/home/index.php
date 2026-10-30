@@ -1,6 +1,6 @@
 <section class="hero">
     <div class="container">
-        <p class="eyebrow">ISIS · Gestão da Privacidade e Proteção de Dados</p>
+        <p class="eyebrow">ÍSIS · Gestão da Privacidade e Proteção de Dados</p>
         <h1>A proteção de dados da sua empresa, organizada.</h1>
         <p class="lead">Uma plataforma para implantar e manter a gestão da LGPD: mapeie operações de tratamento, avalie riscos, atenda titulares, registre incidentes e comprove cada passo com uma trilha de auditoria.</p>
         <div class="actions">

@@ -13,7 +13,7 @@
 <?= $content ?>
 </td></tr>
 <tr><td style="padding:16px 24px;border-top:1px solid #e2e7ef;font-size:12px;color:#5d6b7f;">
-Mensagem automática do ISIS. Se você não reconhece esta ação, ignore este e-mail.<br>
+Mensagem automática do ÍSIS. Se você não reconhece esta ação, ignore este e-mail.<br>
 <?= Isis\Core\View::partial('partials/disclaimer') ?>
 </td></tr>
 </table>

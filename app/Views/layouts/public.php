@@ -18,7 +18,7 @@
 </main>
 <footer class="site-footer">
     <div class="container inner">
-        <span>© <?= date('Y') ?> ISIS · Gestão da Privacidade e Proteção de Dados · AiCode</span>
+        <span>© <?= date('Y') ?> ÍSIS · Gestão da Privacidade e Proteção de Dados · AiCode</span>
         <a href="/termos">Termos de uso e aviso de privacidade</a>
     </div>
 </footer>

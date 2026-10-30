@@ -1,6 +1,6 @@
 <section class="section">
     <div class="container prose">
-        <p class="eyebrow">ISIS</p>
+        <p class="eyebrow">ÍSIS</p>
         <h1>Termos de uso e aviso de privacidade</h1>
         <p class="muted">Versão inicial do MVP. Este texto é um modelo e deve ser revisado pela assessoria jurídica da AiCode antes da operação comercial.</p>
 
