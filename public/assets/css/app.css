@@ -59,6 +59,28 @@ small, .small { font-size: .85rem; }
 :focus-visible { outline: 3px solid rgba(15, 138, 131, .45); outline-offset: 2px; }
 .hidden { display: none !important; }
 
+/* ---------- Barras de rolagem ----------
+   Finas, arredondadas e discretas. Chrome/Edge/Safari usam ::-webkit-scrollbar;
+   o Firefox usa scrollbar-width/scrollbar-color (aplicados só nele, pois no Chrome desativariam o estilo abaixo). */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: rgba(15, 27, 45, .22); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background-color: rgba(15, 27, 45, .4); }
+::-webkit-scrollbar-corner { background: transparent; }
+/* Menu lateral escuro: barra clara, quase invisível até passar o mouse */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background-color: transparent; border-width: 1px; }
+.sidebar:hover::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, .22); }
+.sidebar::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, .4); }
+/* Tabelas e listas internas: um pouco mais finas */
+.table-wrap::-webkit-scrollbar, .check-grid::-webkit-scrollbar, .manual-toc::-webkit-scrollbar { width: 8px; height: 8px; }
+@supports (-moz-appearance: none) {
+  html { scrollbar-width: thin; scrollbar-color: rgba(15, 27, 45, .28) transparent; }
+  .sidebar { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  .sidebar:hover { scrollbar-color: rgba(255, 255, 255, .25) transparent; }
+  .table-wrap, .check-grid, .manual-toc { scrollbar-width: thin; }
+}
+
 /* ---------- Botões ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .45rem;

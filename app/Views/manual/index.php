@@ -406,6 +406,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>0.2.4</td><td>29/10/2026</td><td>Barras de rolagem finas e discretas nas telas, tabelas e no menu lateral; no menu, a barra só aparece ao passar o mouse.</td></tr>
                         <tr><td>0.2.3</td><td>29/10/2026</td><td>As telas passam a ocupar toda a largura disponível, inclusive com o menu lateral recolhido. Os indicadores se distribuem para preencher a linha.</td></tr>
                         <tr><td>0.2.2</td><td>29/10/2026</td><td>Nome do sistema grafado com acento, ÍSIS, em todas as telas, e-mails e documentos. Imagens do manual atualizadas.</td></tr>
                         <tr><td>0.2.1</td><td>29/10/2026</td><td>Menu lateral recolhível no computador, com lembrança da escolha. Atalho para o manual no menu do usuário. Manual ilustrado com 22 imagens das telas, feitas com dados fictícios.</td></tr>
