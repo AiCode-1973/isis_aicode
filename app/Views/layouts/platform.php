@@ -35,7 +35,7 @@ $path = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
         </ul>
         <p class="nav-section"><span>Público</span></p>
         <ul class="nav">
-            <li><a href="/precos" title="Página de preços"><?= icon('info') ?><span class="nav-label">Página de preços</span></a></li>
+            <li><a href="/#planos" title="Página de preços"><?= icon('info') ?><span class="nav-label">Página de preços</span></a></li>
         </ul>
     </nav>
     <div class="sidebar-foot">ÍSIS v<?= e(APP_VERSION) ?> · Painel da plataforma</div>

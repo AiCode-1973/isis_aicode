@@ -1,5 +1,5 @@
 <?php $loggedIn = Isis\Auth\Auth::check(); ?>
-<section class="<?= $loggedIn ? '' : 'section' ?>">
+<section id="planos" class="<?= $loggedIn ? '' : 'section section-alt' ?>">
     <div class="<?= $loggedIn ? '' : 'container' ?>">
         <div class="section-head">
             <p class="eyebrow">Planos e preços</p>

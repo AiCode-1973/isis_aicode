@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura (versão 1.1.0)
+## Situação: MVP completo + planos e assinatura (versão 1.1.2)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -18,7 +18,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 3 | Solicitações de titulares (protocolo, prazo de 15 dias, resposta por e-mail, dados criptografados), canal público `/titular/<empresa>` com acompanhamento e incidentes de segurança (classificação, investigação criptografada, prazo de 3 dias úteis para a ANPD) | **pronta** |
 | 4 | Fornecedores (avaliação com nota e risco, contratos, revisão), políticas e documentos (versões, aprovação, validade, ciência, modelos) e treinamentos (avaliação, designação, certificado com verificação pública em `/certificado/<código>`) | **pronta** |
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
-| 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e página pública de preços (`/precos`) | **pronta** |
+| 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 
 ## Requisitos
 
@@ -193,13 +193,21 @@ Valores, limites e destaques são editados no painel da plataforma, sem mexer no
 
 ### Painel da plataforma (`/plataforma`)
 
-Uso exclusivo da equipe AiCode, com login e sessão **separados** das contas das empresas. Crie o primeiro acesso no servidor:
+Uso exclusivo da equipe AiCode, com login e sessão **separados** das contas das empresas. Endereço de entrada: https://isis.aicode.dev.br/plataforma/entrar. Crie o primeiro acesso de um destes jeitos:
+
+**No Terminal do cPanel (ou SSH)**, na pasta do ÍSIS no servidor. Use o caminho completo do PHP 8.3 se o `php` padrão for outro:
 
 ```bash
-php bin/isis plataforma:admin voce@aicode.dev.br "Seu Nome"
+cd ~/isis && /usr/local/bin/ea-php83 bin/isis plataforma:admin voce@aicode.dev.br "Seu Nome"
 ```
 
-O comando pede a senha (mínimo 12 caracteres). Se você deixar em branco, ele gera uma senha e mostra uma única vez. O mesmo comando troca a senha de quem esqueceu.
+**Deste computador (Windows)**, gravando direto no banco de produção pelo IP. Não precisa ter enviado os arquivos ao servidor, só ter rodado as migrations:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File bin\plataforma-admin-producao.ps1 voce@aicode.dev.br "Seu Nome"
+```
+
+Nos dois casos a senha (mínimo 12 caracteres) é digitada duas vezes e não aparece na tela. No servidor, se você deixar em branco, o comando gera uma senha e a mostra uma única vez. O mesmo comando troca a senha de quem esqueceu.
 
 No painel:
 

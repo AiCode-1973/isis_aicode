@@ -31,7 +31,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+#planos { scroll-margin-top: 64px; }
 body {
   margin: 0;
   font-family: var(--font);

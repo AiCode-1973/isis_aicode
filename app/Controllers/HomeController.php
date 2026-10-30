@@ -15,7 +15,7 @@ final class HomeController extends Controller
         if (Auth::check()) {
             return $this->redirect('/painel');
         }
-        return $this->view('home/index', ['title' => 'Gestão da Privacidade e Proteção de Dados'], 'public');
+        return $this->view('home/index', ['title' => 'Gestão da Privacidade e Proteção de Dados'] + $this->pricingData(), 'public');
     }
 
     /** Manual do sistema: dentro do layout da aplicação para quem está logado, público para os demais. */
@@ -24,14 +24,25 @@ final class HomeController extends Controller
         return $this->view('manual/index', ['title' => 'Manual do sistema'], Auth::check() ? 'app' : 'public');
     }
 
-    /** Página pública de planos e preços (valores vêm do painel da plataforma). */
+    /**
+     * Planos e preços (valores vêm do painel da plataforma). Para visitantes é uma seção da página
+     * inicial; quem está logado vê a comparação dentro do sistema.
+     */
     public function pricing(Request $request): Response
     {
-        return $this->view('home/pricing', [
-            'title' => 'Planos e preços',
+        if (!Auth::check()) {
+            return $this->redirect('/#planos');
+        }
+        return $this->view('home/pricing', ['title' => 'Planos e preços'] + $this->pricingData(), 'app');
+    }
+
+    /** @return array{plans: array, trialDays: int} */
+    private function pricingData(): array
+    {
+        return [
             'plans' => (new \Isis\Repositories\PlanRepository())->all(true),
             'trialDays' => (int) \Isis\Core\Config::get('billing.trial_days', 14),
-        ], Auth::check() ? 'app' : 'public');
+        ];
     }
 
     public function terms(Request $request): Response

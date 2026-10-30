@@ -197,8 +197,26 @@ try {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($name) < 3) {
                 throw new RuntimeException('Uso: php bin/isis plataforma:admin <email> "<Nome completo>"');
             }
-            fwrite(STDOUT, 'Senha (mínimo 12 caracteres; deixe vazio para gerar uma): ');
-            $password = trim((string) preg_replace('/^\xEF\xBB\xBF/', '', (string) fgets(STDIN))); // ignora BOM de terminais Windows
+            // No terminal do servidor (Linux) a senha não aparece enquanto é digitada e é pedida duas vezes.
+            $interactive = function_exists('stream_isatty') && stream_isatty(STDIN);
+            $hide = $interactive && DIRECTORY_SEPARATOR === '/' && function_exists('shell_exec')
+                && !in_array('shell_exec', array_map('trim', explode(',', (string) ini_get('disable_functions'))), true);
+            $ask = static function (string $prompt) use ($hide): string {
+                fwrite(STDOUT, $prompt);
+                if ($hide) {
+                    shell_exec('stty -echo');
+                }
+                $line = (string) fgets(STDIN);
+                if ($hide) {
+                    shell_exec('stty echo');
+                    fwrite(STDOUT, PHP_EOL);
+                }
+                return trim((string) preg_replace('/^\xEF\xBB\xBF/', '', $line)); // ignora BOM de terminais Windows
+            };
+            $password = $ask('Senha (mínimo 12 caracteres; deixe vazio para gerar uma): ');
+            if ($interactive && $password !== '' && $ask('Repita a senha: ') !== $password) {
+                throw new RuntimeException('As senhas não conferem. Nada foi alterado.');
+            }
             $generated = $password === '';
             if ($generated) {
                 $password = rtrim(strtr(base64_encode(random_bytes(15)), '+/', 'Kx'), '=');

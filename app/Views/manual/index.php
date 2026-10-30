@@ -628,7 +628,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
 
         <section id="plano">
             <h2>21. Plano e assinatura</h2>
-            <p>Todos os planos têm <strong>todos os módulos</strong>. O que muda é o tamanho da equipe e alguns limites. Os valores atuais estão na página pública <a href="/precos">Planos e preços</a>.</p>
+            <p>Todos os planos têm <strong>todos os módulos</strong>. O que muda é o tamanho da equipe e alguns limites. Os valores atuais estão na seção <a href="/#planos">Planos e preços</a> da página inicial.</p>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Plano</th><th>Usuários</th><th>Fornecedores</th><th>Treinamentos</th></tr></thead>
@@ -656,7 +656,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>ao regularizar, o acesso completo volta na hora, sem perda de dados.</li>
             </ul>
             <p>Ao atingir um limite do plano, o ÍSIS avisa e não deixa incluir mais um item daquele tipo. Os dados que já existem continuam disponíveis.</p>
-            <?= $fig('precos', 'Página pública de planos e preços') ?>
+            <?= $fig('precos', 'Seção Planos e preços da página inicial') ?>
         </section>
 
         <section id="auditoria">
@@ -736,6 +736,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.1.2</td><td>30/10/2026</td><td>Planos e preços agora são uma seção da página inicial (botão "Ver planos e preços"); o link saiu do topo do site e continua no rodapé.</td></tr>
+                        <tr><td>1.1.1</td><td>30/10/2026</td><td>Criação do acesso da equipe AiCode ao painel da plataforma: a senha não aparece enquanto é digitada e é confirmada duas vezes; atalho para criar o acesso a partir de um computador Windows. Nada muda para as empresas.</td></tr>
                         <tr><td>1.1.0</td><td>30/10/2026</td><td><strong>Planos e assinatura:</strong> planos Essencial, Profissional e Empresarial com todos os módulos; teste grátis de 14 dias; limites de usuários, fornecedores e treinamentos; tela Plano e assinatura com faturas, instruções de pagamento e pedido de mudança de plano; avisos por e-mail e no topo das telas; modo somente leitura quando a assinatura vence (sem bloquear titulares e incidentes); página pública de preços. Pagamento registrado manualmente pela AiCode.</td></tr>
                         <tr><td>1.0.1</td><td>30/10/2026</td><td>Para o responsável técnico: comando de teste de envio de e-mail e guia de configuração do SMTP no README (passo a passo, SPF/DKIM/DMARC e problemas comuns).</td></tr>
                         <tr><td>1.0.0</td><td>30/10/2026</td><td>Fase 5, que conclui o MVP:<br>• <strong>Relatório de conformidade</strong> para impressão ou PDF e exportações em planilha de riscos, ações, solicitações (sem dados pessoais), incidentes, fornecedores e treinamentos.<br>• <strong>Lembrete diário por e-mail</strong>, um por pessoa, só quando há pendências.<br>• <strong>Cópias de segurança diárias criptografadas</strong>, com rotação e restauração.<br>• Limpeza automática de registros temporários e verificação do ambiente.</td></tr>

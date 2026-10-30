@@ -3,7 +3,7 @@
         <h1>Planos e preços</h1>
         <p>Valores e limites usados na página pública de preços, nas cobranças e nos bloqueios do sistema. Deixe um limite em branco para “sem limite”.</p>
     </div>
-    <a class="btn btn-ghost" href="/precos"><?= icon('eye') ?> Ver página pública</a>
+    <a class="btn btn-ghost" href="/#planos"><?= icon('eye') ?> Ver página pública</a>
 </div>
 
 <div class="stack">

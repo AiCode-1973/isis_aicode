@@ -130,6 +130,20 @@ async function shot(name, height = 820) {
   console.log(`  ${name}.webp`);
 }
 
+/** Captura só um trecho da página (ex.: uma seção da página inicial). */
+async function shotSection(name, selector, maxHeight = 1100) {
+  const full = await evaluate('Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)');
+  await send('Emulation.setDeviceMetricsOverride', { width: screen.width, height: full, deviceScaleFactor: 1, mobile: false });
+  await evaluate('window.scrollTo(0, 0)');
+  await sleep(300);
+  const box = JSON.parse(await evaluate(`JSON.stringify((() => { const r = document.querySelector('${selector}').getBoundingClientRect(); return { y: r.top + window.scrollY, h: r.height }; })())`));
+  const clip = { x: 0, y: box.y, width: screen.width, height: Math.min(box.h, maxHeight), scale: 1 };
+  const { data } = await send('Page.captureScreenshot', { format: 'webp', quality: 82, clip });
+  writeFileSync(join(OUT, `${name}.webp`), Buffer.from(data, 'base64'));
+  await viewport(screen.width, screen.height, screen.mobile);
+  console.log(`  ${name}.webp`);
+}
+
 async function login(email) {
   await send('Network.clearBrowserCookies');
   await go('/entrar');
@@ -165,7 +179,7 @@ try {
   await go('/'); await shot('inicio', 768);
   await go('/cadastro'); await shot('cadastro', 900);
   await go('/entrar'); await shot('login', 768);
-  await go('/precos'); await shot('precos', 900);
+  await go('/'); await shotSection('precos', '#planos');
 
   // Cadastro de uma empresa de exemplo -> confirmação -> configuração inicial
   const email = `lucia.andrade${Date.now() % 1000}@escolaexemplo.example`;
