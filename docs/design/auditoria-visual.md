@@ -17,7 +17,7 @@ Nada exige trocar de tecnologia. Tudo se resolve no CSS e nos templates PHP atua
 
 ---
 
-## Prioridade 1 · Defeitos (corrigir já)
+## Prioridade 1 · Defeitos (corrigir já) · **concluída na 1.4.0 e 1.4.1**
 
 | # | Problema | Onde | Proposta | Esforço |
 |---|---|---|---|---|

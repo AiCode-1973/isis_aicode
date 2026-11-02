@@ -141,7 +141,7 @@ final class TrainingController extends Controller
         }
         $added = $repo->enroll($id, $ids, Auth::id(), $due);
         AuditLogger::log('training.assigned', 'training', $id, null, ['participantes' => $added, 'prazo' => $due]);
-        return $this->success("/treinamentos/{$id}", "{$added} participante(s) designado(s)" . ($added < count($ids) ? '; os demais já estavam inscritos.' : '.'));
+        return $this->success("/treinamentos/{$id}", plural((int) $added, 'participante designado', 'participantes designados') . ($added < count($ids) ? '; os demais já estavam inscritos.' : '.'));
     }
 
     /** Conteúdo + avaliação para o participante. */

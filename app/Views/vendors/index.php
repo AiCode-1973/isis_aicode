@@ -18,7 +18,7 @@ $filtered = $filters['q'] || $filters['status'] || $filters['risk'] || $filters[
     <div class="card kpi"><span class="kpi-icon"><?= icon('truck', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['active'] ?></div><div class="kpi-label">Fornecedores ativos</div></div></div>
     <a class="card kpi" href="/fornecedores?risco=alto"><span class="kpi-icon warn"><?= icon('alert', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['high'] ?></div><div class="kpi-label">De risco alto</div></div></a>
     <a class="card kpi" href="/fornecedores?sem_avaliacao=1"><span class="kpi-icon info"><?= icon('target', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['unassessed'] ?></div><div class="kpi-label">Sem avaliação · <?= (int) $stats['review_overdue'] ?> com revisão vencida</div></div></a>
-    <div class="card kpi"><span class="kpi-icon teal"><?= icon('file', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['no_dpa'] ?></div><div class="kpi-label">Sem contrato com cláusulas de dados · <?= (int) $stats['contracts_expiring'] ?> contrato(s) vencendo em 30 dias</div></div></div>
+    <div class="card kpi"><span class="kpi-icon teal"><?= icon('file', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['no_dpa'] ?></div><div class="kpi-label">Sem contrato com cláusulas de dados · <?= plural((int) $stats['contracts_expiring'], 'contrato vencendo', 'contratos vencendo') ?> em 30 dias</div></div></div>
 </div>
 
 <form method="get" action="/fornecedores" class="card filters section-gap" aria-label="Filtros">

@@ -54,9 +54,9 @@ $shot = static fn (string $name): string => e(asset('img/manual/' . $name . '.we
                     <p>Operações de tratamento com finalidade, hipótese legal, retenção, sistemas e compartilhamentos. Exporta o registro do art. 37.</p>
                 </div>
                 <div class="mini-table" aria-hidden="true">
-                    <div><span class="mono">OP-002</span> Prontuário eletrônico <i class="chip chip-danger">sensível</i><i class="chip chip-ok">Ativa</i></div>
-                    <div><span class="mono">OP-003</span> Faturamento de convênios <i class="chip chip-ok">Ativa</i></div>
-                    <div><span class="mono">OP-005</span> Lembretes por WhatsApp <i class="chip chip-warn">sem hipótese legal</i></div>
+                    <div><span class="mono">OP-002</span> Prontuário eletrônico <i class="lp-chip lp-chip-danger">sensível</i><i class="lp-chip lp-chip-ok">Ativa</i></div>
+                    <div><span class="mono">OP-003</span> Faturamento de convênios <i class="lp-chip lp-chip-ok">Ativa</i></div>
+                    <div><span class="mono">OP-005</span> Lembretes por WhatsApp <i class="lp-chip lp-chip-warn">sem hipótese legal</i></div>
                 </div>
             </article>
 
@@ -71,7 +71,7 @@ $shot = static fn (string $name): string => e(asset('img/manual/' . $name . '.we
             <article class="bento-card">
                 <h3><?= icon('scale') ?> Relatório de impacto (RIPD)</h3>
                 <p>O ÍSIS indica as operações de alto risco e monta o relatório com os dados do inventário. Cada versão aprovada fica guardada.</p>
-                <div class="mini-doc" aria-hidden="true"><b>RIPD-001</b><span>Versão 1 · aprovada</span><i class="chip chip-ok"><?= icon('check') ?> íntegro</i></div>
+                <div class="mini-doc" aria-hidden="true"><b>RIPD-001</b><span>Versão 1 · aprovada</span><i class="lp-chip lp-chip-ok"><?= icon('check') ?> íntegro</i></div>
             </article>
 
             <article class="bento-card">
@@ -92,9 +92,9 @@ $shot = static fn (string $name): string => e(asset('img/manual/' . $name . '.we
                     <p>Avaliação de terceiros com nota de risco, políticas com aprovação e ciência dos colaboradores, treinamentos com certificado verificável.</p>
                 </div>
                 <div class="mini-cards" aria-hidden="true">
-                    <div><small>Fornecedor</small><b>Risco baixo</b><i class="chip chip-ok">contrato ok</i></div>
-                    <div><small>Política</small><b>v2 vigente</b><i class="chip chip-info">87% ciência</i></div>
-                    <div><small>Treinamento</small><b>Certificado</b><i class="chip chip-ok">aprovado 90%</i></div>
+                    <div><small>Fornecedor</small><b>Risco baixo</b><i class="lp-chip lp-chip-ok">contrato ok</i></div>
+                    <div><small>Política</small><b>v2 vigente</b><i class="lp-chip lp-chip-info">87% ciência</i></div>
+                    <div><small>Treinamento</small><b>Certificado</b><i class="lp-chip lp-chip-ok">aprovado 90%</i></div>
                 </div>
             </article>
 

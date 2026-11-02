@@ -72,7 +72,7 @@ $statusBadge = ['pendente' => 'badge', 'em_andamento' => 'badge-brand', 'conclui
                     <a class="title-link" href="/planos/<?= (int) $x['id'] ?>"><?= e($x['title']) ?></a>
                     <div class="small muted">
                         <?= $x['risk_title'] ? e(code('RSK', (int) $x['risk_seq']) . ' ' . $x['risk_title']) : ($x['activity_name'] ? e(code('OP', (int) $x['activity_seq']) . ' ' . $x['activity_name']) : 'Tarefa geral') ?>
-                        <?= (int) $x['evidence_count'] > 0 ? ' · ' . (int) $x['evidence_count'] . ' evidência(s)' : '' ?>
+                        <?= (int) $x['evidence_count'] > 0 ? ' · ' . plural((int) $x['evidence_count'], 'evidência', 'evidências') : '' ?>
                     </div>
                 </td>
                 <td data-label="Responsável"><?= $x['owner_name'] ? e($x['owner_name']) : '<span class="badge badge-warn">sem responsável</span>' ?></td>

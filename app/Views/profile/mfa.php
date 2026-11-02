@@ -50,7 +50,7 @@
         <h2><?= icon('check') ?> Ativada</h2>
         <dl class="dl section-gap-sm">
             <dt>Ativada em</dt><dd><?= e(fmt_datetime($me['mfa_enabled_at'])) ?></dd>
-            <dt>Códigos de recuperação</dt><dd class="<?= $remaining <= 2 ? 'text-danger' : '' ?>"><?= (int) $remaining ?> disponível(is) de 10</dd>
+            <dt>Códigos de recuperação</dt><dd class="<?= $remaining <= 2 ? 'text-danger' : '' ?>"><?= plural((int) $remaining, 'disponível', 'disponíveis') ?> de 10</dd>
         </dl>
         <p class="small section-gap-sm">A cada entrada, depois da senha, o ÍSIS pede o código do aplicativo.</p>
 

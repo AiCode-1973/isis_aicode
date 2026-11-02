@@ -199,7 +199,7 @@ final class PolicyController extends Controller
             $created++;
         }
         return $this->success('/politicas', $created > 0
-            ? "{$created} modelo(s) criado(s) como rascunho. Adapte o texto antes de enviar para aprovação."
+            ? plural((int) $created, 'modelo criado', 'modelos criados') . ' como rascunho. Adapte o texto antes de enviar para aprovação.'
             : 'Os modelos já existem na lista.');
     }
 

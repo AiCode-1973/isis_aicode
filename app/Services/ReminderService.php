@@ -30,7 +30,7 @@ final class ReminderService
                         continue;
                     }
                     $count = array_sum(array_map('count', $entry['groups']));
-                    Mailer::sendTemplate($entry['user']['email'], "ÍSIS: {$count} pendência(s) de proteção de dados", 'reminders', [
+                    Mailer::sendTemplate($entry['user']['email'], 'ÍSIS: ' . plural($count, 'pendência', 'pendências') . ' de proteção de dados', 'reminders', [
                         'name' => explode(' ', (string) $entry['user']['name'])[0],
                         'company' => $tenant['trade_name'] ?: $tenant['legal_name'],
                         'groups' => $entry['groups'],

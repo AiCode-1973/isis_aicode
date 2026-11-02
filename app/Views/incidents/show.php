@@ -32,7 +32,7 @@ $text = static fn (?string $v): string => $v !== null && trim($v) !== '' ? e($v)
     <?php else: ?>
     <p><strong class="text-danger"><?= icon('alert') ?> Incidente com possível risco ou dano relevante aos titulares.</strong>
     Prazo de referência para comunicar a ANPD e os titulares: <strong><?= e(fmt_date($i['anpd_deadline'])) ?></strong>
-    (<?= $left === null ? '—' : ($left < 0 ? abs($left) . ' dia(s) de atraso' : ($left === 0 ? 'vence hoje' : 'faltam ' . $left . ' dia(s)')) ?>).
+    (<?= $left === null ? '—' : days_left_label($left) ?>).
     <span class="small muted">3 dias úteis a partir do conhecimento (Res. CD/ANPD nº 15/2024); feriados não considerados.</span></p>
     <?php endif; ?>
 </section>

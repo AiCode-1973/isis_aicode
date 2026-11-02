@@ -54,7 +54,7 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
     <a class="card kpi" href="/riscos?abertos=1"><span class="kpi-icon warn"><?= icon('target', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $risks['open'] ?></div><div class="kpi-label">Riscos abertos · <?= (int) ($risks['critical'] + $risks['high']) ?> altos/críticos</div></div></a>
     <?php endif; ?>
     <?php if ($actionStats !== null): ?>
-    <a class="card kpi" href="/planos?abertas=1"><span class="kpi-icon info"><?= icon('clock', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) ($actionStats['pending'] + $actionStats['in_progress']) ?></div><div class="kpi-label"><?= $onlyOwn ? 'Minhas tarefas abertas' : 'Ações em aberto' ?> · <?= (int) $actionStats['overdue'] ?> vencida(s)</div></div></a>
+    <a class="card kpi" href="/planos?abertas=1"><span class="kpi-icon info"><?= icon('clock', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) ($actionStats['pending'] + $actionStats['in_progress']) ?></div><div class="kpi-label"><?= $onlyOwn ? 'Minhas tarefas abertas' : 'Ações em aberto' ?> · <?= plural((int) $actionStats['overdue'], 'vencida', 'vencidas') ?></div></div></a>
     <?php
         $base = max(1, (int) $actionStats['total'] - (int) $actionStats['cancelled']);
         $execution = (int) round((int) $actionStats['done'] / $base * 100);
@@ -192,7 +192,7 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
             <ul class="bar-list section-gap-sm">
                 <?php $max = max(1, ...array_map(static fn (array $o): int => (int) $o['open_count'], $byOwner)); foreach ($byOwner as $o): ?>
                 <li>
-                    <div class="bar-head"><span><?= e($o['owner_name']) ?></span><strong><?= (int) $o['open_count'] ?><?= (int) $o['overdue_count'] ? ' · <span class="text-danger">' . (int) $o['overdue_count'] . ' vencida(s)</span>' : '' ?></strong></div>
+                    <div class="bar-head"><span><?= e($o['owner_name']) ?></span><strong><?= (int) $o['open_count'] ?><?= (int) $o['overdue_count'] ? ' · <span class="text-danger">' . plural((int) $o['overdue_count'], 'vencida', 'vencidas') . '</span>' : '' ?></strong></div>
                     <div class="bar"><span class="<?= width_class((int) $o['open_count'] / $max * 100) ?>"></span></div>
                 </li>
                 <?php endforeach; ?>

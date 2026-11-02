@@ -64,10 +64,10 @@ $extraLabel = ['dados' => 'Sensível (art. 5º, II)', 'titulares' => 'Vulneráve
                     <?php else: ?>
                     <label class="check small"><input type="checkbox" name="flag" value="1"<?= $item[$cat->extraColumn()] ? ' checked' : '' ?>> <span><?= $cat->type === 'dados' ? 'Sensível' : 'Vulnerável' ?></span></label>
                     <?php endif; ?>
-                    <span class="badge" title="Operações que usam"><?= (int) $item['uses'] ?> uso(s)</span>
+                    <span class="badge" title="Operações que usam"><?= plural((int) $item['uses'], 'uso', 'usos') ?></span>
                     <button type="submit" class="btn btn-ghost btn-sm">Salvar</button>
                 </form>
-                <form method="post" action="/inventario/catalogos/<?= e($cat->type) ?>/<?= (int) $item['id'] ?>/excluir" class="inline-form" data-confirm="Excluir &quot;<?= e($item['name']) ?>&quot;?<?= $item['uses'] ? ' Ele será removido de ' . (int) $item['uses'] . ' operação(ões).' : '' ?>">
+                <form method="post" action="/inventario/catalogos/<?= e($cat->type) ?>/<?= (int) $item['id'] ?>/excluir" class="inline-form" data-confirm="Excluir &quot;<?= e($item['name']) ?>&quot;?<?= $item['uses'] ? ' Ele será removido de ' . plural((int) $item['uses'], 'operação.', 'operações.') : '' ?>">
                     <?= csrf_field() ?>
                     <button type="submit" class="icon-btn btn-danger" aria-label="Excluir <?= e($item['name']) ?>"><?= icon('trash') ?></button>
                 </form>

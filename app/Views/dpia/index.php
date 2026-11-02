@@ -19,7 +19,7 @@ $statusBadge = ['rascunho' => 'badge', 'em_aprovacao' => 'badge-warn', 'aprovado
     <div class="card kpi"><span class="kpi-icon teal"><?= icon('scale', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['approved'] ?><span class="kpi-sub">/<?= (int) $stats['total'] ?></span></div><div class="kpi-label">Aprovados</div></div></div>
     <div class="card kpi"><span class="kpi-icon"><?= icon('file', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['draft'] ?></div><div class="kpi-label">Em elaboração</div></div></div>
     <div class="card kpi"><span class="kpi-icon warn"><?= icon('clock', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['pending'] ?></div><div class="kpi-label">Aguardando aprovação</div></div></div>
-    <div class="card kpi"><span class="kpi-icon info"><?= icon('alert', 'icon-lg') ?></span><div><div class="kpi-value"><?= count($candidates) ?></div><div class="kpi-label">Operações que podem exigir RIPD · <?= (int) $stats['review_overdue'] ?> revisão(ões) vencida(s)</div></div></div>
+    <div class="card kpi"><span class="kpi-icon info"><?= icon('alert', 'icon-lg') ?></span><div><div class="kpi-value"><?= count($candidates) ?></div><div class="kpi-label">Operações que podem exigir RIPD · <?= plural((int) $stats['review_overdue'], 'revisão vencida', 'revisões vencidas') ?></div></div></div>
 </div>
 
 <?php if ($candidates): ?>

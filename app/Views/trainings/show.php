@@ -9,7 +9,7 @@ $done = count(array_filter($enrollments, static fn (array $e): bool => $e['statu
     <div>
         <p class="eyebrow"><a href="/treinamentos">Treinamentos</a> · <?= e(code('TRE', (int) $m['seq'])) ?></p>
         <h1><?= e($m['title']) ?></h1>
-        <p><?= (int) $m['duration_minutes'] ?> min · <?= (int) $questionsCount ?> pergunta(s) · nota mínima <?= (int) $m['passing_score'] ?> · certificado válido por <?= (int) $m['certificate_months'] ?> meses
+        <p><?= (int) $m['duration_minutes'] ?> min · <?= plural((int) $questionsCount, 'pergunta', 'perguntas') ?> · nota mínima <?= (int) $m['passing_score'] ?> · certificado válido por <?= (int) $m['certificate_months'] ?> meses
             <?php if ($manager): ?> · <span class="badge <?= $m['status'] === 'publicado' ? 'badge-ok' : '' ?>"><?= e(Labels::TRAINING_STATUS[$m['status']]) ?></span><?php endif; ?></p>
     </div>
     <?php if ($manager): ?>

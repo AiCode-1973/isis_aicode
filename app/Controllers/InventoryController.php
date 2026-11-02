@@ -213,7 +213,7 @@ final class InventoryController extends Controller
         $tenant = (new TenantRepository())->current();
         $created = CatalogService::importSuggestions($tenant['segment_code']);
         AuditLogger::log('catalog.imported', 'tenant', (int) $tenant['id'], null, ['segmento' => $tenant['segment_code']] + $created);
-        return $this->success('/inventario/catalogos', sprintf('%d categoria(s) de dados e %d de titulares importadas das sugestões do segmento.', $created['data'], $created['subjects']));
+        return $this->success('/inventario/catalogos', 'Importadas das sugestões do segmento: ' . plural((int) $created['data'], 'categoria de dados', 'categorias de dados') . ' e ' . plural((int) $created['subjects'], 'de titulares', 'de titulares') . '.');
     }
 
     // ---------------- Apoio ----------------

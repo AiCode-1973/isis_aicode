@@ -54,7 +54,7 @@ $actionBase = max(0, $r['actions']['total'] - $r['actions']['cancelled']);
 
     <section class="report-section">
         <h2>2. Inventário de dados pessoais</h2>
-        <p><?= (int) $r['inventory']['total'] ?> operação(ões) registrada(s), <?= (int) $r['inventory']['active'] ?> ativa(s); <?= (int) $r['inventory']['sensitive'] ?> com dados sensíveis; <?= (int) $r['inventory']['international'] ?> com transferência internacional; <?= (int) $r['inventory']['no_basis'] ?> sem hipótese legal definida; <?= (int) $r['inventory']['review_overdue'] ?> com revisão vencida.</p>
+        <p><?= plural((int) $r['inventory']['total'], 'operação registrada', 'operações registradas') ?>, <?= plural((int) $r['inventory']['active'], 'ativa', 'ativas') ?>; <?= (int) $r['inventory']['sensitive'] ?> com dados sensíveis; <?= (int) $r['inventory']['international'] ?> com transferência internacional; <?= (int) $r['inventory']['no_basis'] ?> sem hipótese legal definida; <?= (int) $r['inventory']['review_overdue'] ?> com revisão vencida.</p>
         <?php if ($r['activities']): ?>
         <table class="report-table">
             <thead><tr><th>Código</th><th>Operação</th><th>Hipótese legal</th><th>Sensíveis</th><th>Setor</th><th>Situação</th></tr></thead>
@@ -85,7 +85,7 @@ $actionBase = max(0, $r['actions']['total'] - $r['actions']['cancelled']);
 
     <section class="report-section">
         <h2>4. Plano de ação</h2>
-        <p><?= (int) $r['actions']['total'] ?> ação(ões): <?= (int) $r['actions']['done'] ?> concluída(s) (<?= (int) $r['actions']['done_on_time'] ?> dentro do prazo), <?= (int) ($r['actions']['pending'] + $r['actions']['in_progress']) ?> em aberto, <?= (int) $r['actions']['overdue'] ?> vencida(s).</p>
+        <p><?= plural((int) $r['actions']['total'], 'ação', 'ações') ?>: <?= plural((int) $r['actions']['done'], 'concluída', 'concluídas') ?> (<?= (int) $r['actions']['done_on_time'] ?> dentro do prazo), <?= (int) ($r['actions']['pending'] + $r['actions']['in_progress']) ?> em aberto, <?= plural((int) $r['actions']['overdue'], 'vencida', 'vencidas') ?>.</p>
         <?php if ($r['overdueActions']): ?>
         <table class="report-table">
             <thead><tr><th>Ação vencida</th><th>Responsável</th><th>Prazo</th></tr></thead>
@@ -96,7 +96,7 @@ $actionBase = max(0, $r['actions']['total'] - $r['actions']['cancelled']);
 
     <section class="report-section">
         <h2>5. Direitos dos titulares</h2>
-        <p>No período: <?= (int) $r['requestsPeriod']['received'] ?> solicitação(ões) recebida(s) e <?= (int) $r['requestsPeriod']['answered'] ?> respondida(s), <?= $pct((int) $r['requestsPeriod']['on_time'], (int) $r['requestsPeriod']['answered']) ?> dentro do prazo de referência. Situação atual: <?= (int) $r['requests']['open'] ?> em aberto, <?= (int) $r['requests']['overdue'] ?> fora do prazo. Tempo médio de resposta: <?= $r['requests']['avg_days'] === null ? '—' : e(number_format($r['requests']['avg_days'], 1, ',', '')) . ' dia(s)' ?>.</p>
+        <p>No período: <?= plural((int) $r['requestsPeriod']['received'], 'solicitação recebida', 'solicitações recebidas') ?> e <?= plural((int) $r['requestsPeriod']['answered'], 'respondida', 'respondidas') ?>, <?= $pct((int) $r['requestsPeriod']['on_time'], (int) $r['requestsPeriod']['answered']) ?> dentro do prazo de referência. Situação atual: <?= (int) $r['requests']['open'] ?> em aberto, <?= (int) $r['requests']['overdue'] ?> fora do prazo. Tempo médio de resposta: <?= $r['requests']['avg_days'] === null ? '—' : e(number_format($r['requests']['avg_days'], 1, ',', '')) . ($r['requests']['avg_days'] == 1 ? ' dia' : ' dias') ?>.</p>
         <?php if ($r['requestsPeriod']['by_type']): ?>
         <table class="report-table"><thead><tr><th>Tipo de pedido</th><th>Quantidade</th></tr></thead>
             <tbody><?php foreach ($r['requestsPeriod']['by_type'] as $row): ?><tr><td><?= e(label(Labels::RIGHT_TYPE, $row['right_type'])) ?></td><td><?= (int) $row['n'] ?></td></tr><?php endforeach; ?></tbody></table>
@@ -105,7 +105,7 @@ $actionBase = max(0, $r['actions']['total'] - $r['actions']['cancelled']);
 
     <section class="report-section">
         <h2>6. Incidentes de segurança</h2>
-        <p>No período: <?= (int) $r['incidentsPeriod']['total'] ?> incidente(s), <?= (int) $r['incidentsPeriod']['relevant'] ?> com risco relevante aos titulares, dos quais <?= (int) $r['incidentsPeriod']['notified_on_time'] ?> comunicado(s) à ANPD dentro do prazo de referência. Situação atual: <?= (int) $r['incidents']['open'] ?> em aberto; <?= (int) $r['incidents']['anpd_pending'] ?> com comunicação à ANPD pendente.</p>
+        <p>No período: <?= plural((int) $r['incidentsPeriod']['total'], 'incidente', 'incidentes') ?>, <?= (int) $r['incidentsPeriod']['relevant'] ?> com risco relevante aos titulares, <?= (int) $r['incidentsPeriod']['notified_on_time'] === 1 ? 'do qual 1 comunicado' : 'dos quais ' . (int) $r['incidentsPeriod']['notified_on_time'] . ' comunicados' ?> à ANPD dentro do prazo de referência. Situação atual: <?= (int) $r['incidents']['open'] ?> em aberto; <?= (int) $r['incidents']['anpd_pending'] ?> com comunicação à ANPD pendente.</p>
         <?php if ($r['incidentsPeriod']['by_severity']): ?>
         <p class="small">Por gravidade: <?php foreach ($r['incidentsPeriod']['by_severity'] as $row): ?><?= e($row['severity'] === 'a_classificar' ? 'a classificar' : Labels::SEVERITY[$row['severity']]) ?>: <?= (int) $row['n'] ?> · <?php endforeach; ?></p>
         <?php endif; ?>
@@ -113,19 +113,19 @@ $actionBase = max(0, $r['actions']['total'] - $r['actions']['cancelled']);
 
     <section class="report-section">
         <h2>7. Fornecedores</h2>
-        <p><?= (int) $r['vendors']['active'] ?> fornecedor(es) ativo(s); <?= (int) $r['vendors']['unassessed'] ?> sem avaliação; <?= (int) $r['vendors']['no_dpa'] ?> trata(m) dados sem contrato com cláusulas de proteção; <?= (int) $r['vendors']['contracts_expiring'] ?> contrato(s) vencendo em 30 dias.
+        <p><?= plural((int) $r['vendors']['active'], 'fornecedor ativo', 'fornecedores ativos') ?>; <?= (int) $r['vendors']['unassessed'] ?> sem avaliação; <?= (int) $r['vendors']['no_dpa'] ?> <?= (int) $r['vendors']['no_dpa'] === 1 ? 'trata' : 'tratam' ?> dados sem contrato com cláusulas de proteção; <?= plural((int) $r['vendors']['contracts_expiring'], 'contrato vencendo', 'contratos vencendo') ?> em 30 dias.
             Por risco: <?php foreach ($r['vendorsByRisk'] as $row): ?><?= e($row['level'] === 'nao_avaliado' ? 'não avaliado' : Labels::LEVEL[$row['level']]) ?>: <?= (int) $row['n'] ?> · <?php endforeach; ?></p>
     </section>
 
     <section class="report-section">
         <h2>8. Políticas e treinamentos</h2>
-        <p>Políticas: <?= (int) $r['policies']['published'] ?> vigente(s) de <?= (int) $r['policies']['total'] ?>; <?= (int) $r['policies']['expired'] ?> vencida(s); <?= (int) $r['policies']['awaiting'] ?> aguardando aprovação; ciência dos colaboradores em <?= $pct((int) $r['policies']['ack_done'], (int) $r['policies']['ack_expected']) ?>.</p>
-        <p>Treinamentos: <?= (int) $r['trainings']['modules'] ?> publicado(s); <?= (int) $r['trainings']['completed'] ?> de <?= (int) $r['trainings']['enrolled'] ?> participações concluídas (<?= $pct((int) $r['trainings']['completed'], (int) $r['trainings']['enrolled']) ?>); <?= (int) $r['trainings']['overdue'] ?> com prazo vencido; <?= (int) $r['trainingsPeriod'] ?> concluída(s) no período.</p>
+        <p>Políticas: <?= (int) $r['policies']['published'] ?> de <?= (int) $r['policies']['total'] ?> <?= (int) $r['policies']['total'] === 1 ? 'vigente' : 'vigentes' ?>; <?= plural((int) $r['policies']['expired'], 'vencida', 'vencidas') ?>; <?= (int) $r['policies']['awaiting'] ?> aguardando aprovação; ciência dos colaboradores em <?= $pct((int) $r['policies']['ack_done'], (int) $r['policies']['ack_expected']) ?>.</p>
+        <p>Treinamentos: <?= plural((int) $r['trainings']['modules'], 'publicado', 'publicados') ?>; <?= (int) $r['trainings']['completed'] ?> de <?= (int) $r['trainings']['enrolled'] ?> participações concluídas (<?= $pct((int) $r['trainings']['completed'], (int) $r['trainings']['enrolled']) ?>); <?= (int) $r['trainings']['overdue'] ?> com prazo vencido; <?= plural((int) $r['trainingsPeriod'], 'concluída', 'concluídas') ?> no período.</p>
     </section>
 
     <section class="report-section">
         <h2>9. Rastreabilidade</h2>
-        <p><?= (int) $r['audit']['events'] ?> ação(ões) registrada(s) na trilha de auditoria no período, <?= (int) $r['audit']['security'] ?> de segurança (acessos negados e tentativas de login recusadas). Verificação da cadeia de integridade: <strong><?= $r['audit']['chain']['ok'] ? 'íntegra' : 'VIOLADA' ?></strong> (<?= (int) $r['audit']['chain']['checked'] ?> registros conferidos).</p>
+        <p><?= plural((int) $r['audit']['events'], 'ação registrada', 'ações registradas') ?> na trilha de auditoria no período, <?= (int) $r['audit']['security'] ?> de segurança (acessos negados e tentativas de login recusadas). Verificação da cadeia de integridade: <strong><?= $r['audit']['chain']['ok'] ? 'íntegra' : 'VIOLADA' ?></strong> (<?= (int) $r['audit']['chain']['checked'] ?> registros conferidos).</p>
     </section>
 
     <footer class="report-foot">

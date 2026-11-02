@@ -83,7 +83,7 @@ $onTime = $stats['answered'] > 0 ? (int) round($stats['answered_on_time'] / $sta
                 <td data-label="Recebida"><?= e(fmt_date($r['received_at'])) ?></td>
                 <td data-label="Prazo" class="<?= $r['overdue'] ? 'text-danger' : '' ?>">
                     <?= e(fmt_date($r['due_date'])) ?>
-                    <?php if ($open && $left !== null): ?><div class="small <?= $left < 0 ? 'text-danger' : ($left <= 3 ? 'text-warn' : 'muted') ?>"><?= $left < 0 ? abs($left) . ' dia(s) de atraso' : ($left === 0 ? 'vence hoje' : 'faltam ' . $left . ' dia(s)') ?></div><?php endif; ?>
+                    <?php if ($open && $left !== null): ?><div class="small <?= $left < 0 ? 'text-danger' : ($left <= 3 ? 'text-warn' : 'muted') ?>"><?= days_left_label($left) ?></div><?php endif; ?>
                 </td>
                 <td data-label="Responsável"><?= $r['assigned_name'] ? e($r['assigned_name']) : '<span class="badge badge-warn">sem responsável</span>' ?></td>
                 <td data-label="Situação"><span class="badge <?= $statusBadge[$r['status']] ?? '' ?>"><?= e(label(Labels::REQUEST_STATUS, $r['status'])) ?></span></td>

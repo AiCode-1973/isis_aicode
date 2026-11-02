@@ -107,7 +107,7 @@ $n = 0;
                 <td><?= risk_badge($r['likelihood'], $r['impact']) ?></td>
                 <td><?= $r['residual_likelihood'] !== null ? risk_badge($r['residual_likelihood'], $r['residual_impact']) : '<span class="muted">não avaliado</span>' ?></td>
                 <td><?= e($r['treatment']) ?> · <?= e($r['status']) ?></td>
-                <td><?= $r['actions_count'] > 0 ? $r['actions_done'] . ' de ' . $r['actions_count'] . ' concluída(s)' : '—' ?></td>
+                <td><?= $r['actions_count'] > 0 ? $r['actions_done'] . ' de ' . $r['actions_count'] . ($r['actions_count'] === 1 ? ' concluída' : ' concluídas') : '—' ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>

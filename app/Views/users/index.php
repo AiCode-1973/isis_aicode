@@ -16,7 +16,7 @@ $canManage = can(P::USERS_MANAGE);
     <div class="stack">
         <section class="card" aria-labelledby="users-title">
             <div class="card-header">
-                <div><h2 id="users-title">Usuários</h2><p><?= count($users) ?> conta(s) nesta empresa.</p></div>
+                <div><h2 id="users-title">Usuários</h2><p><?= plural(count($users), 'conta', 'contas') ?> nesta empresa.</p></div>
             </div>
             <div class="table-wrap">
                 <table class="table-stack">

@@ -2,7 +2,7 @@
     <div>
         <p class="eyebrow"><a href="/treinamentos/<?= (int) $m['id'] ?>"><?= e($m['title']) ?></a></p>
         <h1>Avaliação</h1>
-        <p><?= count($questions) ?> pergunta(s). Nota mínima: <?= (int) $m['passing_score'] ?>. Você pode refazer se não atingir a nota.<?= (int) $enrollment['attempts'] > 0 ? ' Tentativas anteriores: ' . (int) $enrollment['attempts'] . '.' : '' ?></p>
+        <p><?= plural(count($questions), 'pergunta', 'perguntas') ?>. Nota mínima: <?= (int) $m['passing_score'] ?>. Você pode refazer se não atingir a nota.<?= (int) $enrollment['attempts'] > 0 ? ' Tentativas anteriores: ' . (int) $enrollment['attempts'] . '.' : '' ?></p>
     </div>
 </div>
 

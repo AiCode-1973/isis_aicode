@@ -43,7 +43,7 @@ $level = RiskMatrix::levelOf((int) $r['likelihood'], (int) $r['impact']);
 
         <section class="card">
             <div class="card-header">
-                <div><h2>Plano de ação</h2><p><?= (int) $r['actions_done'] ?> de <?= (int) $r['actions_count'] ?> ação(ões) concluída(s).</p></div>
+                <div><h2>Plano de ação</h2><p><?= (int) $r['actions_done'] ?> de <?= plural((int) $r['actions_count'], 'ação concluída', 'ações concluídas') ?>.</p></div>
                 <?php if (can(P::ACTIONS_EDIT)): ?><a class="btn btn-ghost btn-sm" href="/planos/nova?risco=<?= (int) $r['id'] ?>"><?= icon('plus') ?> Nova ação</a><?php endif; ?>
             </div>
             <?php if (!$actions): ?>

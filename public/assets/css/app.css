@@ -39,7 +39,7 @@
   --radius-sm: 8px;
   --shadow: 0 1px 2px rgba(15, 27, 45, .05), 0 4px 16px rgba(15, 27, 45, .05);
   --font: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --sidebar: 256px;
+  --sidebar: 272px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -250,7 +250,7 @@ td.actions-cell { white-space: nowrap; text-align: right; }
 .title-link { font-weight: 600; color: var(--ink); text-decoration: none; }
 .title-link:hover { color: var(--teal); text-decoration: underline; }
 .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
-.chip { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .6rem; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); font-size: .82rem; color: var(--ink-2); }
+.chip { display: inline-flex; align-items: center; gap: .3rem; padding: .25rem .6rem; border-radius: 8px; line-height: 1.35; max-width: 100%; background: var(--surface-2); border: 1px solid var(--line); font-size: .82rem; color: var(--ink-2); }
 .chip.sensitive { background: var(--danger-soft); border-color: #f2c4c9; color: var(--danger); }
 .chip.vulnerable { background: var(--warn-soft); border-color: #f0dba7; color: var(--warn); }
 
@@ -414,6 +414,10 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .menu-btn { display: inline-grid; flex: none; }
 .menu-btn:hover { background: var(--surface-2); color: var(--ink); }
 .topbar-title { font-weight: 700; color: var(--ink-2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar-title a { color: var(--ink); text-decoration: none; }
+.topbar-title a:hover { color: var(--teal); }
+.crumb-section { color: var(--muted); font-weight: 500; }
+.crumb-sep { color: var(--line-2); margin: 0 .5rem; }
 .user-menu { position: relative; }
 .user-menu summary { list-style: none; display: flex; align-items: center; gap: .55rem; cursor: pointer; padding: .3rem .4rem; border-radius: 10px; }
 .user-menu summary::-webkit-details-marker { display: none; }
@@ -795,12 +799,12 @@ body.public { background: var(--bg); }
 .bento-card h3 .icon { color: #5fd4c6; }
 .bento-card p { color: #9fb2cf; font-size: .93rem; margin: 0; }
 .bento-card .mono { color: #8ea4c8; }
-.chip { font-style: normal; display: inline-flex; align-items: center; gap: .25rem; font-size: .72rem; font-weight: 600; padding: .12rem .5rem; border-radius: 999px; white-space: nowrap; }
-.chip .icon { width: 12px; height: 12px; }
-.chip-ok { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
-.chip-warn { background: rgba(251, 191, 36, .14); color: #fcd34d; }
-.chip-danger { background: rgba(248, 113, 113, .15); color: #fca5a5; }
-.chip-info { background: rgba(96, 165, 250, .15); color: #93c5fd; }
+.lp-chip { font-style: normal; display: inline-flex; align-items: center; gap: .25rem; font-size: .72rem; font-weight: 600; padding: .12rem .5rem; border-radius: 999px; white-space: nowrap; }
+.lp-chip .icon { width: 12px; height: 12px; }
+.lp-chip-ok { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
+.lp-chip-warn { background: rgba(251, 191, 36, .14); color: #fcd34d; }
+.lp-chip-danger { background: rgba(248, 113, 113, .15); color: #fca5a5; }
+.lp-chip-info { background: rgba(96, 165, 250, .15); color: #93c5fd; }
 .mini-table, .mini-audit, .mini-cards { flex: 1.1 1 0; min-width: 0; display: grid; gap: .45rem; }
 .mini-table div, .mini-audit div { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; padding: .6rem .8rem; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); color: #dbe5f3; font-size: .86rem; }
 .mini-audit .ok { display: flex; align-items: center; gap: .4rem; color: #6ee7b7; font-size: .84rem; margin: .25rem 0 0; }
@@ -878,3 +882,4 @@ body.public .site-footer a { color: #9fb2cf; }
   .site-header .brand-sub { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .bento-card { transition: none; } .bento-card:hover { transform: none; } }
+@media (max-width: 640px) { .crumb-section, .crumb-sep { display: none; } }

@@ -13,7 +13,7 @@ $filtersOn = $filters['q'] !== '' || $filters['situacao'] !== '';
 </div>
 
 <div class="grid grid-4">
-    <div class="card kpi"><span class="kpi-icon teal"><?= icon('check', 'icon-lg') ?></span><div><div class="kpi-value"><?= money($totals['mrr']) ?></div><div class="kpi-label">Receita mensal recorrente · <?= (int) $totals['ativa'] ?> assinatura(s) paga(s)</div></div></div>
+    <div class="card kpi"><span class="kpi-icon teal"><?= icon('check', 'icon-lg') ?></span><div><div class="kpi-value"><?= money($totals['mrr']) ?></div><div class="kpi-label">Receita mensal recorrente · <?= plural((int) $totals['ativa'], 'assinatura paga', 'assinaturas pagas') ?></div></div></div>
     <a class="card kpi" href="/plataforma?situacao=teste"><span class="kpi-icon info"><?= icon('clock', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $totals['teste'] ?></div><div class="kpi-label">Em teste grátis</div></div></a>
     <a class="card kpi" href="/plataforma?situacao=em_atraso"><span class="kpi-icon warn"><?= icon('alert', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $totals['atencao'] ?></div><div class="kpi-label">Pedem atenção (atraso, vencida ou teste encerrado)</div></div></a>
     <a class="card kpi" href="/plataforma?situacao=pedido"><span class="kpi-icon"><?= icon('inbox', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $totals['pedidos'] ?></div><div class="kpi-label">Pedidos de mudança de plano</div></div></a>

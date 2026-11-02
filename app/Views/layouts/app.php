@@ -82,7 +82,24 @@ $menu = [
 <div class="main-wrap">
     <header class="topbar">
         <button type="button" class="icon-btn menu-btn" data-toggle-sidebar aria-controls="sidebar" aria-expanded="true" aria-label="Recolher menu" title="Recolher ou expandir o menu"><?= icon('menu') ?></button>
-        <div class="topbar-title"><?= e($title ?? '') ?></div>
+        <?php
+        // Caminho de navegação (seção › item do menu), no lugar de repetir o título da página
+        $crumb = null;
+        foreach ($menu as $section => $items) {
+            foreach ($items as [, $path, , $label]) {
+                if (nav_active($path) !== '') {
+                    $crumb = [$section, $label, $path];
+                }
+            }
+        }
+        ?>
+        <nav class="topbar-title" aria-label="Você está em">
+            <?php if ($crumb): ?>
+            <span class="crumb-section"><?= e($crumb[0]) ?></span><span class="crumb-sep" aria-hidden="true">›</span><a href="<?= e($crumb[2]) ?>"><?= e($crumb[1]) ?></a>
+            <?php else: ?>
+            <span><?= e($tenant['trade_name'] ?? $tenant['legal_name'] ?? '') ?></span>
+            <?php endif; ?>
+        </nav>
         <?php if ($user): ?>
         <details class="user-menu">
             <summary aria-label="Menu do usuário">

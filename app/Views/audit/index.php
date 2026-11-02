@@ -46,7 +46,7 @@
 </form>
 
 <section class="card section-gap" aria-label="Registros">
-    <p class="small muted"><?= (int) $total ?> registro(s) encontrados.</p>
+    <p class="small muted"><?= plural((int) $total, 'registro encontrado', 'registros encontrados') ?>.</p>
     <?php if (!$rows): ?>
     <p class="empty">Nenhum registro para os filtros escolhidos.</p>
     <?php else: ?>

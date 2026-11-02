@@ -61,7 +61,7 @@
                 <?php foreach (Isis\Support\Labels::MFA_POLICY as $k => $v): ?><option value="<?= e($k) ?>"<?= old('mfa_policy', $tenant['mfa_policy'] ?? 'opcional') === $k ? ' selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?>
             </select>
             <?= field_error('mfa_policy') ?>
-            <p class="hint">Quando obrigatória, quem ainda não ativou é levado à ativação no próximo acesso, inclusive você. Hoje <?= (int) $mfaAdoption['enabled'] ?> de <?= (int) $mfaAdoption['active'] ?> usuário(s) ativo(s) já ativaram.</p>
+            <p class="hint">Quando obrigatória, quem ainda não ativou é levado à ativação no próximo acesso, inclusive você. Hoje, <?= (int) $mfaAdoption['enabled'] ?> de <?= plural((int) $mfaAdoption['active'], 'usuário ativo', 'usuários ativos') ?> já ativaram.</p>
         </div>
         <div class="field section-gap">
             <label for="f-channel">Canal on-line do titular</label>

@@ -195,7 +195,7 @@ try {
   await go('/'); await shotSection('precos', '#planos');
 
   // Cadastro de uma empresa de exemplo -> confirmação -> configuração inicial
-  const email = `lucia.andrade${Date.now() % 1000}@escolaexemplo.example`;
+  const email = `lucia.andrade${Date.now() % 10000000}@escolaexemplo.example`;
   await go('/cadastro');
   await submit(`(() => { const f = document.querySelector('form[action="/cadastro"]');
     f.legal_name.value = 'Escola Exemplo Ensino Ltda.'; f.trade_name.value = 'Escola Exemplo'; f.cnpj.value = '${cnpj()}';

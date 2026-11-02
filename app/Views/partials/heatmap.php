@@ -16,7 +16,7 @@ $selected = $selected ?? null;
     ?>
     <a role="cell" class="heat heat-<?= $level ?><?= $n === 0 ? ' is-empty' : '' ?><?= $isSel ? ' is-selected' : '' ?>"
        href="/riscos?celula=<?= $l ?>-<?= $i ?>&amp;abertos=1"
-       aria-label="Probabilidade <?= e(Labels::LIKELIHOOD[$l]) ?>, impacto <?= e(Labels::IMPACT[$i]) ?>: <?= $n ?> risco(s) aberto(s), nível <?= e(RiskMatrix::label($level)) ?>"><?= $n ?></a>
+       aria-label="Probabilidade <?= e(Labels::LIKELIHOOD[$l]) ?>, impacto <?= e(Labels::IMPACT[$i]) ?>: <?= plural((int) $n, 'risco aberto', 'riscos abertos') ?>, nível <?= e(RiskMatrix::label($level)) ?>"><?= $n ?></a>
     <?php endforeach; ?>
     <?php endforeach; ?>
     <div></div>

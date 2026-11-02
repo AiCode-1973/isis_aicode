@@ -69,7 +69,7 @@ $statusBadge = ['pendente' => 'badge-warn', 'em_andamento' => 'badge-brand', 'co
                 <td data-label="Código"><span class="code"><?= e(code('TRE', (int) $m['seq'])) ?></span></td>
                 <td data-label="Treinamento"><a class="title-link" href="/treinamentos/<?= (int) $m['id'] ?>"><?= e($m['title']) ?></a><div class="small muted"><?= (int) $m['duration_minutes'] ?> min · nota mínima <?= (int) $m['passing_score'] ?></div></td>
                 <td data-label="Perguntas"><?= (int) $m['questions_count'] ?></td>
-                <td data-label="Participantes"><?= (int) $m['enrolled'] ?><?= (int) $m['overdue'] ? ' · <span class="text-danger">' . (int) $m['overdue'] . ' vencido(s)</span>' : '' ?></td>
+                <td data-label="Participantes"><?= (int) $m['enrolled'] ?><?= (int) $m['overdue'] ? ' · <span class="text-danger">' . plural((int) $m['overdue'], 'vencido', 'vencidos') . '</span>' : '' ?></td>
                 <td data-label="Conclusão"><div class="bar-head small"><span><?= (int) $m['completed'] ?>/<?= (int) $m['enrolled'] ?></span><strong><?= $pct ?>%</strong></div><div class="bar"><span class="<?= width_class($pct) ?>"></span></div></td>
                 <td data-label="Situação"><span class="badge <?= $m['status'] === 'publicado' ? 'badge-ok' : '' ?>"><?= e(Labels::TRAINING_STATUS[$m['status']]) ?></span></td>
             </tr>

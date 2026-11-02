@@ -15,7 +15,7 @@ $eventLabel = ['criada' => 'Registro', 'status' => 'Situação alterada', 'nota'
         <p>
             <span class="badge <?= $statusBadge[$r['status']] ?? '' ?>"><?= e(label(Labels::REQUEST_STATUS, $r['status'])) ?></span>
             <?php if ($open && $left !== null): ?>
-            <span class="badge <?= $left < 0 ? 'badge-danger' : ($left <= 3 ? 'badge-warn' : '') ?>"><?= $left < 0 ? abs($left) . ' dia(s) de atraso' : ($left === 0 ? 'vence hoje' : 'faltam ' . $left . ' dia(s)') ?></span>
+            <span class="badge <?= $left < 0 ? 'badge-danger' : ($left <= 3 ? 'badge-warn' : '') ?>"><?= days_left_label($left) ?></span>
             <?php endif; ?>
             · <?= e(label(Labels::RIGHT_TYPE, $r['right_type'])) ?>
         </p>

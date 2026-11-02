@@ -131,6 +131,23 @@ function code(string $prefix, int $seq): string
 }
 
 /** Valor em centavos para "R$ 1.234,56"; null vira "Sob consulta". */
+/** Número com a palavra ou frase concordando: plural(1, 'risco', 'riscos') = "1 risco"; 0 e 2+ usam o plural. */
+function plural(int $n, string $one, string $many): string
+{
+    return $n . ' ' . ($n === 1 ? $one : $many);
+}
+
+/** Prazo em dias para exibição: "faltam 3 dias", "vence hoje", "2 dias de atraso". */
+function days_left_label(int $left): string
+{
+    return match (true) {
+        $left < 0 => plural(abs($left), 'dia de atraso', 'dias de atraso'),
+        $left === 0 => 'vence hoje',
+        $left === 1 => 'falta 1 dia',
+        default => 'faltam ' . $left . ' dias',
+    };
+}
+
 function money(?int $cents): string
 {
     return $cents === null ? 'Sob consulta' : 'R$ ' . number_format($cents / 100, 2, ',', '.');
