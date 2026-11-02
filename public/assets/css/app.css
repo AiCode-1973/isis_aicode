@@ -992,3 +992,47 @@ tr.row-link:hover .title-link { color: var(--teal); }
 
 /* Cadastro e entrada: o painel azul acompanha a rolagem em telas longas */
 @media (min-width: 961px) { .auth-aside { position: sticky; top: 0; height: 100vh; align-self: start; } }
+
+/* ---------- Página inicial · animações (landing.js) ---------- */
+.lp-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.lp-hero .container { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lp-hero-inner > * { animation: lp-rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+  .lp-hero-inner > :nth-child(2) { animation-delay: .08s; }
+  .lp-hero-inner > :nth-child(3) { animation-delay: .18s; }
+  .lp-hero-inner > :nth-child(4) { animation-delay: .28s; }
+  .lp-hero-inner > :nth-child(5) { animation-delay: .36s; }
+  .lp-hero h1 em { background-size: 220% 100%; animation: lp-sheen 7s ease-in-out infinite; }
+  .lp-final img { animation: lp-glow 3.2s ease-in-out infinite; }
+  .mini-steps li:not(.done)::before { animation: lp-blink 1.6s ease-in-out infinite; }
+}
+@keyframes lp-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes lp-sheen { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes lp-glow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(43, 181, 168, 0)); } 50% { filter: drop-shadow(0 0 22px rgba(43, 181, 168, .55)); } }
+@keyframes lp-blink { 0%, 100% { box-shadow: 0 0 0 0 rgba(252, 211, 77, .5); } 50% { box-shadow: 0 0 0 5px rgba(252, 211, 77, 0); } }
+
+.lp-frame.lp-tilt { transform-origin: 50% 0; transform: perspective(1600px) rotateX(calc(var(--tilt, 0) * 14deg)) scale(calc(1 - var(--tilt, 0) * .05)); will-change: transform; }
+
+.lp-anim [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .8s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0ms); }
+.lp-anim [data-reveal].is-in { opacity: 1; transform: none; }
+.lp-anim .bento-card[data-reveal].is-in:hover { transform: translateY(-2px); transition-delay: 0ms; }
+
+/* Pedaços de interface dos módulos entram em sequência quando o cartão aparece */
+.lp-anim .bento-card[data-reveal] .mini-table > div,
+.lp-anim .bento-card[data-reveal] .mini-audit > *,
+.lp-anim .bento-card[data-reveal] .mini-cards > div,
+.lp-anim .bento-card[data-reveal] .mini-steps li,
+.lp-anim .bento-card[data-reveal] .mini-doc > * { opacity: 0; transform: translateX(-12px); transition: opacity .5s ease, transform .5s ease; transition-delay: calc(250ms + var(--i, 0) * 140ms); }
+.lp-anim .bento-card[data-reveal] .mini-heat i { opacity: 0; transform: scale(.4); transition: opacity .35s ease, transform .35s cubic-bezier(.3, 1.6, .5, 1); transition-delay: calc(200ms + var(--i, 0) * 28ms); }
+.lp-anim .bento-card.is-in .mini-table > div,
+.lp-anim .bento-card.is-in .mini-audit > *,
+.lp-anim .bento-card.is-in .mini-cards > div,
+.lp-anim .bento-card.is-in .mini-steps li,
+.lp-anim .bento-card.is-in .mini-doc > *,
+.lp-anim .bento-card.is-in .mini-heat i { opacity: 1; transform: none; }
+
+/* Passos entram com mais intervalo; ícones de segurança acendem */
+.lp-anim .lp-steps li[data-reveal] { transition-delay: calc(var(--d, 0ms) * 2); }
+.lp-anim .lp-checks li[data-reveal] .icon { transition: box-shadow .6s ease .3s; }
+.lp-anim .lp-checks li.is-in .icon { box-shadow: 0 0 0 6px rgba(43, 181, 168, .08), 0 0 24px rgba(43, 181, 168, .35); }

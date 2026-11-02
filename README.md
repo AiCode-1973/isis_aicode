@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma (versão 1.6.0)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma + página inicial animada (versão 1.6.1)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 

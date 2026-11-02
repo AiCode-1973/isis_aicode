@@ -9,3 +9,4 @@
 !/storage/**/.gitkeep
 /.phpunit.cache/
 /.dev/
+/deploy/

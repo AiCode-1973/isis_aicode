@@ -195,3 +195,5 @@ $shot = static fn (string $name): string => e(asset('img/manual/' . $name . '.we
         <p class="lp-disclaimer"><?= Isis\Core\View::partial('partials/disclaimer') ?></p>
     </div>
 </section>
+
+<script src="<?= e(asset('js/landing.js')) ?>" defer></script>
