@@ -13,6 +13,7 @@ use Isis\Core\Database;
 use Isis\Core\Mailer;
 use Isis\Services\BackupService;
 use Isis\Services\MaintenanceService;
+use Isis\Services\MaturityService;
 use Isis\Services\ReminderService;
 use Isis\Services\ReportService;
 
@@ -109,6 +110,19 @@ final class OperationsTest extends DatabaseTestCase
         foreach (Mailer::$sent as $mail) {
             self::assertStringNotContainsString('João Pereira', $mail['html'], 'Lembretes não trazem dados pessoais de titulares.');
         }
+    }
+
+    public function testSeriesMensaisDoPainel(): void
+    {
+        [$clinic, $store] = $this->seedTwoCompanies();
+        Auth::actAs($clinic['users']['admin']);
+        $requests = MaturityService::requestsByMonth();
+        self::assertCount(6, $requests);
+        $expected = (int) Database::value('SELECT COUNT(*) FROM dsar_requests WHERE tenant_id = ? AND received_at >= ?',
+            [$clinic['tenant']['id'], date('Y-m-01', strtotime('first day of -5 months'))]);
+        self::assertSame($expected, array_sum(array_column($requests, 'value')), 'Conta só as solicitações da própria empresa no período.');
+        self::assertStringContainsString(' de ' . date('Y'), end($requests)['title']);
+        self::assertCount(6, MaturityService::actionsDoneByMonth());
     }
 
     public function testRelatorioReuneOsModulos(): void

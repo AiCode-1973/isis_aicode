@@ -18,6 +18,7 @@ use Isis\Repositories\SegmentRepository;
 use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\AccessScope;
+use Isis\Services\MaturityService;
 
 /**
  * Painel de conformidade: pendências, riscos, indicadores, responsáveis e prazos.
@@ -118,7 +119,16 @@ final class DashboardController extends Controller
             $alerts[] = ['warn', plural((int) $trainingStats['overdue'], 'participação', 'participações') . ' em treinamento com prazo vencido.', '/treinamentos'];
         }
 
+        // Índice de maturidade (visão da gestão; quem só vê as próprias tarefas não recebe)
+        $maturity = $onlyOwn ? null : MaturityService::compute([
+            'inventory' => $inventory, 'risks' => $risks, 'actions' => $actionStats, 'requests' => $requestStats,
+            'incidents' => $incidentStats, 'vendors' => $vendorStats, 'policies' => $policyStats, 'trainings' => $trainingStats,
+        ]);
+
         return $this->view('dashboard/index', [
+            'maturity' => $maturity !== null && $maturity['score'] !== null ? $maturity : null,
+            'requestTrend' => $requestStats !== null ? MaturityService::requestsByMonth() : null,
+            'actionTrend' => $actionStats !== null && !$onlyOwn ? MaturityService::actionsDoneByMonth() : null,
             'title' => 'Painel de conformidade',
             'tenant' => $tenant,
             'stats' => $stats,

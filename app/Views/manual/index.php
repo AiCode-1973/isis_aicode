@@ -194,12 +194,23 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>É a tela inicial depois de entrar. Reúne, num só lugar, o que precisa de atenção. No topo, o quadro <strong>Para você</strong> lista os treinamentos designados e as políticas que ainda pedem sua ciência; ele aparece para todos os perfis.</p>
             <?= $fig('painel', 'Painel de conformidade da administradora (dados fictícios)') ?>
             <ul>
-                <li><strong>Pendências:</strong> políticas vencidas ou aguardando aprovação, fornecedores de risco alto ou sem cláusulas contratuais, contratos vencendo, treinamentos atrasados, comunicação à ANPD pendente ou vencida, solicitações de titulares fora do prazo ou vencendo em 3 dias, incidentes aguardando análise, ações vencidas, riscos altos ou críticos em aberto, operações sem hipótese legal ou com revisão vencida, riscos e ações sem responsável. Cada item leva direto à lista filtrada.</li>
-                <li><strong>Indicadores:</strong> operações ativas, riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas), percentual de execução dos planos, solicitações de titulares em aberto, incidentes em aberto, fornecedores (quantos de risco alto) e conclusão dos treinamentos.</li>
+                <li><strong>Índice de maturidade:</strong> nota de 0 a 100, com o nível "Inicial" (até 39), "Em evolução" (40 a 69), "Estruturada" (70 a 84) ou "Avançada" (85 ou mais). É a média de seis pilares, cada um com a sua nota e com o principal ponto a melhorar:
+                    <ul>
+                        <li><strong>Inventário de dados:</strong> operações com hipótese legal e revisão em dia;</li>
+                        <li><strong>Gestão de riscos:</strong> riscos abertos com responsável e revisão em dia;</li>
+                        <li><strong>Planos de ação:</strong> ações concluídas e sem atraso;</li>
+                        <li><strong>Titulares e incidentes:</strong> pedidos dentro do prazo e comunicação à ANPD em dia;</li>
+                        <li><strong>Fornecedores:</strong> fornecedores avaliados e com cláusulas de proteção de dados;</li>
+                        <li><strong>Políticas e treinamentos:</strong> políticas vigentes e treinamentos concluídos.</li>
+                    </ul>
+                    O índice é calculado só com o que está registrado no ÍSIS. É um indicador interno de organização, não uma certificação nem garantia de conformidade legal. Cada perfil vê só os pilares dos módulos a que tem acesso.</li>
+                <li><strong>Indicadores principais:</strong> riscos abertos (quantos altos ou críticos), ações em aberto (quantas vencidas), solicitações de titulares (quantas fora do prazo) e incidentes em aberto (quantos graves). Clique para ver a lista.</li>
+                <li><strong>Pendências:</strong> separadas em <strong>Urgente</strong> (prazos vencidos, riscos altos e críticos, comunicação à ANPD, políticas vencidas) e <strong>Atenção</strong> (o restante). Aparecem as três primeiras de cada grupo; "Ver mais" mostra as demais. Cada linha leva direto à lista correspondente.</li>
+                <li><strong>Gráficos:</strong> ações concluídas e solicitações de titulares recebidas por mês, nos últimos seis meses. Passe o mouse sobre a barra para ver o mês e a quantidade.</li>
                 <li><strong>Prazos:</strong> ações vencidas e as que vencem nos próximos 30 dias, com o responsável.</li>
                 <li><strong>Riscos:</strong> matriz de probabilidade × impacto e quantidade por nível.</li>
                 <li><strong>Inventário, o que falta completar:</strong> operações com informações pendentes.</li>
-                <li><strong>Jornada de implantação:</strong> sete passos, da configuração inicial à execução dos planos, com o percentual concluído. É um indicador de organização interna, não um certificado de conformidade.</li>
+                <li><strong>Jornada de implantação:</strong> os passos da configuração inicial à execução dos planos, com o percentual concluído.</li>
                 <li><strong>Responsáveis:</strong> ações em aberto e vencidas por pessoa.</li>
                 <li><strong>Atividade recente</strong> (perfis com acesso à auditoria), dados do encarregado e orientações do segmento.</li>
             </ul>
@@ -813,6 +824,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.5.0</td><td>02/11/2026</td><td><strong>Novo painel de conformidade:</strong> índice de maturidade de 0 a 100 com seis pilares e o principal ponto a melhorar em cada um, quatro indicadores principais, pendências separadas em "Urgente" e "Atenção" e gráficos mensais de ações concluídas e de solicitações de titulares. No celular, o índice e os indicadores aparecem primeiro.</td></tr>
                         <tr><td>1.4.1</td><td>02/11/2026</td><td>Acabamento: textos sem "(s)" e "(ões)" (ex.: "1 ação", "2 solicitações", "faltam 3 dias"), caminho de navegação no topo das telas (ex.: Conformidade › Riscos) no lugar do título repetido, categorias longas sem quebrar o selo e menu lateral um pouco mais largo.</td></tr>
                         <tr><td>1.4.0</td><td>02/11/2026</td><td><strong>Nova identidade visual e nova página inicial:</strong> logo novo (escudo com fechadura em forma de "Í"), fonte Inter carregada pelo próprio sistema (a mesma em qualquer computador), página inicial com telas do produto, módulos, segurança, perguntas frequentes e menu por seções. No menu interno, o item do RIPD passou a se chamar "Relatórios de impacto".</td></tr>
                         <tr><td>1.3.0</td><td>30/10/2026</td><td><strong>Verificação em duas etapas:</strong> código de aplicativo autenticador na entrada, códigos de recuperação de uso único, política da empresa (opcional, obrigatória para administradores e encarregados, ou para todos) e redefinição pelo administrador para quem perdeu o celular.</td></tr>

@@ -21,16 +21,88 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
     </div>
 </div>
 
-<?php if ($alerts): ?>
-<section class="card alerts-card" aria-labelledby="alerts-title">
-    <h2 id="alerts-title" class="visually-hidden">Pendências</h2>
-    <ul class="issues">
-        <?php foreach ($alerts as [$kind, $text, $link]): ?>
-        <li class="<?= $kind === 'danger' ? 'issue-danger' : '' ?>"><?= icon('alert') ?><a href="<?= e($link) ?>"><?= e($text) ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-</section>
-<?php endif; ?>
+<?php
+$urgent = array_values(array_filter($alerts, static fn (array $a): bool => $a[0] === 'danger'));
+$attention = array_values(array_filter($alerts, static fn (array $a): bool => $a[0] !== 'danger'));
+$alertGroup = static function (string $title, string $kind, array $items): string {
+    if (!$items) {
+        return '';
+    }
+    $row = static fn (array $a): string => '<li><a href="' . e($a[2]) . '"><span>' . e($a[1]) . '</span>' . icon('arrow-right') . '</a></li>';
+    $html = '<div class="alert-group ' . $kind . '"><h3>' . icon($kind === 'danger' ? 'alert' : 'clock') . ' ' . e($title) . ' <span class="count">' . count($items) . '</span></h3><ul>';
+    $html .= implode('', array_map($row, array_slice($items, 0, 3))) . '</ul>';
+    if (count($items) > 3) {
+        $html .= '<details><summary>Ver mais ' . (count($items) - 3) . '</summary><ul>' . implode('', array_map($row, array_slice($items, 3))) . '</ul></details>';
+    }
+    return $html . '</div>';
+};
+$kpis = [];
+if ($risks !== null) {
+    $kpis[] = ['/riscos?abertos=1', 'target', 'warn', (int) $risks['open'], 'Riscos abertos', plural((int) ($risks['critical'] + $risks['high']), 'alto ou crítico', 'altos ou críticos')];
+}
+if ($actionStats !== null) {
+    $kpis[] = ['/planos?abertas=1', 'clock', 'info', (int) ($actionStats['pending'] + $actionStats['in_progress']), $onlyOwn ? 'Minhas tarefas abertas' : 'Ações em aberto', plural((int) $actionStats['overdue'], 'vencida', 'vencidas')];
+}
+if ($requestStats !== null) {
+    $kpis[] = ['/titulares?abertas=1', 'inbox', '', (int) $requestStats['open'], 'Solicitações de titulares', (int) $requestStats['overdue'] . ' fora do prazo'];
+}
+if ($incidentStats !== null) {
+    $kpis[] = ['/incidentes?abertos=1', 'siren', 'warn', (int) $incidentStats['open'], 'Incidentes em aberto', plural((int) $incidentStats['severe'], 'grave', 'graves')];
+}
+if ($kpis === []) {
+    $kpis[] = ['/usuarios', 'users', '', (int) $stats['users'], 'Usuários ativos', 'na empresa'];
+}
+?>
+
+<div class="dash-top<?= $maturity ? '' : ' no-maturity' ?>">
+    <?php if ($maturity): ?>
+    <section class="card maturity" aria-labelledby="mat-title">
+        <div class="maturity-head">
+            <?= Isis\Core\View::partial('partials/maturity-ring', ['score' => $maturity['score']]) ?>
+            <div>
+                <h2 id="mat-title">Índice de maturidade</h2>
+                <p class="maturity-level"><?= e($maturity['level']) ?></p>
+                <p class="small muted">Calculado com o que o ÍSIS já registra. Indicador interno, não é certificação nem garantia de conformidade.</p>
+            </div>
+        </div>
+        <ul class="pillars-list">
+            <?php foreach ($maturity['pillars'] as $p): ?>
+            <li>
+                <a href="<?= e($p['link']) ?>">
+                    <span class="pillar-name"><?= e($p['label']) ?></span>
+                    <span class="pillar-score"><?= (int) $p['score'] ?></span>
+                </a>
+                <div class="bar"><span class="<?= e(width_class($p['score'])) ?>"></span></div>
+                <span class="pillar-hint"><?= e($p['hint']) ?></span>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+    <?php endif; ?>
+
+    <div class="dash-side">
+        <div class="kpi-grid">
+            <?php foreach ($kpis as [$link, $ic, $tone, $value, $label, $sub]): ?>
+            <a class="card kpi-tile" href="<?= e($link) ?>">
+                <span class="kpi-icon <?= e($tone) ?>"><?= icon($ic, 'icon-lg') ?></span>
+                <span class="kpi-tile-value"><?= $value ?></span>
+                <span class="kpi-tile-label"><?= e($label) ?></span>
+                <span class="kpi-tile-sub"><?= e($sub) ?></span>
+            </a>
+            <?php endforeach; ?>
+        </div>
+
+        <section class="card alerts-panel" aria-labelledby="alerts-title">
+            <h2 id="alerts-title">Pendências</h2>
+            <?php if (!$alerts): ?>
+            <p class="text-ok small section-gap-sm"><?= icon('check') ?> Nenhuma pendência que exija atenção agora.</p>
+            <?php else: ?>
+            <?= $alertGroup('Urgente', 'danger', $urgent) ?>
+            <?= $alertGroup('Atenção', 'warn', $attention) ?>
+            <?php endif; ?>
+        </section>
+    </div>
+</div>
 
 <?php if ($myAcks || $myTrainings): ?>
 <section class="card for-you section-gap" aria-labelledby="you-title">
@@ -46,37 +118,22 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
 </section>
 <?php endif; ?>
 
-<div class="grid grid-4 section-gap">
-    <?php if ($inventory !== null): ?>
-    <a class="card kpi" href="/inventario"><span class="kpi-icon"><?= icon('database', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $inventory['active'] ?><span class="kpi-sub">/<?= (int) $inventory['total'] ?></span></div><div class="kpi-label">Operações ativas</div></div></a>
+<?php if ($requestTrend !== null || $actionTrend !== null): ?>
+<div class="grid grid-2 section-gap">
+    <?php if ($actionTrend !== null): ?>
+    <section class="card" aria-labelledby="trend-actions">
+        <div class="card-header"><div><h2 id="trend-actions">Ações concluídas</h2><p>Por mês, nos últimos 6 meses.</p></div></div>
+        <?= Isis\Core\View::partial('partials/bar-chart', ['series' => $actionTrend, 'caption' => 'Ações concluídas por mês']) ?>
+    </section>
     <?php endif; ?>
-    <?php if ($risks !== null): ?>
-    <a class="card kpi" href="/riscos?abertos=1"><span class="kpi-icon warn"><?= icon('target', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $risks['open'] ?></div><div class="kpi-label">Riscos abertos · <?= (int) ($risks['critical'] + $risks['high']) ?> altos/críticos</div></div></a>
-    <?php endif; ?>
-    <?php if ($actionStats !== null): ?>
-    <a class="card kpi" href="/planos?abertas=1"><span class="kpi-icon info"><?= icon('clock', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) ($actionStats['pending'] + $actionStats['in_progress']) ?></div><div class="kpi-label"><?= $onlyOwn ? 'Minhas tarefas abertas' : 'Ações em aberto' ?> · <?= plural((int) $actionStats['overdue'], 'vencida', 'vencidas') ?></div></div></a>
-    <?php
-        $base = max(1, (int) $actionStats['total'] - (int) $actionStats['cancelled']);
-        $execution = (int) round((int) $actionStats['done'] / $base * 100);
-    ?>
-    <a class="card kpi" href="/planos"><span class="kpi-icon teal"><?= icon('check', 'icon-lg') ?></span><div><div class="kpi-value"><?= $execution ?>%</div><div class="kpi-label">Execução dos planos</div></div></a>
-    <?php endif; ?>
-    <?php if ($requestStats !== null): ?>
-    <a class="card kpi" href="/titulares?abertas=1"><span class="kpi-icon"><?= icon('inbox', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $requestStats['open'] ?></div><div class="kpi-label">Solicitações de titulares em aberto · <?= (int) $requestStats['overdue'] ?> fora do prazo</div></div></a>
-    <?php endif; ?>
-    <?php if ($incidentStats !== null): ?>
-    <a class="card kpi" href="/incidentes?abertos=1"><span class="kpi-icon warn"><?= icon('siren', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $incidentStats['open'] ?></div><div class="kpi-label">Incidentes em aberto · <?= (int) $incidentStats['severe'] ?> graves</div></div></a>
-    <?php endif; ?>
-    <?php if ($vendorStats !== null): ?>
-    <a class="card kpi" href="/fornecedores"><span class="kpi-icon"><?= icon('truck', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $vendorStats['active'] ?></div><div class="kpi-label">Fornecedores · <?= (int) $vendorStats['high'] ?> de risco alto</div></div></a>
-    <?php endif; ?>
-    <?php if ($trainingStats !== null): $tp = $trainingStats['enrolled'] > 0 ? (int) round($trainingStats['completed'] / $trainingStats['enrolled'] * 100) : null; ?>
-    <a class="card kpi" href="/treinamentos"><span class="kpi-icon teal"><?= icon('graduation', 'icon-lg') ?></span><div><div class="kpi-value"><?= $tp === null ? '—' : $tp . '%' ?></div><div class="kpi-label">Conclusão dos treinamentos</div></div></a>
-    <?php endif; ?>
-    <?php if ($inventory === null && $risks === null): ?>
-    <div class="card kpi"><span class="kpi-icon"><?= icon('users', 'icon-lg') ?></span><div><div class="kpi-value"><?= (int) $stats['users'] ?></div><div class="kpi-label">Usuários ativos</div></div></div>
+    <?php if ($requestTrend !== null): ?>
+    <section class="card" aria-labelledby="trend-requests">
+        <div class="card-header"><div><h2 id="trend-requests">Solicitações de titulares</h2><p>Recebidas por mês, nos últimos 6 meses.</p></div></div>
+        <?= Isis\Core\View::partial('partials/bar-chart', ['series' => $requestTrend, 'caption' => 'Solicitações de titulares recebidas por mês']) ?>
+    </section>
     <?php endif; ?>
 </div>
+<?php endif; ?>
 
 <div class="grid grid-main section-gap">
     <div class="stack">

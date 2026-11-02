@@ -52,7 +52,7 @@ Nada exige trocar de tecnologia. Tudo se resolve no CSS e nos templates PHP atua
 - **Cabeçalho:** links âncora "Módulos · Segurança · Planos · Dúvidas" (sem voltar o link de preços para o topo como item solto).
 - **Espaço para o vídeo da Ísis**, quando estiver pronto.
 
-### 2.2 Painel de conformidade
+### 2.2 Painel de conformidade · **concluída na 1.5.0**
 
 **Hoje:**
 - Abre com 11 alertas sublinhados, em vermelho e amarelo misturados, que no celular ocupam a tela inteira.
