@@ -94,7 +94,10 @@ final class OperationsTest extends DatabaseTestCase
         self::assertArrayHasKey($dpo, $byUser, 'O encarregado tem pendências nos dados demonstrativos.');
         self::assertArrayHasKey('Ações dos planos', $byUser[$dpo], 'Ação vencida do encarregado.');
         self::assertArrayHasKey('Solicitações sem responsável', $byUser[$dpo], 'Pedido de titular ainda sem responsável.');
-        self::assertArrayNotHasKey((int) $clinic['users']['auditor']['id'], $byUser, 'Quem não tem pendências não recebe e-mail.');
+        // Políticas para dar ciência entram só no lembrete de segunda-feira; fora isso, o auditor não tem pendências.
+        $auditorGroups = $byUser[(int) $clinic['users']['auditor']['id']] ?? [];
+        unset($auditorGroups['Políticas para ler e dar ciência']);
+        self::assertSame([], $auditorGroups, 'Quem não tem pendências não recebe e-mail.');
 
         Mailer::$sent = [];
         $first = ReminderService::run();

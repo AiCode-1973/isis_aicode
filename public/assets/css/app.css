@@ -459,7 +459,7 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .section-title { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; margin: 1.5rem 0 .75rem; }
 
 /* ---------- Página pública ---------- */
-.site-header { position: sticky; top: 0; z-index: 30; background: rgba(7, 14, 28, .82); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.07); }
+.site-header { position: sticky; top: 0; z-index: 30; background: rgba(7, 14, 28, .97); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.07); }
 .site-header .inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .site-header .brand { color: #fff; padding: .7rem 0; }
 .site-header .brand-sub { color: #8ea4c8; }
