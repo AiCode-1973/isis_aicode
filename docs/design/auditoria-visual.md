@@ -68,7 +68,7 @@ Nada exige trocar de tecnologia. Tudo se resolve no CSS e nos templates PHP atua
 - **Gráficos simples em SVG gerado no servidor**, sem biblioteca: solicitações por mês, ações concluídas e vencidas. Isso também serve ao relatório de conformidade.
 - **No celular:** índice e indicadores primeiro, alertas recolhidos.
 
-### 2.3 Tabelas e listas
+### 2.3 Tabelas e listas · **concluída na 1.5.1**
 
 **Hoje:**
 - Muitas colunas quebram em duas ou três linhas ("Recepção e Atendimento", nomes, "6 dia(s) de atraso").
@@ -82,7 +82,7 @@ Nada exige trocar de tecnologia. Tudo se resolve no CSS e nos templates PHP atua
 
 ---
 
-## Prioridade 3 · Acabamento
+## Prioridade 3 · Acabamento · **3.1 a 3.7 concluídos na 1.5.1; ícones (3.8) e modo escuro (3.9) ficam para depois**
 
 | # | Proposta |
 |---|---|

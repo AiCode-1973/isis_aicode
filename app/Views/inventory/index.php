@@ -3,7 +3,7 @@
 use Isis\Auth\Permission as P;
 use Isis\Support\Labels;
 
-$statusBadge = ['rascunho' => 'badge', 'ativa' => 'badge-ok', 'em_revisao' => 'badge-warn', 'descontinuada' => 'badge'];
+$statusBadge = ['rascunho' => 'badge', 'ativa' => 'badge-ok', 'em_revisao' => 'badge-brand', 'descontinuada' => 'badge'];
 $filtered = $filters['q'] || $filters['status'] || $filters['department_id'] || $filters['sensitive'];
 ?>
 <div class="page-head">

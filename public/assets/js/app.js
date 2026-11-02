@@ -29,13 +29,13 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       document.body.classList.remove('sidebar-open');
-      document.querySelectorAll('details.user-menu[open]').forEach(function (d) { d.removeAttribute('open'); });
+      document.querySelectorAll('details.user-menu[open], details.dropdown[open]').forEach(function (d) { d.removeAttribute('open'); });
     }
   });
 
   // Fecha o menu do usuário ao clicar fora
   document.addEventListener('click', function (e) {
-    document.querySelectorAll('details.user-menu[open]').forEach(function (d) {
+    document.querySelectorAll('details.user-menu[open], details.dropdown[open]').forEach(function (d) {
       if (!d.contains(e.target)) d.removeAttribute('open');
     });
   });
@@ -93,6 +93,40 @@
       window.location.href = '/configuracao-inicial?segmento=' + encodeURIComponent(segment.value);
     });
   }
+
+  // Linha de tabela inteira clicável: leva ao link principal da linha (o título)
+  document.querySelectorAll('tbody tr').forEach(function (tr) {
+    var link = tr.querySelector('a.title-link');
+    if (!link) return;
+    tr.classList.add('row-link');
+    tr.addEventListener('click', function (e) {
+      if (e.target.closest('a, button, input, select, textarea, label, form, summary')) return;
+      if (window.getSelection && String(window.getSelection()).length > 0) return;
+      if (e.ctrlKey || e.metaKey) { window.open(link.href, '_blank'); return; }
+      window.location.href = link.href;
+    });
+  });
+
+  // Filtros recolhidos no celular, com a quantidade de filtros em uso
+  var small = window.matchMedia('(max-width: 720px)');
+  document.querySelectorAll('form.filters').forEach(function (form) {
+    var active = Array.prototype.filter.call(form.elements, function (el) {
+      return el.name && ((el.type === 'checkbox' && el.checked) || (el.type !== 'checkbox' && el.type !== 'submit' && el.value !== ''));
+    }).length;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-ghost filters-toggle';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = active ? 'Filtros (' + active + ')' : 'Filtros';
+    form.parentNode.insertBefore(btn, form);
+    function sync() { form.classList.toggle('is-collapsed', small.matches && btn.getAttribute('aria-expanded') !== 'true'); }
+    btn.addEventListener('click', function () {
+      btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+      sync();
+    });
+    small.addEventListener('change', sync);
+    sync();
+  });
 
   // Máscara leve de CNPJ (aceita o novo formato alfanumérico)
   document.querySelectorAll('[data-mask=cnpj]').forEach(function (input) {

@@ -13,12 +13,26 @@ $firstName = explode(' ', (string) auth_user()['name'])[0];
         <h1>Olá, <?= e($firstName) ?></h1>
         <p><?= $onlyOwn ? 'Suas tarefas de proteção de dados em ' . e($company) . '.' : 'Situação da gestão de privacidade de ' . e($company) . '.' ?></p>
     </div>
-    <div class="actions">
-        <?php if (can(P::INVENTORY_EDIT)): ?><a class="btn btn-ghost" href="/inventario/nova"><?= icon('plus') ?> Operação</a><?php endif; ?>
-        <?php if (can(P::RISKS_EDIT)): ?><a class="btn btn-ghost" href="/riscos/novo"><?= icon('plus') ?> Risco</a><?php endif; ?>
-        <?php if (can(P::INCIDENTS_REPORT)): ?><a class="btn btn-ghost" href="/incidentes/novo"><?= icon('siren') ?> Comunicar incidente</a><?php endif; ?>
-        <?php if (can(P::USERS_MANAGE)): ?><a class="btn btn-primary" href="/usuarios#convidar"><?= icon('users') ?> Convidar</a><?php endif; ?>
-    </div>
+    <?php
+    $quick = array_values(array_filter([
+        can(P::INVENTORY_EDIT) ? ['/inventario/nova', 'database', 'Operação de tratamento'] : null,
+        can(P::RISKS_EDIT) ? ['/riscos/novo', 'target', 'Risco'] : null,
+        can(P::ACTIONS_EDIT) ? ['/planos/nova', 'check', 'Ação do plano'] : null,
+        can(P::REQUESTS_MANAGE) ? ['/titulares/nova', 'inbox', 'Solicitação de titular'] : null,
+        can(P::INCIDENTS_REPORT) ? ['/incidentes/novo', 'siren', 'Comunicar incidente'] : null,
+        can(P::USERS_MANAGE) ? ['/usuarios#convidar', 'users', 'Convidar pessoa'] : null,
+    ]));
+    ?>
+    <?php if (count($quick) === 1): ?>
+    <a class="btn btn-primary" href="<?= e($quick[0][0]) ?>"><?= icon($quick[0][1]) ?> <?= e($quick[0][2]) ?></a>
+    <?php elseif ($quick): ?>
+    <details class="dropdown">
+        <summary class="btn btn-primary"><?= icon('plus') ?> Novo</summary>
+        <div class="menu-pop">
+            <?php foreach ($quick as [$href, $ic, $text]): ?><a href="<?= e($href) ?>"><?= icon($ic) ?> <?= e($text) ?></a><?php endforeach; ?>
+        </div>
+    </details>
+    <?php endif; ?>
 </div>
 
 <?php

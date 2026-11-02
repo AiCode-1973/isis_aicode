@@ -937,3 +937,54 @@ body.public .site-footer a { color: #9fb2cf; }
 .chart-bar:hover .chart-hit { fill: rgba(15, 138, 131, .06); }
 @media (max-width: 1100px) { .dash-top { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 520px) { .kpi-grid { gap: .6rem; } .kpi-tile-value { font-size: 1.6rem; } .maturity-head { flex-direction: column; text-align: center; } .ring { width: 112px; height: 112px; } }
+
+/* ---------- Etapa D: tipografia, tabelas, filtros, estados vazios e acabamento ---------- */
+h1 { font-size: 1.75rem; letter-spacing: -.02em; }
+h2 { font-size: 1.2rem; letter-spacing: -.01em; }
+.kpi-value { font-size: 1.85rem; letter-spacing: -.02em; }
+.page-head { margin-bottom: 1.5rem; }
+.card { transition: border-color .15s ease, box-shadow .15s ease; }
+.btn:active { transform: translateY(1px); }
+
+/* Tabelas: linhas centralizadas, colunas curtas sem quebrar e a linha inteira clicável */
+th, td { padding: .65rem .85rem; }
+td { vertical-align: middle; }
+td[data-label="Prazo"], td[data-label="Situação"], td[data-label="Recebida"], td[data-label="Código"], td[data-label="Protocolo"], td[data-label="Nível"], td[data-label="Residual"], td[data-label="Ações"], td[data-label="Riscos"], td[data-label="Validade"] { white-space: nowrap; }
+td[data-label="Setor"], td[data-label="Responsável"], td[data-label="Titular"] { min-width: 9rem; }
+tr.row-link { cursor: pointer; }
+tr.row-link:hover td { background: #f3f8f8; }
+tr.row-link:hover .title-link { color: var(--teal); }
+.row-overdue.row-link:hover td { background: #fdeff0; }
+
+/* Filtros numa faixa compacta; no celular ficam recolhidos atrás do botão "Filtros" */
+.filters { padding: .9rem 1rem; gap: .6rem .75rem; }
+.filters label:not(.check), .filters .label { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.filters input[type=text], .filters input[type=search], .filters input[type=email], .filters select { min-height: 38px; padding: .4rem .65rem; }
+.filters .btn { min-height: 38px; }
+.filters-toggle { display: none; }
+@media (max-width: 720px) {
+  .filters-toggle { display: inline-flex; margin-top: 1rem; }
+  .filters.is-collapsed { display: none; }
+}
+
+/* Estado vazio com ícone discreto */
+.empty { display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: 2.25rem 1rem; font-size: .92rem; max-width: 52ch; margin: 0 auto; }
+.empty::before {
+  content: ""; width: 48px; height: 48px; border-radius: 14px; background-color: var(--teal-soft);
+  background-repeat: no-repeat; background-position: center; background-size: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f8a83' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-6l-2 3h-4l-2-3H2'/%3E%3Cpath d='M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'/%3E%3C/svg%3E");
+}
+
+/* Menu "Novo" do painel */
+.dropdown { position: relative; }
+.dropdown summary { list-style: none; }
+.dropdown summary::-webkit-details-marker { display: none; }
+.dropdown summary::after { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); margin-left: .2rem; }
+.dropdown[open] summary::after { transform: rotate(-135deg) translateY(-1px); }
+.dropdown .menu-pop { min-width: 240px; }
+
+/* Selo "em andamento" */
+.badge-info { background: var(--info-soft); color: var(--info); border-color: #cddff3; }
+
+/* Cadastro e entrada: o painel azul acompanha a rolagem em telas longas */
+@media (min-width: 961px) { .auth-aside { position: sticky; top: 0; height: 100vh; align-self: start; } }

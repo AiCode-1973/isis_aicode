@@ -215,6 +215,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li><strong>Atividade recente</strong> (perfis com acesso à auditoria), dados do encarregado e orientações do segmento.</li>
             </ul>
             <p>Para o colaborador, o painel mostra apenas as tarefas atribuídas a ele.</p>
+            <p>O botão <strong>Novo</strong>, no alto do painel, abre um menu para registrar uma operação, um risco, uma ação, uma solicitação de titular, comunicar um incidente ou convidar uma pessoa. Aparecem só as opções permitidas para o seu perfil.</p>
+            <p><strong>Nas listas</strong> (inventário, riscos, planos, titulares, incidentes, fornecedores e as demais), clique em qualquer ponto da linha para abrir o registro. Segure Ctrl (ou Cmd, no Mac) para abrir numa nova aba. No celular, os filtros ficam atrás do botão <strong>Filtros</strong>, que mostra quantos estão em uso.</p>
             <?= $fig('celular-painel', 'O painel no celular', 'shot-phone') ?>
         </section>
 
@@ -824,6 +826,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.5.1</td><td>02/11/2026</td><td>Acabamento das telas internas: títulos maiores, tabelas mais compactas com a linha inteira clicável, filtros numa faixa enxuta (no celular, atrás do botão "Filtros"), menu <strong>Novo</strong> no painel, estados vazios com ícone, situação "Em revisão" do inventário em azul (em andamento) e painel lateral fixo nas telas de entrada e cadastro.</td></tr>
                         <tr><td>1.5.0</td><td>02/11/2026</td><td><strong>Novo painel de conformidade:</strong> índice de maturidade de 0 a 100 com seis pilares e o principal ponto a melhorar em cada um, quatro indicadores principais, pendências separadas em "Urgente" e "Atenção" e gráficos mensais de ações concluídas e de solicitações de titulares. No celular, o índice e os indicadores aparecem primeiro.</td></tr>
                         <tr><td>1.4.1</td><td>02/11/2026</td><td>Acabamento: textos sem "(s)" e "(ões)" (ex.: "1 ação", "2 solicitações", "faltam 3 dias"), caminho de navegação no topo das telas (ex.: Conformidade › Riscos) no lugar do título repetido, categorias longas sem quebrar o selo e menu lateral um pouco mais largo.</td></tr>
                         <tr><td>1.4.0</td><td>02/11/2026</td><td><strong>Nova identidade visual e nova página inicial:</strong> logo novo (escudo com fechadura em forma de "Í"), fonte Inter carregada pelo próprio sistema (a mesma em qualquer computador), página inicial com telas do produto, módulos, segurança, perguntas frequentes e menu por seções. No menu interno, o item do RIPD passou a se chamar "Relatórios de impacto".</td></tr>
