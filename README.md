@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas (versão 1.3.0)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual (versão 1.4.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -20,6 +20,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 | 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
+| 1.4 | Nova identidade visual (logo em `public/assets/img/logo.svg` e `public/assets/img/marca/`, palavra ÍSIS em vetor em `app/Views/partials/wordmark.php`), fonte Inter hospedada em `public/assets/fonts/` (licença OFL) e nova página inicial | **pronta** |
 | 1.3 | Verificação em duas etapas (TOTP, RFC 6238) com QR code gerado no servidor, códigos de recuperação de uso único, política da empresa (opcional, gestão ou todos) e redefinição pelo administrador | **pronta** |
 
 ## Requisitos

@@ -3,13 +3,19 @@
 <head>
 <?= Isis\Core\View::partial('partials/head', ['title' => $title ?? '']) ?>
 </head>
-<body>
+<body class="public">
 <header class="site-header">
     <div class="container inner">
         <?= Isis\Core\View::partial('partials/brand') ?>
+        <nav class="site-nav" aria-label="Seções do site">
+            <a href="/#modulos">Módulos</a>
+            <a href="/#seguranca">Segurança</a>
+            <a href="/#planos">Planos</a>
+            <a href="/#duvidas">Dúvidas</a>
+        </nav>
         <nav class="actions nav-links" aria-label="Acesso">
-            <a class="btn btn-ghost" href="/entrar">Entrar</a>
-            <a class="btn btn-primary" href="/cadastro">Criar conta</a>
+            <a class="btn btn-glass" href="/entrar">Entrar</a>
+            <a class="btn btn-teal" href="/cadastro">Criar conta</a>
         </nav>
     </div>
 </header>

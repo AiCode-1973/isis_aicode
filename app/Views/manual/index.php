@@ -68,6 +68,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O ÍSIS é um sistema on-line para implantar e manter a gestão da privacidade e da proteção de dados pessoais (LGPD) em empresas de qualquer segmento: saúde, comércio, educação, tecnologia, indústria, serviços e outros.</p>
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
+            <p>A página inicial (<a href="/">isis.aicode.dev.br</a>) apresenta os módulos, a segurança, os planos e as dúvidas frequentes. O menu do topo leva direto a cada seção, e os botões <strong>Começar teste grátis</strong> e <strong>Criar conta</strong> abrem o cadastro da empresa.</p>
             <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, planos e assinatura, perfis e permissões, configuração por segmento, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
@@ -323,7 +324,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <h2>9. Relatório de impacto (RIPD)</h2>
             <p>O <strong>Relatório de Impacto à Proteção de Dados Pessoais</strong> documenta os tratamentos que podem gerar alto risco aos titulares: como os dados são tratados, por que o tratamento é necessário, quais são os riscos e quais medidas os reduzem (art. 5º, XVII, e art. 38 da LGPD). A ANPD pode pedir o relatório a qualquer momento.</p>
             <h3>9.1 Quando elaborar</h3>
-            <p>O ÍSIS olha o inventário e lista, em <strong>Relatórios de impacto (RIPD)</strong>, as operações que ainda não têm relatório e apresentam algum destes indicadores:</p>
+            <p>O ÍSIS olha o inventário e lista, em <strong>Relatórios de impacto</strong>, as operações que ainda não têm relatório e apresentam algum destes indicadores:</p>
             <ul>
                 <li>dados pessoais sensíveis;</li>
                 <li>titulares vulneráveis, como crianças;</li>
@@ -812,6 +813,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.4.0</td><td>02/11/2026</td><td><strong>Nova identidade visual e nova página inicial:</strong> logo novo (escudo com fechadura em forma de "Í"), fonte Inter carregada pelo próprio sistema (a mesma em qualquer computador), página inicial com telas do produto, módulos, segurança, perguntas frequentes e menu por seções. No menu interno, o item do RIPD passou a se chamar "Relatórios de impacto".</td></tr>
                         <tr><td>1.3.0</td><td>30/10/2026</td><td><strong>Verificação em duas etapas:</strong> código de aplicativo autenticador na entrada, códigos de recuperação de uso único, política da empresa (opcional, obrigatória para administradores e encarregados, ou para todos) e redefinição pelo administrador para quem perdeu o celular.</td></tr>
                         <tr><td>1.2.0</td><td>30/10/2026</td><td><strong>Relatório de impacto (RIPD):</strong> indicação das operações que podem exigir o relatório, elaboração com os dados do inventário e os riscos, aprovação com versão guardada e código de integridade, revisões e documento para impressão. A página de cada operação mostra o RIPD dela.</td></tr>
                         <tr><td>1.1.2</td><td>30/10/2026</td><td>Planos e preços agora são uma seção da página inicial (botão "Ver planos e preços"); o link saiu do topo do site e continua no rodapé.</td></tr>
