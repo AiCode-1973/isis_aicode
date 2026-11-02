@@ -89,7 +89,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <li>Acesse o endereço do ÍSIS e clique em <strong>Criar conta</strong>.</li>
                 <li>Informe razão social, nome fantasia (opcional), CNPJ e o segmento de atuação. O CNPJ pode ser no formato numérico ou no novo formato alfanumérico.</li>
                 <li>Informe seu nome, e-mail corporativo e uma senha forte. Quem cria a conta passa a ser o <strong>administrador</strong> da empresa.</li>
-                <li>Confirme a leitura dos termos e clique em <strong>Criar conta da empresa</strong>.</li>
+                <li>Leia e aceite, em nome da empresa, os <a href="/termos">Termos de uso</a> e o <a href="/acordo-de-tratamento">Acordo de tratamento de dados</a>, confirme a leitura do <a href="/privacidade">Aviso de privacidade</a> e clique em <strong>Criar conta da empresa</strong>. A versão aceita fica registrada na trilha de auditoria.</li>
             </ol>
             <?= $fig('cadastro', 'Cadastro da empresa e do administrador') ?>
             <p>Cada CNPJ só pode ser cadastrado uma vez. Se a sua empresa já usa o ÍSIS, peça um convite ao administrador em vez de criar outra conta.</p>
@@ -780,6 +780,8 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
         <section id="duvidas">
             <h2>25. Dúvidas frequentes</h2>
             <dl class="faq">
+                <dt>Quem é responsável pelos dados que registro no ÍSIS?</dt>
+                <dd>A sua empresa é a controladora: decide o que registrar e para quê. A AiCode é operadora e trata esses dados só para prestar o serviço, conforme o <a href="/acordo-de-tratamento">Acordo de tratamento de dados</a>, que traz também a lista de suboperadores e o prazo de aviso em caso de incidente. Os dados de acesso de cada pessoa usuária seguem o <a href="/privacidade">Aviso de privacidade</a> da AiCode.</dd>
                 <dt>Toda operação precisa de RIPD?</dt>
                 <dd>Não. O relatório é para tratamentos que podem gerar alto risco aos titulares. O ÍSIS indica as operações com sinais de alto risco, mas a decisão é do encarregado. A ANPD também pode pedir um RIPD a qualquer momento.</dd>
                 <dt>O código do aplicativo não é aceito.</dt>
@@ -826,6 +828,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.5.2</td><td>02/11/2026</td><td><strong>Documentos legais separados:</strong> Termos de uso, Aviso de privacidade (dados tratados pela AiCode, bases legais, cookie único de sessão, prazos de guarda, direitos e contato do encarregado) e Acordo de tratamento de dados (a AiCode como operadora, aviso de incidente em até 48 horas, suboperadores e eliminação ao fim do contrato). No cadastro, o administrador aceita os termos e o acordo em nome da empresa, e a versão aceita fica na auditoria. Textos-modelo, a revisar pela assessoria jurídica.</td></tr>
                         <tr><td>1.5.1</td><td>02/11/2026</td><td>Acabamento das telas internas: títulos maiores, tabelas mais compactas com a linha inteira clicável, filtros numa faixa enxuta (no celular, atrás do botão "Filtros"), menu <strong>Novo</strong> no painel, estados vazios com ícone, situação "Em revisão" do inventário em azul (em andamento) e painel lateral fixo nas telas de entrada e cadastro.</td></tr>
                         <tr><td>1.5.0</td><td>02/11/2026</td><td><strong>Novo painel de conformidade:</strong> índice de maturidade de 0 a 100 com seis pilares e o principal ponto a melhorar em cada um, quatro indicadores principais, pendências separadas em "Urgente" e "Atenção" e gráficos mensais de ações concluídas e de solicitações de titulares. No celular, o índice e os indicadores aparecem primeiro.</td></tr>
                         <tr><td>1.4.1</td><td>02/11/2026</td><td>Acabamento: textos sem "(s)" e "(ões)" (ex.: "1 ação", "2 solicitações", "faltam 3 dias"), caminho de navegação no topo das telas (ex.: Conformidade › Riscos) no lugar do título repetido, categorias longas sem quebrar o selo e menu lateral um pouco mais largo.</td></tr>

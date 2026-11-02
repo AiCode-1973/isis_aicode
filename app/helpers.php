@@ -329,6 +329,7 @@ function audit_label(string $action): string
         'platform.login' => 'Entrada no painel da plataforma',
         'platform.login_failed' => 'Tentativa de entrada na plataforma recusada',
         'platform.plan_updated' => 'Plano comercial alterado',
+        'platform.legal_updated' => 'Identificação dos documentos legais alterada',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

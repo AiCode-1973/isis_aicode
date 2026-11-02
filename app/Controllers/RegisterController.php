@@ -59,7 +59,7 @@ final class RegisterController extends Controller
             'email' => 'seu e-mail',
             'password' => 'uma senha',
             'password_confirmation' => 'a confirmação da senha',
-            'accept_terms' => 'a leitura dos termos e do aviso',
+            'accept_terms' => 'o aceite dos termos e do acordo',
         ]);
 
         $data = $v->validated();

@@ -17,6 +17,7 @@ use Isis\Repositories\PlanRepository;
 use Isis\Repositories\PlatformRepository;
 use Isis\Repositories\SubscriptionRepository;
 use Isis\Services\SubscriptionService;
+use Isis\Support\LegalDocs;
 
 /**
  * Painel da plataforma (equipe AiCode): empresas, assinaturas, cobranças manuais, planos e preços.
@@ -271,6 +272,7 @@ final class PlatformController extends Controller
             'title' => 'Configurações da plataforma',
             'instructions' => $repo->setting('payment_instructions', ''),
             'billingEmail' => $repo->setting('billing_email', ''),
+            'legal' => LegalDocs::info(),
             'admins' => $repo->activeAdmins(),
         ], 'platform');
     }
@@ -289,6 +291,30 @@ final class PlatformController extends Controller
         $repo->saveSetting('payment_instructions', $data['payment_instructions']);
         $repo->saveSetting('billing_email', $data['billing_email']);
         return $this->success('/plataforma/configuracoes', 'Configurações salvas.');
+    }
+
+    /** Identificação da AiCode nos Termos, no Aviso de privacidade e no Acordo de tratamento de dados. */
+    public function saveLegal(Request $request): Response
+    {
+        $v = Validator::make($request->all(), [
+            'legal_name' => 'nullable|max:190',
+            'legal_cnpj' => 'nullable|max:20',
+            'legal_address' => 'nullable|max:300',
+            'privacy_email' => 'nullable|email',
+            'dpo_name' => 'nullable|max:150',
+            'subprocessors' => 'nullable|max:3000',
+        ], LegalDocs::FIELDS);
+        if ($v->fails()) {
+            return $this->backWithErrors('/plataforma/configuracoes#documentos', $v->errors(), $request->all());
+        }
+        $repo = new PlatformRepository();
+        $before = LegalDocs::info();
+        foreach ($v->validated() as $key => $value) {
+            $repo->saveSetting($key, $value === null ? null : trim((string) $value));
+        }
+        AuditLogger::log('platform.legal_updated', 'platform', null, $before, LegalDocs::info(),
+            ['tenant_id' => null, 'user_id' => null, 'user_name' => 'AiCode · ' . $this->actor()]);
+        return $this->success('/plataforma/configuracoes#documentos', 'Identificação dos documentos legais salva. As páginas públicas já mostram os novos dados.');
     }
 
     public function password(Request $request): Response

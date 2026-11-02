@@ -499,6 +499,10 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .prose { max-width: 760px; }
 .prose h2 { margin-top: 1.75rem; }
 .prose li { margin-bottom: .4rem; }
+.legal-nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.5rem; }
+.legal-nav a { padding: .4rem .85rem; border: 1px solid var(--line-2); border-radius: 999px; font-size: .9rem; text-decoration: none; color: var(--ink-2); background: var(--surface); }
+.legal-nav a:hover { border-color: var(--brand); }
+.legal-nav a[aria-current="page"] { background: var(--brand); border-color: var(--brand); color: #fff; }
 
 /* ---------- Assistente ---------- */
 .wizard { max-width: 920px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }

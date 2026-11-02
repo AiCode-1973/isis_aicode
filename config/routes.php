@@ -42,6 +42,8 @@ return static function (Router $r): void {
     // Público
     $r->get('/', [HomeController::class, 'index']);
     $r->get('/termos', [HomeController::class, 'terms']);
+    $r->get('/privacidade', [HomeController::class, 'privacy']);
+    $r->get('/acordo-de-tratamento', [HomeController::class, 'dpa']);
     $r->get('/manual', [HomeController::class, 'manual']);
     $r->get('/precos', [HomeController::class, 'pricing']);
 
@@ -232,6 +234,7 @@ return static function (Router $r): void {
     $r->post('/plataforma/planos/{slug}', [PlatformController::class, 'updatePlan'], ['platform']);
     $r->get('/plataforma/configuracoes', [PlatformController::class, 'settings'], ['platform']);
     $r->post('/plataforma/configuracoes', [PlatformController::class, 'saveSettings'], ['platform']);
+    $r->post('/plataforma/documentos', [PlatformController::class, 'saveLegal'], ['platform']);
     $r->post('/plataforma/senha', [PlatformController::class, 'password'], ['platform']);
 
     $r->get('/perfil', [ProfileController::class, 'show'], ['auth']);

@@ -58,7 +58,7 @@
     <div class="field">
         <label class="check">
             <input type="checkbox" name="accept_terms" value="1"<?= old('accept_terms') === '1' ? ' checked' : '' ?><?= error_attrs('accept_terms') ?>>
-            <span>Li os <a href="/termos" target="_blank" rel="noopener">termos de uso e o aviso de privacidade</a> e entendo que o ÍSIS apoia a organização da conformidade, sem substituir análise jurídica nem garantir conformidade legal.</span>
+            <span>Li e aceito, em nome da empresa, os <a href="/termos" target="_blank" rel="noopener">Termos de uso</a> e o <a href="/acordo-de-tratamento" target="_blank" rel="noopener">Acordo de tratamento de dados</a>, li o <a href="/privacidade" target="_blank" rel="noopener">Aviso de privacidade</a> e entendo que o ÍSIS apoia a organização da conformidade, sem substituir análise jurídica nem garantir conformidade legal.</span>
         </label>
         <?= field_error('accept_terms') ?>
     </div>

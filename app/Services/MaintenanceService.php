@@ -73,6 +73,11 @@ final class MaintenanceService
         $fresh = $last !== null && strtotime($last['date']) > time() - 2 * 86400;
         $checks[] = ['ok' => $fresh, 'label' => 'Backup recente (até 2 dias)', 'detail' => $last ? $last['name'] . ' · ' . fmt_bytes($last['size']) : 'nenhum backup em storage/backups'];
         $checks[] = ['ok' => Config::get('mail.driver') === 'smtp', 'label' => 'E-mail por SMTP', 'detail' => (string) Config::get('mail.driver') . (Config::get('mail.driver') === 'log' ? ' (e-mails só no log; configure MAIL_* para produção)' : '')];
+        try {
+            $missing = \Isis\Support\LegalDocs::missing();
+            $checks[] = ['ok' => $missing === [], 'label' => 'Identificação no aviso de privacidade', 'detail' => $missing === [] ? 'ok' : 'falta preencher no painel da plataforma: ' . implode(', ', $missing)];
+        } catch (\Throwable) {
+        }
         $checks[] = ['ok' => !Config::get('app.debug'), 'label' => 'Modo de depuração desligado', 'detail' => Config::get('app.debug') ? 'APP_DEBUG=true: desligue em produção' : 'ok'];
         return $checks;
     }

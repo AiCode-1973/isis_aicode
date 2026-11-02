@@ -49,6 +49,7 @@ final class AccountService
                     'cnpj' => $data['cnpj'],
                     'segmento' => $data['segment_code'],
                     'administrador' => $data['email'],
+                    'documentos_aceitos' => 'Termos de uso e Acordo de tratamento de dados, versão de ' . \Isis\Support\LegalDocs::VERSION,
                 ], ['tenant_id' => $tenantId, 'user_id' => $userId, 'user_name' => $data['name']]);
                 return $userId;
             });
@@ -207,7 +208,7 @@ final class AccountService
                 'email_verified_at' => date('Y-m-d H:i:s'), // o link chegou no e-mail convidado
             ]);
             (new InvitationRepository())->markAccepted((int) $invitation['id']);
-            AuditLogger::log('invitation.accepted', 'user', $userId, null, ['email' => $invitation['email'], 'perfil' => $invitation['role']], [
+            AuditLogger::log('invitation.accepted', 'user', $userId, null, ['email' => $invitation['email'], 'perfil' => $invitation['role'], 'documentos_aceitos' => 'Termos de uso, versão de ' . \Isis\Support\LegalDocs::VERSION], [
                 'tenant_id' => $tenantId, 'user_id' => $userId, 'user_name' => $name,
             ]);
             return $userId;

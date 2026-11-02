@@ -7,6 +7,7 @@ namespace Isis\Controllers;
 use Isis\Auth\Auth;
 use Isis\Core\Request;
 use Isis\Core\Response;
+use Isis\Support\LegalDocs;
 
 final class HomeController extends Controller
 {
@@ -47,6 +48,17 @@ final class HomeController extends Controller
 
     public function terms(Request $request): Response
     {
-        return $this->view('home/terms', ['title' => 'Termos de uso e aviso de privacidade'], 'public');
+        return $this->view('home/terms', ['title' => 'Termos de uso', 'info' => LegalDocs::info()], 'public');
+    }
+
+    public function privacy(Request $request): Response
+    {
+        return $this->view('legal/privacy', ['title' => 'Aviso de privacidade', 'info' => LegalDocs::info()], 'public');
+    }
+
+    /** Acordo de tratamento de dados: a AiCode como operadora dos dados que cada empresa registra. */
+    public function dpa(Request $request): Response
+    {
+        return $this->view('legal/dpa', ['title' => 'Acordo de tratamento de dados', 'info' => LegalDocs::info()], 'public');
     }
 }

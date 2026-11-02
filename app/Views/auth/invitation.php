@@ -20,7 +20,7 @@
     <div class="field">
         <label class="check">
             <input type="checkbox" name="accept_terms" value="1"<?= error_attrs('accept_terms') ?>>
-            <span>Li os <a href="/termos" target="_blank" rel="noopener">termos de uso e o aviso de privacidade</a>.</span>
+            <span>Li os <a href="/termos" target="_blank" rel="noopener">Termos de uso</a> e o <a href="/privacidade" target="_blank" rel="noopener">Aviso de privacidade</a>.</span>
         </label>
         <?= field_error('accept_terms') ?>
     </div>

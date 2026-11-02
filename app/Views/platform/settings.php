@@ -1,7 +1,7 @@
 <div class="page-head">
     <div>
         <h1>Configurações da plataforma</h1>
-        <p>Instruções de pagamento mostradas às empresas e contato de cobrança.</p>
+        <p>Instruções de pagamento, contato de cobrança e identificação da AiCode nos documentos legais.</p>
     </div>
 </div>
 
@@ -22,6 +22,26 @@
             <?= field_error('billing_email') ?>
         </div>
         <div class="actions section-gap-sm"><button type="submit" class="btn btn-primary">Salvar</button></div>
+    </form>
+
+    <form method="post" action="/plataforma/documentos" class="card" id="documentos" novalidate>
+        <?= csrf_field() ?>
+        <h2>Documentos legais</h2>
+        <p class="hint">Aparecem nos <a href="/termos" target="_blank" rel="noopener">Termos de uso</a>, no <a href="/privacidade" target="_blank" rel="noopener">Aviso de privacidade</a> e no <a href="/acordo-de-tratamento" target="_blank" rel="noopener">Acordo de tratamento de dados</a>. Enquanto estiverem vazios, as páginas mostram "<?= e(Isis\Support\LegalDocs::PENDING) ?>".</p>
+        <?php foreach (['legal_name' => 190, 'legal_cnpj' => 20, 'legal_address' => 300, 'privacy_email' => 190, 'dpo_name' => 150] as $key => $max): ?>
+        <div class="field">
+            <label for="f-<?= e($key) ?>"><?= e(Isis\Support\LegalDocs::FIELDS[$key]) ?></label>
+            <input type="<?= $key === 'privacy_email' ? 'email' : 'text' ?>" id="f-<?= e($key) ?>" name="<?= e($key) ?>" value="<?= e(old($key, $legal[$key])) ?>" maxlength="<?= $max ?>"<?= error_attrs($key) ?>>
+            <?= field_error($key) ?>
+        </div>
+        <?php endforeach; ?>
+        <div class="field">
+            <label for="f-subprocessors">Suboperadores</label>
+            <textarea id="f-subprocessors" name="subprocessors" rows="4" maxlength="3000"<?= error_attrs('subprocessors') ?>><?= e(old('subprocessors', $legal['subprocessors'])) ?></textarea>
+            <p class="hint">Um por linha: empresa, serviço e país. Ex.: "Provedor X · hospedagem do servidor e do banco · Brasil".</p>
+            <?= field_error('subprocessors') ?>
+        </div>
+        <div class="actions section-gap-sm"><button type="submit" class="btn btn-primary">Salvar documentos</button></div>
     </form>
 
     <div class="stack">
