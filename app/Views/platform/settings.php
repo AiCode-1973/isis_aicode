@@ -56,11 +56,32 @@
             <div class="actions"><button type="submit" class="btn btn-primary">Alterar senha</button></div>
         </form>
 
+        <section class="card" id="dois-fatores">
+            <h2><?= icon('shield') ?> Verificação em duas etapas</h2>
+            <?php if ($mfaCodes): ?>
+            <div class="recovery-box section-gap-sm">
+                <p><strong>Guarde seus códigos de recuperação.</strong> Cada um funciona uma única vez, no lugar do código do aplicativo, se você perder ou trocar o celular. Eles aparecem só agora.</p>
+                <ol class="recovery-codes">
+                    <?php foreach ($mfaCodes as $c): ?><li class="mono"><?= e($c) ?></li><?php endforeach; ?>
+                </ol>
+                <button type="button" class="btn btn-ghost no-print" data-print><?= icon('download') ?> Imprimir</button>
+            </div>
+            <?php endif; ?>
+            <p class="section-gap-sm">Ativada e obrigatória para toda a equipe AiCode. Códigos de recuperação: <strong class="<?= $mfaRemaining <= 2 ? 'text-danger' : '' ?>"><?= plural((int) $mfaRemaining, 'disponível', 'disponíveis') ?> de 10</strong>.</p>
+            <form method="post" action="/plataforma/dois-fatores/codigos" class="section-gap-sm" novalidate>
+                <?= csrf_field() ?>
+                <p class="small muted">Gerar novos códigos invalida os anteriores.</p>
+                <?= Isis\Core\View::partial('partials/password', ['name' => 'password_codes', 'label' => 'Sua senha', 'autocomplete' => 'current-password']) ?>
+                <button type="submit" class="btn btn-ghost"><?= icon('refresh') ?> Gerar novos códigos</button>
+            </form>
+            <p class="hint section-gap-sm">Perdeu o celular e os códigos? No servidor, rode <span class="mono">php bin/isis plataforma:2fa-redefinir email@aicode.dev.br</span>. Na próxima entrada, a pessoa cadastra o aplicativo de novo.</p>
+        </section>
+
         <section class="card" aria-label="Administradores da plataforma">
             <h2>Administradores da plataforma</h2>
             <ul class="stack section-gap-sm">
                 <?php foreach ($admins as $a): ?>
-                <li><strong><?= e($a['name']) ?></strong> · <?= e($a['email']) ?> <span class="muted small">· último acesso <?= e(fmt_datetime($a['last_login_at'])) ?></span></li>
+                <li><strong><?= e($a['name']) ?></strong> · <?= e($a['email']) ?> <span class="muted small">· último acesso <?= e(fmt_datetime($a['last_login_at'])) ?> · <?= empty($a['mfa_enabled_at']) ? 'duas etapas pendente (ativa na próxima entrada)' : 'duas etapas ativada' ?></span></li>
                 <?php endforeach; ?>
             </ul>
             <p class="hint section-gap-sm">Para incluir alguém ou trocar uma senha esquecida, rode no servidor: <span class="mono">php bin/isis plataforma:admin email@aicode.dev.br "Nome"</span></p>

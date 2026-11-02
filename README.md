@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais (versão 1.5.2)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma (versão 1.6.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -20,6 +20,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 | 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
+| 1.6 | Verificação em duas etapas obrigatória para a equipe AiCode no painel da plataforma (`PlatformMfaController`, `PlatformMfaService`, migration 009). Celular perdido: `php bin/isis plataforma:2fa-redefinir <email>` | **pronta** |
 | 1.5.2 | Termos de uso, Aviso de privacidade (`/privacidade`) e Acordo de tratamento de dados (`/acordo-de-tratamento`), com a identificação da AiCode editável no painel da plataforma (`app/Support/LegalDocs.php`) e aceite registrado na auditoria. Textos-modelo, a revisar pela assessoria jurídica | **pronta** |
 | 1.5 | Painel com índice de maturidade (`app/Services/MaturityService.php`, seis pilares calculados com os dados já registrados), pendências agrupadas por gravidade e gráficos SVG gerados no servidor (`partials/bar-chart.php`) | **pronta** |
 | 1.4 | Nova identidade visual (logo em `public/assets/img/logo.svg` e `public/assets/img/marca/`, palavra ÍSIS em vetor em `app/Views/partials/wordmark.php`), fonte Inter hospedada em `public/assets/fonts/` (licença OFL) e nova página inicial | **pronta** |
@@ -177,6 +178,7 @@ cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
 | `php bin/isis email:teste <destino>` | Envia um e-mail de teste com a configuração atual (veja [E-mail (SMTP)](#e-mail-smtp)) |
 | `php bin/isis assinaturas` | Envia os avisos de assinatura pendentes e lista a situação de cada empresa |
 | `php bin/isis plataforma:admin <email> "<Nome>"` | Cria ou atualiza um acesso ao painel da plataforma |
+| `php bin/isis plataforma:2fa-redefinir <email>` | Apaga o cadastro do aplicativo autenticador de um administrador da plataforma (celular perdido); na próxima entrada ele cadastra de novo |
 
 ## Planos e cobrança (manual)
 
@@ -205,6 +207,8 @@ Uso exclusivo da equipe AiCode, com login e sessão **separados** das contas das
 ```bash
 cd ~/isis && /usr/local/bin/ea-php83 bin/isis plataforma:admin voce@aicode.dev.br "Seu Nome"
 ```
+
+No primeiro acesso a `/plataforma/entrar`, depois da senha, o painel pede para cadastrar um aplicativo autenticador (Google Authenticator, Microsoft Authenticator ou outro) e mostra 10 códigos de recuperação, que devem ser guardados.
 
 **Deste computador (Windows)**, gravando direto no banco de produção pelo IP. Não precisa ter enviado os arquivos ao servidor, só ter rodado as migrations:
 
@@ -264,7 +268,7 @@ composer install
 vendor/bin/phpunit
 ```
 
-São 125 testes. Os dos documentos legais conferem a identificação da AiCode nas três páginas e o registro da versão aceita no cadastro. Os do painel conferem o cálculo do índice de maturidade (empresa nova, tudo em dia, pendências, níveis e perfis sem acesso) e as séries mensais só da própria empresa. Os da verificação em duas etapas usam os vetores oficiais da RFC 6238 e conferem a recusa de código repetido ou vencido, os códigos de recuperação de uso único, o login que só abre a sessão depois do código, o bloqueio após 5 códigos errados, a política da empresa e a redefinição pelo administrador só na própria empresa. Os do RIPD conferem a indicação das operações pelo inventário, o bloqueio de envio incompleto, a aprovação com versão congelada (que não muda quando o inventário muda), a devolução, a revisão, a proibição de excluir RIPD aprovado, o isolamento entre empresas e as permissões por perfil. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
+São 129 testes. Os da plataforma conferem que só a senha não abre o painel, a ativação no primeiro acesso, o bloqueio após 5 códigos errados e a redefinição. Os dos documentos legais conferem a identificação da AiCode nas três páginas e o registro da versão aceita no cadastro. Os do painel conferem o cálculo do índice de maturidade (empresa nova, tudo em dia, pendências, níveis e perfis sem acesso) e as séries mensais só da própria empresa. Os da verificação em duas etapas usam os vetores oficiais da RFC 6238 e conferem a recusa de código repetido ou vencido, os códigos de recuperação de uso único, o login que só abre a sessão depois do código, o bloqueio após 5 códigos errados, a política da empresa e a redefinição pelo administrador só na própria empresa. Os do RIPD conferem a indicação das operações pelo inventário, o bloqueio de envio incompleto, a aprovação com versão congelada (que não muda quando o inventário muda), a devolução, a revisão, a proibição de excluir RIPD aprovado, o isolamento entre empresas e as permissões por perfil. Os de planos conferem o teste grátis no cadastro, a situação calculada pelas datas (tolerância e vencimento), os limites do plano, a extensão do período a cada pagamento, a recusa de pagar duas vezes ou pagar fatura de outra empresa, os avisos sem repetição, o somente leitura (sem bloquear titulares e incidentes) e o login separado da plataforma. A fase 5 testa backup e restauração com contagem de registros, a recusa de backup adulterado, os lembretes (sem duplicar no mesmo dia) e o relatório. A fase 4 inclui regras de avaliação de fornecedores, fluxo de versões e ciência de políticas, correção da avaliação de treinamento, certificado e isolamento entre empresas.
 
 - **Unidade** (sem banco): validação (inclui CNPJ alfanumérico), criptografia, matriz de permissões, cadeia de hashes da auditoria, rotas, CSRF, redirecionamentos, matriz de risco, pendências do inventário e prazos (15 dias corridos e 3 dias úteis).
 - **Integração** (banco próprio, **apagado e recriado** a cada execução):

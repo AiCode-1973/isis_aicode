@@ -15,6 +15,12 @@ use Isis\Support\LegalDocs;
  */
 final class LegalDocsTest extends DatabaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Database::execute("DELETE FROM platform_settings WHERE name IN ('legal_name', 'legal_cnpj', 'legal_address', 'privacy_email', 'dpo_name', 'subprocessors')");
+    }
+
     public function testSemIdentificacaoAsPaginasMostramOQueFalta(): void
     {
         self::assertContains('Razão social da AiCode', LegalDocs::missing());

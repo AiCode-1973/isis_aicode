@@ -29,6 +29,7 @@ use Isis\Controllers\RegisterController;
 use Isis\Controllers\SettingsController;
 use Isis\Controllers\SubscriptionController;
 use Isis\Controllers\PlatformController;
+use Isis\Controllers\PlatformMfaController;
 use Isis\Controllers\UserController;
 use Isis\Core\Router;
 
@@ -223,6 +224,11 @@ return static function (Router $r): void {
     // Painel da plataforma (equipe AiCode), com login próprio
     $r->get('/plataforma/entrar', [PlatformController::class, 'showLogin']);
     $r->post('/plataforma/entrar', [PlatformController::class, 'login']);
+    $r->get('/plataforma/verificacao', [PlatformMfaController::class, 'challenge']);
+    $r->post('/plataforma/verificacao', [PlatformMfaController::class, 'verify']);
+    $r->get('/plataforma/verificacao/ativar', [PlatformMfaController::class, 'setup']);
+    $r->post('/plataforma/verificacao/ativar', [PlatformMfaController::class, 'enable']);
+    $r->post('/plataforma/dois-fatores/codigos', [PlatformMfaController::class, 'regenerate'], ['platform']);
     $r->post('/plataforma/sair', [PlatformController::class, 'logout'], ['platform']);
     $r->get('/plataforma', [PlatformController::class, 'index'], ['platform']);
     $r->get('/plataforma/empresas/{id}', [PlatformController::class, 'tenant'], ['platform']);

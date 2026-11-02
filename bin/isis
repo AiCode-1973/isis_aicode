@@ -21,6 +21,7 @@ declare(strict_types=1);
  * Suporte
  *   php bin/isis verificar         Verifica requisitos, banco, migrations, auditoria, backup e e-mail
  *   php bin/isis email:teste <destino@exemplo.com>   Envia um e-mail de teste com a configuração atual
+ *   php bin/isis plataforma:2fa-redefinir <email>   Apaga o cadastro do aplicativo de um administrador da plataforma (celular perdido)
  *   php bin/isis audit:verify      Verifica a cadeia de hashes da auditoria de todas as empresas
  *   php bin/isis backup:listar
  *   php bin/isis backup:decifrar <arquivo.isisbak> <saida.zip>
@@ -231,6 +232,18 @@ try {
             }
             break;
 
+        case 'plataforma:2fa-redefinir':
+            $email = mb_strtolower(trim($positional[0] ?? ''));
+            $admin = (new Isis\Repositories\PlatformRepository())->findAdminByEmail($email);
+            if ($admin === null) {
+                throw new RuntimeException('Uso: php bin/isis plataforma:2fa-redefinir <email de um administrador da plataforma>');
+            }
+            Isis\Services\PlatformMfaService::reset($admin);
+            Isis\Audit\AuditLogger::log('platform.mfa_reset', 'platform_admin', (int) $admin['id'], null, ['email' => $email],
+                ['tenant_id' => null, 'user_id' => null, 'user_name' => 'Servidor (bin/isis)']);
+            out("Verificação em duas etapas de {$email} redefinida. Na próxima entrada, a pessoa cadastra o aplicativo de novo.");
+            break;
+
         case 'email:teste':
             $to = $positional[0] ?? '';
             if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
@@ -280,7 +293,7 @@ try {
             exit($failures > 0 ? 2 : 0);
 
         default:
-            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | diario | backup | backup:listar | backup:decifrar | backup:restaurar | lembretes | manutencao | verificar | email:teste | assinaturas | plataforma:admin | audit:verify');
+            out('Comandos: key:generate | migrate | install [--demo] | seed:demo | diario | backup | backup:listar | backup:decifrar | backup:restaurar | lembretes | manutencao | verificar | email:teste | assinaturas | plataforma:admin | plataforma:2fa-redefinir | audit:verify');
     }
 } catch (Throwable $e) {
     fwrite(STDERR, 'Erro: ' . $e->getMessage() . PHP_EOL);

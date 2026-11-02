@@ -16,6 +16,7 @@ use Isis\Core\Validator;
 use Isis\Repositories\PlanRepository;
 use Isis\Repositories\PlatformRepository;
 use Isis\Repositories\SubscriptionRepository;
+use Isis\Services\PlatformMfaService;
 use Isis\Services\SubscriptionService;
 use Isis\Support\LegalDocs;
 
@@ -42,10 +43,10 @@ final class PlatformController extends Controller
                 ? 'Muitas tentativas sem sucesso. Aguarde 15 minutos.'
                 : 'E-mail ou senha incorretos.');
         }
-        PlatformAuth::login($result['admin']);
+        // A senha conferiu; o painel só abre depois do código do aplicativo (ou da ativação, no primeiro acesso).
         $intended = Session::get('platform_intended');
         Session::forget('platform_intended');
-        return $this->redirect(is_string($intended) && str_starts_with($intended, '/plataforma') ? $intended : '/plataforma');
+        return $this->redirect(PlatformMfaController::begin($result['admin'], is_string($intended) ? $intended : null));
     }
 
     public function logout(Request $request): Response
@@ -273,6 +274,8 @@ final class PlatformController extends Controller
             'instructions' => $repo->setting('payment_instructions', ''),
             'billingEmail' => $repo->setting('billing_email', ''),
             'legal' => LegalDocs::info(),
+            'mfaCodes' => Session::getFlash('platform_mfa_codes'),
+            'mfaRemaining' => PlatformMfaService::remainingRecoveryCodes(PlatformAuth::admin()),
             'admins' => $repo->activeAdmins(),
         ], 'platform');
     }
