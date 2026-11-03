@@ -3,6 +3,7 @@
 $shot = static fn (string $name): string => e(asset('img/manual/' . $name . '.webp'));
 ?>
 <section class="lp-hero">
+    <div class="lp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="container lp-hero-inner">
         <a class="lp-badge" href="#modulos"><span>Novo</span> Relatório de impacto (RIPD) e verificação em duas etapas <?= icon('arrow-right') ?></a>
         <h1>A proteção de dados da sua empresa, <em>organizada</em>.</h1>
