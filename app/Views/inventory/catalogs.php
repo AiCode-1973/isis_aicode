@@ -26,11 +26,11 @@ $extraLabel = ['dados' => 'Sensível (art. 5º, II)', 'titulares' => 'Vulneráve
 <?php foreach ($catalogs as $cat): $items = $cat->all(); ?>
     <section class="card" id="<?= e($cat->type) ?>" aria-labelledby="t-<?= e($cat->type) ?>">
         <div class="card-header">
-            <div><h2 id="t-<?= e($cat->type) ?>"><?= e($cat->label()) ?></h2><p><?= count($items) ?> item(ns).</p></div>
+            <div><h2 id="t-<?= e($cat->type) ?>"><?= e($cat->label()) ?></h2><p><?= plural(count($items), 'item', 'itens') ?>.</p></div>
         </div>
 
         <?php if ($canEdit): ?>
-        <form method="post" action="/inventario/catalogos/<?= e($cat->type) ?>" class="actions" novalidate>
+        <form method="post" action="/inventario/catalogos/<?= e($cat->type) ?>" class="actions catalog-add" novalidate>
             <?= csrf_field() ?>
             <label class="visually-hidden" for="new-<?= e($cat->type) ?>">Novo item</label>
             <input type="text" id="new-<?= e($cat->type) ?>" name="name" class="grow" maxlength="150" required placeholder="Novo item">
