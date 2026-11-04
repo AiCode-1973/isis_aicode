@@ -86,14 +86,6 @@
     btn.addEventListener('click', function () { window.print(); });
   });
 
-  // Assistente: trocar o segmento recarrega as sugestões
-  var segment = document.querySelector('[data-segment-reload]');
-  if (segment) {
-    segment.addEventListener('change', function () {
-      window.location.href = '/configuracao-inicial?segmento=' + encodeURIComponent(segment.value);
-    });
-  }
-
   // Linha de tabela inteira clicável: leva ao link principal da linha (o título)
   document.querySelectorAll('tbody tr').forEach(function (tr) {
     var link = tr.querySelector('a.title-link');

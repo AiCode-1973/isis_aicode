@@ -252,6 +252,15 @@ if ($kpis === []) {
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <?php if ($planTop): ?>
+            <div class="plan-hint section-gap-sm">
+                <p class="small"><strong>Comece por aqui</strong> <span class="muted">(sugestão do assistente)</span></p>
+                <ol>
+                    <?php foreach ($planTop as $item): ?><li><a href="<?= e($item['link']) ?>"><?= e($item['title']) ?></a></li><?php endforeach; ?>
+                </ol>
+                <a class="small" href="/configuracao-inicial/plano">Ver o plano completo</a>
+            </div>
+            <?php endif; ?>
             <p class="hint section-gap-sm">Indicador de organização interna. Não representa certificação nem garantia de conformidade legal.</p>
         </section>
         <?php endif; ?>

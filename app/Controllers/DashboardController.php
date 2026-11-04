@@ -19,6 +19,7 @@ use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\AccessScope;
 use Isis\Services\MaturityService;
+use Isis\Services\OnboardingService;
 
 /**
  * Painel de conformidade: pendências, riscos, indicadores, responsáveis e prazos.
@@ -54,7 +55,7 @@ final class DashboardController extends Controller
 
         // Jornada: reflete só o que já existe no sistema.
         $journey = [
-            ['label' => 'Concluir a configuração inicial', 'hint' => 'Segmento, setores e canal de privacidade.', 'done' => $tenant['onboarding_completed_at'] !== null, 'link' => null],
+            ['label' => 'Concluir a configuração inicial', 'hint' => 'Empresa, áreas, dados e responsáveis.', 'done' => $tenant['onboarding_completed_at'] !== null, 'link' => null],
             ['label' => 'Nomear o encarregado (DPO)', 'hint' => $tenant['dpo_name'] ? 'Encarregado: ' . $tenant['dpo_name'] : 'Defina quem responde pela proteção de dados.', 'done' => !empty($tenant['dpo_name']), 'link' => '/configuracoes'],
             ['label' => 'Convidar a equipe', 'hint' => 'Encarregado, gestores, colaboradores e auditor.', 'done' => $stats['users'] > 1 || $stats['invites'] > 0, 'link' => '/usuarios'],
             ['label' => 'Mapear as operações de tratamento', 'hint' => $inventory ? plural((int) $inventory['total'], 'operação', 'operações') . ' no inventário.' : 'Inventário de dados pessoais.', 'done' => ($inventory['active'] ?? 0) >= 3, 'link' => '/inventario'],
@@ -147,6 +148,8 @@ final class DashboardController extends Controller
             'issues' => Auth::can(P::INVENTORY_VIEW) ? (new ActivityRepository())->withIssues(5) : [],
             'alerts' => $alerts,
             'journey' => $journey,
+            'planTop' => Auth::can(P::SETTINGS_MANAGE) && isset(OnboardingService::answers($tenant)['responsaveis'])
+                ? array_slice(OnboardingService::plan(OnboardingService::answers($tenant)), 0, 3) : [],
             'progress' => (int) round($done / count($journey) * 100),
             'guidance' => SegmentRepository::template($tenant['segment_code'])['guidance'] ?? [],
             'recent' => Auth::can(P::AUDIT_VIEW) ? (new AuditRepository())->recent(6) : [],

@@ -207,6 +207,16 @@ try {
     await go('/verificar-email/' + links[links.length - 1][1]);
     await login(email);
     await go('/configuracao-inicial'); await shot('configuracao-inicial', 1150);
+    // Percorre o assistente: empresa -> áreas -> dados -> responsáveis -> plano sugerido -> conclusão
+    const step = (js) => submit(`(() => { const f = document.querySelector('form.card'); ${js}; f.requestSubmit(); })()`);
+    const tick = (name, values) => values.map((v) => `f.querySelector('input[name="${name}"][value="${v}"]').checked = true`).join('; ');
+    await step(`f.size.value = '11_50'; ${tick('audiences[]', ['pessoas'])}; ${tick('channels[]', ['site', 'mensagens', 'presencial'])}`);
+    await step('');
+    await shot('configuracao-dados', 1300);
+    await step(`${tick('vendors', ['sim'])}; ${tick('international', ['nao_sei'])}`);
+    await step(`f.querySelector('#o-name-0').value = 'Renata Lopes'; f.querySelector('#o-email-0').value = 'renata.lopes@escolaexemplo.example'; f.querySelector('input[name="owner_invite[0]"]').checked = true`);
+    await shot('configuracao-plano', 1700);
+    await step('f.acknowledge.checked = true');
   } else {
     console.log('  (configuração inicial ignorada: e-mail de confirmação não encontrado em storage/logs/mail.log)');
   }

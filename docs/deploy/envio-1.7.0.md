@@ -1,10 +1,10 @@
-# Envio ao servidor · versões 1.1 a 1.6.1
+# Envio ao servidor · versões 1.1 a 1.7.0
 
-Pacote: `deploy/isis-1.6.1.zip` (gerado em 02/11/2026). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
+Pacote: `deploy/isis-1.7.0.zip` (gerado em 03/11/2026). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
 
 **Não contém** `.env`, `storage/`, testes nem documentos internos. Por isso, ao extrair por cima, a configuração, os uploads, os backups e as sessões do servidor ficam como estão.
 
-O banco de produção **já está atualizado até a migration 009**. Os arquivos antigos continuam funcionando com ele até o envio.
+O banco de produção está atualizado até a migration 009. A versão 1.7.0 traz a **migration 010** (`010_assistente_configuracao`), que só acrescenta a coluna `onboarding_answers` em `tenants`: ela é aplicada pelo `migrate` do passo 4, depois de extrair os arquivos. Os arquivos antigos continuam funcionando com ela.
 
 Nos comandos abaixo, `PHP` é o PHP 8.3 do servidor, por exemplo `/usr/local/bin/ea-php83`, e a pasta do ÍSIS é `~/isis`. Ajuste se for outra.
 
@@ -21,9 +21,9 @@ Confira se apareceu "Backup criado". Se quiser uma garantia extra, baixe também
 ## 2. Enviar e extrair
 
 1. cPanel › *Gerenciador de Arquivos* › pasta `isis`.
-2. *Carregar* › escolha `isis-1.6.1.zip`.
+2. *Carregar* › escolha `isis-1.7.0.zip`.
 3. Clique com o botão direito no zip › *Extract* › destino: a própria pasta `isis` (ex.: `/home/USUARIO/isis`). Confirme a substituição dos arquivos.
-4. Apague o `isis-1.6.1.zip` do servidor.
+4. Apague o `isis-1.7.0.zip` do servidor.
 
 Arquivos de versões antigas que sobrarem não atrapalham.
 
@@ -50,7 +50,7 @@ cd ~/isis
 /usr/local/bin/ea-php83 bin/isis verificar
 ```
 
-- `migrate` deve responder "Banco já está atualizado".
+- `migrate` deve responder "Migrations aplicadas: 010_assistente_configuracao". Se responder "Duplicate column onboarding_answers", a coluna já existe: avise antes de continuar.
 - `audit:verify` deve mostrar todas as cadeias "íntegra".
 - `verificar` lista o que ainda falta. Os pontos esperados nesta primeira vez são: identificação no aviso de privacidade (resolvida no passo 6), SMTP (se ainda não configurado) e backup recente (resolvido pelo cron).
 
@@ -69,7 +69,8 @@ cd /home/USUARIO/isis && /usr/local/bin/ea-php83 bin/isis diario >> storage/logs
 3. `https://isis.aicode.dev.br/plataforma/entrar`: entre com a senha. **O painel vai pedir para cadastrar o aplicativo autenticador.** Tenha o celular em mãos, leia o QR code, digite o código e **guarde os 10 códigos de recuperação** (imprima ou anote em papel ou num gerenciador de senhas).
 4. Em *Configurações da plataforma › Documentos legais*, preencha razão social, CNPJ, endereço, e-mail de privacidade, encarregado e suboperadores (hospedagem e e-mail).
 5. Entre com uma conta de empresa e confira o painel com o índice de maturidade, o RIPD e a verificação em duas etapas em *Meu perfil*.
-6. Rode `bin/isis verificar` de novo.
+6. Com o administrador de uma empresa, abra `https://isis.aicode.dev.br/configuracao-inicial?refazer=1`: o assistente em cinco etapas deve abrir. Empresas que já tinham concluído a configuração antiga não são obrigadas a refazê-lo. Só avance até o plano se quiser aplicar as respostas: ao concluir, os convites marcados são enviados de verdade.
+7. Rode `bin/isis verificar` de novo.
 
 ## Se algo der errado
 

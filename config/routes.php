@@ -78,7 +78,8 @@ return static function (Router $r): void {
 
     // Configuração inicial
     $r->get('/configuracao-inicial', [OnboardingController::class, 'show'], ['auth', 'perm:' . P::SETTINGS_MANAGE]);
-    $r->post('/configuracao-inicial', [OnboardingController::class, 'store'], ['auth', 'perm:' . P::SETTINGS_MANAGE]);
+    $r->get('/configuracao-inicial/{type}', [OnboardingController::class, 'step'], ['auth', 'perm:' . P::SETTINGS_MANAGE]);
+    $r->post('/configuracao-inicial/{type}', [OnboardingController::class, 'save'], ['auth', 'perm:' . P::SETTINGS_MANAGE]);
 
     // Área da empresa
     $r->get('/painel', [DashboardController::class, 'index'], $app(P::DASHBOARD_VIEW));
