@@ -7,8 +7,11 @@ namespace Isis\Controllers;
 use Isis\Audit\AuditLogger;
 use Isis\Auth\Auth;
 use Isis\Auth\PlatformAuth;
+use Isis\Core\Config;
 use Isis\Core\Database;
 use Isis\Core\HttpException;
+use Isis\Core\Mailer;
+use Isis\Core\RateLimiter;
 use Isis\Core\Request;
 use Isis\Core\Response;
 use Isis\Core\Session;
@@ -277,7 +280,47 @@ final class PlatformController extends Controller
             'mfaCodes' => Session::getFlash('platform_mfa_codes'),
             'mfaRemaining' => PlatformMfaService::remainingRecoveryCodes(PlatformAuth::admin()),
             'admins' => $repo->activeAdmins(),
+            // Configuração de e-mail em uso (sem a senha) e o resultado do último teste
+            'mail' => [
+                'driver' => (string) Config::get('mail.driver', 'log'),
+                'host' => (string) Config::get('mail.host'),
+                'port' => (string) Config::get('mail.port'),
+                'encryption' => (string) (Config::get('mail.encryption') ?: 'none'),
+                'username' => (string) Config::get('mail.username'),
+                'password' => (string) Config::get('mail.password') !== '',
+                'from' => Config::get('mail.from_name') . ' <' . Config::get('mail.from_address') . '>',
+                'phpmailer' => class_exists(\PHPMailer\PHPMailer\PHPMailer::class),
+            ],
+            'mailTest' => Session::getFlash('mail_test'),
         ], 'platform');
+    }
+
+    /**
+     * Teste de e-mail pelo navegador (para hospedagens sem terminal): diagnóstico da conexão sem login
+     * e envio de uma mensagem de teste. Nunca mostra a senha.
+     */
+    public function mailTest(Request $request): Response
+    {
+        $back = '/plataforma/configuracoes#email';
+        $v = Validator::make($request->all(), ['to' => 'required|email'], ['to' => 'o e-mail de destino']);
+        if ($v->fails()) {
+            return $this->backWithErrors($back, $v->errors(), $request->all());
+        }
+        $key = (string) (PlatformAuth::admin()['id'] ?? '0');
+        if (RateLimiter::tooMany('platform_mail_test', $key, 10, 15)) {
+            return $this->failure($back, 'Muitos testes seguidos. Aguarde 15 minutos e tente de novo.');
+        }
+        RateLimiter::hit('platform_mail_test', $key);
+
+        $to = (string) $v->validated()['to'];
+        $driver = (string) Config::get('mail.driver', 'log');
+        $steps = $driver === 'smtp' ? Mailer::diagnose() : [];
+        $sent = Mailer::send($to, 'Teste de e-mail do ÍSIS',
+            '<p>Este é um e-mail de teste do <strong>ÍSIS</strong>, enviado pelo painel da plataforma em ' . date('d/m/Y H:i') . '.</p><p>Se você recebeu, o envio está funcionando.</p>');
+        Session::flash('mail_test', ['to' => $to, 'driver' => $driver, 'steps' => $steps, 'sent' => $sent, 'error' => Mailer::$lastError, 'at' => date('d/m/Y H:i')]);
+        AuditLogger::log('platform.mail_test', 'platform', null, null, ['destino' => $to, 'driver' => $driver, 'resultado' => $sent ? 'enviado' : 'falhou'],
+            ['tenant_id' => null, 'user_id' => null, 'user_name' => 'AiCode · ' . $this->actor()]);
+        return Response::redirect($back);
     }
 
     public function saveSettings(Request $request): Response

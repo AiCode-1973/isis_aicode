@@ -54,6 +54,11 @@ cd ~/isis
 - `audit:verify` deve mostrar todas as cadeias "íntegra".
 - `verificar` lista o que ainda falta. Os pontos esperados nesta primeira vez são: identificação no aviso de privacidade (resolvida no passo 6), SMTP (se ainda não configurado) e backup recente (resolvido pelo cron).
 
+**Sem terminal na hospedagem:**
+- **Migration 010:** pode ser aplicada daqui, pelo acesso remoto ao banco, como foi feito com a 009, sempre com a sua aprovação. Ela só acrescenta a coluna `onboarding_answers`. Faça isso logo depois de extrair os arquivos.
+- **Teste de e-mail:** use *Plataforma › Configurações › E-mail do sistema (SMTP)*, que mostra o diagnóstico e envia o teste pelo navegador.
+- **Rotina diária:** o *Cron Jobs* do cPanel (passo 5) roda comandos mesmo sem terminal. Ele também serve para rodar uma vez o `migrate` e o `verificar`: agende para daqui a alguns minutos, com a saída gravada em `storage/logs/rotina.log`, e apague o agendamento depois.
+
 ## 5. Agendar a rotina diária (se ainda não estiver)
 
 cPanel › *Cron Jobs* › "Uma vez por dia" (ex.: 02:30):

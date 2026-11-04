@@ -179,6 +179,7 @@ cd /home/USUARIO/isis && php bin/isis diario >> storage/logs/rotina.log 2>&1
 | `php bin/isis lembretes` | Envia o resumo diário de pendências por e-mail: um por pessoa por dia, só para quem tem pendências |
 | `php bin/isis manutencao` | Remove tentativas de login antigas, tokens vencidos, sessões expiradas e temporários |
 | `php bin/isis verificar` | Confere requisitos, banco, migrations, integridade da auditoria, backup recente, SMTP e modo de depuração |
+| Plataforma › Configurações › **E-mail do sistema (SMTP)** | Mesmo teste pelo navegador, para hospedagem sem terminal: mostra a configuração (sem a senha), o diagnóstico e envia o e-mail de teste |
 | `php bin/isis email:teste <destino>` | Envia um e-mail de teste com a configuração atual (veja [E-mail (SMTP)](#e-mail-smtp)) |
 | `php bin/isis assinaturas` | Envia os avisos de assinatura pendentes e lista a situação de cada empresa |
 | `php bin/isis plataforma:admin <email> "<Nome>"` | Cria ou atualiza um acesso ao painel da plataforma |

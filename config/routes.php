@@ -248,6 +248,7 @@ return static function (Router $r): void {
     $r->get('/plataforma/configuracoes', [PlatformController::class, 'settings'], ['platform']);
     $r->post('/plataforma/configuracoes', [PlatformController::class, 'saveSettings'], ['platform']);
     $r->post('/plataforma/documentos', [PlatformController::class, 'saveLegal'], ['platform']);
+    $r->post('/plataforma/email-teste', [PlatformController::class, 'mailTest'], ['platform']);
     $r->post('/plataforma/senha', [PlatformController::class, 'password'], ['platform']);
 
     $r->get('/perfil', [ProfileController::class, 'show'], ['auth']);

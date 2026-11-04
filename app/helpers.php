@@ -337,6 +337,7 @@ function audit_label(string $action): string
         'platform.mfa_codes_regenerated' => 'Novos códigos de recuperação (plataforma)',
         'platform.mfa_reset' => 'Verificação em duas etapas redefinida no servidor (plataforma)',
         'platform.legal_updated' => 'Identificação dos documentos legais alterada',
+        'platform.mail_test' => 'Teste de envio de e-mail',
         'access.denied' => 'Acesso negado por permissão',
         'access.not_found' => 'Tentativa de acesso a registro inexistente ou de outra empresa',
     ][$action] ?? $action;

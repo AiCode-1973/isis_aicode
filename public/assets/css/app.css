@@ -1251,3 +1251,13 @@ label .field-tag, legend .field-tag { margin-left: .35rem; }
 }
 .model-preview .dl { grid-template-columns: 1fr; gap: 0 0; }
 .model-preview .dl dt { margin-top: .45rem; font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; }
+
+/* Teste de e-mail no painel da plataforma */
+.mail-test { padding: .8rem; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--line); }
+.mail-test > p { margin: 0 0 .5rem; }
+.mail-test .alert { margin: .6rem 0 0; }
+.mail-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; font-size: .86rem; }
+.mail-steps li { display: flex; gap: .45rem; align-items: flex-start; overflow-wrap: anywhere; }
+.mail-steps .icon { width: 16px; height: 16px; flex: none; margin-top: .1rem; }
+.mail-steps .is-ok .icon { color: var(--ok); }
+.mail-steps .is-fail { color: var(--danger); }

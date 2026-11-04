@@ -13,6 +13,9 @@ final class Mailer
     /** @var list<array{to: string, subject: string, html: string}> Últimos envios (usado nos testes) */
     public static array $sent = [];
 
+    /** Motivo da última falha de envio (mostrado no teste de e-mail do painel da plataforma). */
+    public static ?string $lastError = null;
+
     /** @param array<string, mixed> $data */
     public static function sendTemplate(string $to, string $subject, string $template, array $data = []): bool
     {
@@ -23,6 +26,7 @@ final class Mailer
     public static function send(string $to, string $subject, string $html): bool
     {
         self::$sent[] = ['to' => $to, 'subject' => $subject, 'html' => $html];
+        self::$lastError = null;
         $driver = Config::get('mail.driver', 'log');
 
         if ($driver === 'smtp' && class_exists(\PHPMailer\PHPMailer\PHPMailer::class)) {
@@ -71,6 +75,7 @@ final class Mailer
             $mail->AltBody = trim(html_entity_decode(strip_tags(str_replace(['<br>', '</p>'], "\n", $html))));
             return $mail->send();
         } catch (\Throwable $e) {
+            self::$lastError = $e->getMessage();
             Logger::error('Falha no envio de e-mail', ['erro' => $e->getMessage(), 'servidor' => Config::get('mail.host') . ':' . Config::get('mail.port'), 'criptografia' => Config::get('mail.encryption')]);
             return false;
         }

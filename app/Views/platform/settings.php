@@ -1,7 +1,7 @@
 <div class="page-head">
     <div>
         <h1>Configurações da plataforma</h1>
-        <p>Instruções de pagamento, contato de cobrança e identificação da AiCode nos documentos legais.</p>
+        <p>Instruções de pagamento, contato de cobrança, identificação da AiCode nos documentos legais e teste do e-mail do sistema.</p>
     </div>
 </div>
 
@@ -45,6 +45,51 @@
     </form>
 
     <div class="stack">
+        <section class="card" id="email" aria-labelledby="email-title">
+            <h2 id="email-title">E-mail do sistema (SMTP)</h2>
+            <p class="small muted">Configuração lida do arquivo <span class="mono">.env</span> do servidor. A senha nunca aparece aqui.</p>
+            <dl class="dl section-gap-sm">
+                <dt>Envio</dt><dd><?= $mail['driver'] === 'smtp' ? 'SMTP (envio real)' : 'Somente registro em arquivo (MAIL_DRIVER=' . e($mail['driver']) . '): nenhum e-mail sai do servidor' ?></dd>
+                <?php if ($mail['driver'] === 'smtp'): ?>
+                <dt>Servidor</dt><dd><span class="mono"><?= e($mail['host'] ?: '(vazio)') ?>:<?= e($mail['port']) ?></span> · <?= e($mail['encryption']) ?></dd>
+                <dt>Usuário</dt><dd><?= e($mail['username'] ?: '(sem login)') ?> · senha <?= $mail['password'] ? 'preenchida' : '<strong>vazia</strong>' ?></dd>
+                <dt>PHPMailer</dt><dd><?= $mail['phpmailer'] ? 'instalado' : '<strong>ausente</strong>: envie a pasta vendor/' ?></dd>
+                <?php endif; ?>
+                <dt>Remetente</dt><dd><?= e($mail['from']) ?></dd>
+            </dl>
+
+            <?php if ($mailTest): ?>
+            <div class="mail-test section-gap-sm" role="status">
+                <p><strong>Teste de <?= e($mailTest['at']) ?> para <?= e($mailTest['to']) ?></strong></p>
+                <?php if ($mailTest['steps']): ?>
+                <ul class="mail-steps">
+                    <?php foreach ($mailTest['steps'] as [$ok, $text]): ?>
+                    <li class="<?= $ok ? 'is-ok' : 'is-fail' ?>"><?= icon($ok ? 'check' : 'alert') ?><span><?= e($text) ?></span></li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+                <?php if ($mailTest['driver'] !== 'smtp'): ?>
+                <p class="alert alert-warn"><?= icon('alert') ?> Com MAIL_DRIVER=<?= e($mailTest['driver']) ?> a mensagem só foi gravada em <span class="mono">storage/logs/mail.log</span>. Para enviar de verdade, use MAIL_DRIVER=smtp no .env.</p>
+                <?php elseif ($mailTest['sent']): ?>
+                <p class="alert alert-success"><?= icon('check') ?> O servidor aceitou a mensagem. Confira a caixa de entrada e o spam de <?= e($mailTest['to']) ?>.</p>
+                <?php else: ?>
+                <p class="alert alert-error"><?= icon('alert') ?> O envio falhou<?= $mailTest['error'] ? ': ' . e(rtrim($mailTest['error'], '. ')) : '' ?>.</p>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
+            <form method="post" action="/plataforma/email-teste" class="section-gap-sm" novalidate>
+                <?= csrf_field() ?>
+                <div class="field">
+                    <label for="f-mail-to">Enviar um e-mail de teste para</label>
+                    <input type="email" id="f-mail-to" name="to" value="<?= e(old('to', (string) (Isis\Auth\PlatformAuth::admin()['email'] ?? ''))) ?>" required maxlength="190"<?= error_attrs('to') ?>>
+                    <?= field_error('to') ?>
+                </div>
+                <button type="submit" class="btn btn-primary" data-loading="Testando...">Diagnosticar e enviar teste</button>
+                <p class="hint section-gap-sm">Primeiro o ÍSIS testa a conexão passo a passo (sem fazer login) e depois envia a mensagem. Se a conexão a um servidor externo falhar por bloqueio da hospedagem, use no .env <span class="mono">MAIL_HOST=localhost</span> e <span class="mono">MAIL_ENCRYPTION=none</span>.</p>
+            </form>
+        </section>
+
         <form method="post" action="/plataforma/senha" class="card" id="senha" novalidate>
             <?= csrf_field() ?>
             <h2>Alterar minha senha</h2>
