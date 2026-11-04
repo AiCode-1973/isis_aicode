@@ -108,6 +108,7 @@ $menu = [
             <span><?= e($tenant['trade_name'] ?? $tenant['legal_name'] ?? '') ?></span>
             <?php endif; ?>
         </nav>
+        <?= Isis\Core\View::partial('partials/help') ?>
         <?php if ($user): ?>
         <details class="user-menu">
             <summary aria-label="Menu do usuário">

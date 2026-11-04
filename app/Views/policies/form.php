@@ -36,7 +36,7 @@ $requiresAck = has_old() ? old('requires_ack') === '1' : (bool) ($p['requires_ac
         </div>
         <div class="field full">
             <label for="f-content">Texto</label>
-            <textarea id="f-content" name="content" rows="22" class="policy-editor" maxlength="200000"<?= error_attrs('content') ?>><?= e(old('content', $content)) ?></textarea>
+            <textarea id="f-content" name="content" rows="22" class="policy-editor" maxlength="200000"<?= error_attrs('content') ?>><?= e(old('content', $policyText)) ?></textarea>
             <p class="hint">Texto simples; as quebras de linha são mantidas. Para documentos formatados (PDF), anexe o arquivo em Evidências e documentos e resuma aqui.</p>
             <?= field_error('content') ?>
         </div>

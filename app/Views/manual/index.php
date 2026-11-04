@@ -81,6 +81,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <?= $fig('menu-recolhido', 'Computador: menu recolhido, só com ícones') ?>
                 <?= $fig('celular-menu', 'Celular: menu aberto sobre o conteúdo', 'shot-phone') ?>
             </div>
+            <p><strong>Ajuda em cada tela:</strong> o botão <strong>Ajuda</strong> (<span class="kbd">?</span>), no alto da tela, abre um painel com a explicação daquela tela em linguagem simples, o passo a passo e, nos formulários, a lista de campos com o que cada um significa, se é <strong>obrigatório</strong> ou <strong>opcional</strong> e um exemplo de preenchimento. No próprio formulário, cada campo traz a marcação "obrigatório" ou "opcional" e um botão <span class="kbd">?</span> que mostra a explicação e o exemplo logo abaixo do nome do campo. Os campos opcionais podem ficar em branco e ser completados depois. Para fechar o painel, use o X, clique fora dele ou pressione <span class="kbd">Esc</span>.</p>
         </section>
 
         <section id="primeiros-passos">
@@ -852,6 +853,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.9.0</td><td>04/11/2026</td><td><strong>Ajuda dentro de cada tela:</strong> botão Ajuda no alto de todas as telas internas, com explicação em linguagem simples, passo a passo e, nos formulários, cada campo com o que significa, se é obrigatório ou opcional e um exemplo de preenchimento. Nos formulários, os campos ganharam a marcação "obrigatório"/"opcional" e um botão <span class="kbd">?</span> com a explicação. <strong>Correção:</strong> as telas "Nova política" e "Editar política" abriam em branco.</td></tr>
                         <tr><td>1.8.0</td><td>04/11/2026</td><td><strong>Central "O que preciso fazer?":</strong> uma tela única (menu Visão geral) com as tarefas pendentes de todos os módulos, agrupadas por prioridade, com prazo, responsável e o próximo passo recomendado; filtros por responsável, prioridade, módulo e prazo. A prioridade combina o prazo com a gravidade de cada item.</td></tr>
                         <tr><td>1.7.1</td><td>04/11/2026</td><td><strong>Grupos do menu lateral abrem e fecham:</strong> o título de cada grupo virou um botão com seta; os grupos fechados ficam lembrados naquele navegador, o grupo da página atual sempre abre e, no menu recolhido, todos os ícones continuam visíveis.</td></tr>
                         <tr><td>1.7.0</td><td>03/11/2026</td><td><strong>Assistente de configuração inicial em etapas:</strong> roteiro guiado que pergunta sobre a empresa, as áreas, os tipos de dados e os responsáveis e termina num plano sugerido de quais módulos configurar primeiro, com os motivos de cada passo. As respostas ficam salvas para continuar depois; ao concluir, o ÍSIS cria áreas e categorias e envia os convites marcados (encarregado e responsáveis de área). Os três primeiros passos do plano aparecem na Jornada de implantação do painel.</td></tr>

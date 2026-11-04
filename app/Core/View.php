@@ -16,7 +16,8 @@ final class View
         if ($layout === null) {
             return $content;
         }
-        return self::capture(self::path('layouts/' . $layout), $data + ['content' => $content]);
+        // A tela renderizada sempre vence: uma variável "content" da própria tela não pode substituí-la no layout.
+        return self::capture(self::path('layouts/' . $layout), ['content' => $content] + $data);
     }
 
     /** @param array<string, mixed> $data */

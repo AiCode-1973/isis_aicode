@@ -52,19 +52,98 @@
     });
   });
 
+  // Ajuda da tela: fecha pelo X; nos formulários, marca obrigatório/opcional e põe o "?" com explicação e exemplo.
+  document.querySelectorAll('[data-help-close]').forEach(function (btn) {
+    btn.addEventListener('click', function () { var d = btn.closest('details'); if (d) d.removeAttribute('open'); });
+  });
+  (function decorateFields() {
+    var main = document.getElementById('main');
+    if (!main) return;
+    var seq = 0;
+    function labelFor(control) {
+      if (control.id) {
+        var byFor = main.querySelector('label[for="' + control.id + '"]');
+        if (byFor) return byFor;
+      }
+      var name = control.getAttribute('name') || '';
+      if (control.type === 'checkbox' && name.slice(-2) !== '[]' && control.closest('label')) return control.closest('label');
+      var fieldset = control.closest('fieldset');
+      if (fieldset && fieldset.querySelector('legend')) return fieldset.querySelector('legend');
+      var field = control.closest('.field');
+      if (!field) return null;
+      for (var i = 0; i < field.children.length; i++) {
+        var child = field.children[i];
+        if (child.matches('label:not(.check), .label, legend')) return child;
+      }
+      return null;
+    }
+    document.querySelectorAll('[data-help-field]').forEach(function (item) {
+      var name = item.getAttribute('data-help-field');
+      var required = item.getAttribute('data-help-required') === '1';
+      var dd = item.querySelector('dd');
+      main.querySelectorAll('[name="' + name + '"]').forEach(function (control) {
+        if (control.type === 'hidden' || control.closest('.filters')) return;
+        var label = labelFor(control);
+        if (!label || label.getAttribute('data-helped')) return;
+        label.setAttribute('data-helped', '1');
+        var host = label.matches('.check') ? (label.querySelector('span') || label) : label;
+        if (required) {
+          control.setAttribute('aria-required', 'true');
+          var form = control.closest('form');
+          if (form) form.setAttribute('data-has-required', '1');
+        }
+        if (required || label.textContent.toLowerCase().indexOf('opcional') === -1) {
+          var tag = document.createElement('span');
+          tag.className = 'field-tag' + (required ? ' req' : '');
+          tag.textContent = required ? 'obrigatório' : 'opcional';
+          host.appendChild(tag);
+        }
+        if (!dd || dd.textContent.trim() === '') return;
+        var id = 'fh-' + (++seq);
+        var bubble = document.createElement('div');
+        bubble.className = 'field-help';
+        bubble.id = id;
+        bubble.hidden = true;
+        Array.prototype.forEach.call(dd.children, function (part) { bubble.appendChild(part.cloneNode(true)); });
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'field-help-btn';
+        btn.textContent = '?';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-controls', id);
+        btn.setAttribute('aria-label', 'Ajuda: ' + (item.querySelector('.help-label') || item).textContent.trim());
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          bubble.hidden = !bubble.hidden;
+          btn.setAttribute('aria-expanded', bubble.hidden ? 'false' : 'true');
+        });
+        host.appendChild(btn);
+        label.insertAdjacentElement('afterend', bubble);
+      });
+    });
+    main.querySelectorAll('form[data-has-required]').forEach(function (form) {
+      if (form.querySelectorAll('.field-tag.req').length === 0 || form.querySelector('.form-legend')) return;
+      var note = document.createElement('p');
+      note.className = 'form-legend';
+      note.textContent = 'Campos marcados como "obrigatório" precisam ser preenchidos para salvar. Clique em ? ao lado de um campo para ver uma explicação e um exemplo.';
+      var first = Array.prototype.find.call(form.children, function (c) { return !(c.matches('input[type=hidden]')); });
+      form.insertBefore(note, first || null);
+    });
+  })();
+
   document.querySelectorAll('[data-close-sidebar]').forEach(function (el) {
     el.addEventListener('click', function () { document.body.classList.remove('sidebar-open'); });
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       document.body.classList.remove('sidebar-open');
-      document.querySelectorAll('details.user-menu[open], details.dropdown[open]').forEach(function (d) { d.removeAttribute('open'); });
+      document.querySelectorAll('details.user-menu[open], details.dropdown[open], details.help[open]').forEach(function (d) { d.removeAttribute('open'); });
     }
   });
 
   // Fecha o menu do usuário ao clicar fora
   document.addEventListener('click', function (e) {
-    document.querySelectorAll('details.user-menu[open], details.dropdown[open]').forEach(function (d) {
+    document.querySelectorAll('details.user-menu[open], details.dropdown[open], details.help[open]').forEach(function (d) {
       if (!d.contains(e.target)) d.removeAttribute('open');
     });
   });

@@ -40,7 +40,7 @@ final class PolicyController extends Controller
         return $this->view('policies/form', [
             'title' => 'Nova política',
             'p' => ['id' => null, 'category' => 'privacidade_interna', 'review_months' => 12, 'requires_ack' => 1, 'owner_user_id' => Auth::id()],
-            'content' => '',
+            'policyText' => '',
             'summary' => 'Primeira versão.',
             'users' => (new UserRepository())->options(),
         ]);
@@ -92,7 +92,7 @@ final class PolicyController extends Controller
         return $this->view('policies/form', [
             'title' => 'Editar ' . $policy['title'],
             'p' => $policy,
-            'content' => (string) ($base['content'] ?? ''),
+            'policyText' => (string) ($base['content'] ?? ''),
             'summary' => $draft['change_summary'] ?? '',
             'newVersion' => $draft === null,
             'users' => (new UserRepository())->options(),
