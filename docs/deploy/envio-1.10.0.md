@@ -72,7 +72,7 @@ cd /home/USUARIO/isis && /usr/local/bin/ea-php83 bin/isis diario >> storage/logs
 6. Com o administrador de uma empresa, abra `https://isis.aicode.dev.br/configuracao-inicial?refazer=1`: o assistente em cinco etapas deve abrir. Empresas que já tinham concluído a configuração antiga não são obrigadas a refazê-lo. Só avance até o plano se quiser aplicar as respostas: ao concluir, os convites marcados são enviados de verdade.
 7. No menu *Visão geral*, abra **O que preciso fazer?**: a lista deve mostrar as pendências da empresa agrupadas por prioridade.
 8. Abra *Inventário › Nova operação* e clique em **Ajuda** (alto da tela): o painel deve abrir, e os campos devem mostrar "obrigatório"/"opcional" e o botão ?. Abra também *Políticas › Nova política*: o formulário deve aparecer (antes abria em branco).
-9. Abra *Visão geral › Modelos prontos*, escolha um modelo de risco e clique em **Usar este modelo**: o formulário deve abrir preenchido (não salve, se for só um teste).
+9. Abra *Bibliotecas › Modelos prontos*, escolha um modelo de risco e clique em **Usar este modelo**: o formulário deve abrir preenchido (não salve, se for só um teste).
 10. Rode `bin/isis verificar` de novo.
 
 ## Se algo der errado

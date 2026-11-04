@@ -400,6 +400,7 @@ button.nav-section .icon { width: 14px; height: 14px; flex: none; transition: tr
 button.nav-section[aria-expanded="false"] .icon { transform: rotate(-90deg); }
 .nav-group.is-closed > .nav,
 html.nav-closed--visao-geral [data-nav-group="visao-geral"]:not(.has-active):not(.is-open) > .nav,
+html.nav-closed--bibliotecas [data-nav-group="bibliotecas"]:not(.has-active):not(.is-open) > .nav,
 html.nav-closed--conformidade [data-nav-group="conformidade"]:not(.has-active):not(.is-open) > .nav,
 html.nav-closed--programa-de-privacidade [data-nav-group="programa-de-privacidade"]:not(.has-active):not(.is-open) > .nav,
 html.nav-closed--governanca [data-nav-group="governanca"]:not(.has-active):not(.is-open) > .nav,

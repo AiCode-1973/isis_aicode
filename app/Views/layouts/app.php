@@ -11,8 +11,10 @@ $menu = [
     'Visão geral' => [
         [P::DASHBOARD_VIEW, '/painel', 'dashboard', 'Painel de conformidade'],
         [P::DASHBOARD_VIEW, '/tarefas', 'clock', 'O que preciso fazer?'],
-        [[P::INVENTORY_EDIT, P::RISKS_EDIT, P::ACTIONS_EDIT, P::REQUESTS_MANAGE, P::INCIDENTS_REPORT], '/modelos', 'layers', 'Modelos prontos'],
         [P::REPORTS_VIEW, '/relatorios', 'file', 'Relatório de conformidade'],
+    ],
+    'Bibliotecas' => [
+        [[P::INVENTORY_EDIT, P::RISKS_EDIT, P::ACTIONS_EDIT, P::REQUESTS_MANAGE, P::INCIDENTS_REPORT], '/modelos', 'layers', 'Modelos prontos'],
     ],
     'Conformidade' => [
         [P::INVENTORY_VIEW, '/inventario', 'database', 'Inventário de dados'],
