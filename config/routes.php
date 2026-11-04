@@ -23,6 +23,7 @@ use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
 use Isis\Controllers\MfaController;
 use Isis\Controllers\OnboardingController;
+use Isis\Controllers\TaskCenterController;
 use Isis\Controllers\PasswordController;
 use Isis\Controllers\ProfileController;
 use Isis\Controllers\RegisterController;
@@ -83,6 +84,7 @@ return static function (Router $r): void {
 
     // Área da empresa
     $r->get('/painel', [DashboardController::class, 'index'], $app(P::DASHBOARD_VIEW));
+    $r->get('/tarefas', [TaskCenterController::class, 'index'], $app(P::DASHBOARD_VIEW));
 
     // Inventário de operações de tratamento
     $r->get('/inventario', [InventoryController::class, 'index'], $app(P::INVENTORY_VIEW));

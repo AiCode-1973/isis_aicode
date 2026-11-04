@@ -107,7 +107,10 @@ if ($kpis === []) {
         </div>
 
         <section class="card alerts-panel" aria-labelledby="alerts-title">
-            <h2 id="alerts-title">Pendências</h2>
+            <div class="card-header alerts-head">
+                <h2 id="alerts-title">Pendências</h2>
+                <a class="btn btn-ghost btn-sm" href="/tarefas">O que preciso fazer? <?= icon('arrow-right') ?></a>
+            </div>
             <?php if (!$alerts): ?>
             <p class="text-ok small section-gap-sm"><?= icon('check') ?> Nenhuma pendência que exija atenção agora.</p>
             <?php else: ?>

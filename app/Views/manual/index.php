@@ -69,7 +69,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>Todas as empresas acessam pelo mesmo endereço, <strong>https://isis.aicode.dev.br</strong>. Cada empresa tem o próprio ambiente, com seus usuários, configurações e dados, totalmente separados das demais: ninguém de uma empresa vê ou altera informações de outra.</p>
             <?= $fig('inicio', 'Página inicial pública do ÍSIS') ?>
             <p>A página inicial (<a href="/">isis.aicode.dev.br</a>) apresenta os módulos, a segurança, os planos e as dúvidas frequentes. O menu do topo leva direto a cada seção, e os botões <strong>Começar teste grátis</strong> e <strong>Criar conta</strong> abrem o cadastro da empresa.</p>
-            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, planos e assinatura, perfis e permissões, assistente de configuração inicial com plano sugerido, painel de conformidade, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
+            <p><strong>Módulos disponíveis nesta versão:</strong> cadastro da empresa e usuários, planos e assinatura, perfis e permissões, assistente de configuração inicial com plano sugerido, painel de conformidade, central de tarefas, inventário de dados pessoais, gestão de riscos, planos de ação, solicitações de titulares com canal on-line, incidentes de segurança, fornecedores, políticas e documentos, treinamentos com certificado, evidências, trilha de auditoria, relatório de conformidade e lembretes por e-mail.</p>
             <p><strong>Navegadores:</strong> funciona em computador, tablet e celular, nas versões atuais do Chrome, Edge, Firefox e Safari.</p>
             <p><strong>Menu lateral:</strong> o botão <span class="kbd">☰</span>, no canto superior esquerdo, abre e fecha o menu.</p>
             <ul>
@@ -223,6 +223,25 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
             <p>O botão <strong>Novo</strong>, no alto do painel, abre um menu para registrar uma operação, um risco, uma ação, uma solicitação de titular, comunicar um incidente ou convidar uma pessoa. Aparecem só as opções permitidas para o seu perfil.</p>
             <p><strong>Nas listas</strong> (inventário, riscos, planos, titulares, incidentes, fornecedores e as demais), clique em qualquer ponto da linha para abrir o registro. Segure Ctrl (ou Cmd, no Mac) para abrir numa nova aba. No celular, os filtros ficam atrás do botão <strong>Filtros</strong>, que mostra quantos estão em uso.</p>
             <?= $fig('celular-painel', 'O painel no celular', 'shot-phone') ?>
+
+            <h3 id="central">5.1 O que preciso fazer? (Central de tarefas)</h3>
+            <p>No menu <strong>Visão geral › O que preciso fazer?</strong> (ou no botão do quadro Pendências do painel) fica uma lista única com tudo o que está pendente nos módulos. Para cada tarefa aparecem o módulo e o código, o motivo, o <strong>prazo</strong> (com "vence amanhã", "vencida há 3 dias" e assim por diante), o <strong>responsável</strong> e o <strong>próximo passo recomendado</strong>. Clique na linha para abrir o registro e resolver.</p>
+            <?= $fig('tarefas', 'Central "O que preciso fazer?" (dados fictícios)') ?>
+            <p>O que entra na lista:</p>
+            <ul>
+                <li><strong>Planos de ação</strong> em aberto (pendentes ou em andamento);</li>
+                <li><strong>Solicitações de titulares</strong> em aberto, com o prazo legal;</li>
+                <li><strong>Incidentes</strong> em aberto, com destaque para os que precisam ser comunicados à ANPD;</li>
+                <li><strong>Riscos</strong> altos e críticos, sem responsável ou com revisão nos próximos 30 dias;</li>
+                <li><strong>Inventário:</strong> operações sem hipótese legal, em rascunho, em revisão ou com revisão nos próximos 30 dias;</li>
+                <li><strong>Relatórios de impacto</strong> em elaboração, aguardando aprovação ou com revisão próxima;</li>
+                <li><strong>Fornecedores</strong> sem avaliação, sem cláusulas de proteção de dados, com reavaliação ou fim de contrato próximos;</li>
+                <li><strong>Políticas</strong> aguardando aprovação ou com validade terminando, e as que pedem a sua ciência;</li>
+                <li><strong>Treinamentos</strong> designados para você e, para quem gerencia treinamentos, participações vencidas da equipe.</li>
+            </ul>
+            <p><strong>Prioridade:</strong> as tarefas vêm agrupadas em Urgente, Alta, Média e Baixa. O prazo sobe a prioridade (vencido é urgente; até 3 dias, alta; até 14 dias, média) e a gravidade de cada item também conta, por exemplo um risco crítico, uma comunicação pendente à ANPD ou uma política aguardando aprovação. É uma ordem sugerida: a decisão continua com a equipe.</p>
+            <p><strong>Filtros:</strong> só as suas tarefas, as sem responsável, por prioridade, por módulo e por prazo (vencidas, até 7 ou até 30 dias). Os quatro quadros do topo (urgentes, com prazo vencido, vencem em 7 dias e comigo) também filtram ao clicar.</p>
+            <p>Cada perfil vê só os módulos a que tem acesso. O colaborador vê apenas as próprias ações, treinamentos e políticas para dar ciência.</p>
         </section>
 
         <section id="inventario">
@@ -833,6 +852,7 @@ $fig = static function (string $file, string $caption, string $class = ''): stri
                 <table>
                     <thead><tr><th>Versão</th><th>Data</th><th>Alterações</th></tr></thead>
                     <tbody>
+                        <tr><td>1.8.0</td><td>04/11/2026</td><td><strong>Central "O que preciso fazer?":</strong> uma tela única (menu Visão geral) com as tarefas pendentes de todos os módulos, agrupadas por prioridade, com prazo, responsável e o próximo passo recomendado; filtros por responsável, prioridade, módulo e prazo. A prioridade combina o prazo com a gravidade de cada item.</td></tr>
                         <tr><td>1.7.1</td><td>04/11/2026</td><td><strong>Grupos do menu lateral abrem e fecham:</strong> o título de cada grupo virou um botão com seta; os grupos fechados ficam lembrados naquele navegador, o grupo da página atual sempre abre e, no menu recolhido, todos os ícones continuam visíveis.</td></tr>
                         <tr><td>1.7.0</td><td>03/11/2026</td><td><strong>Assistente de configuração inicial em etapas:</strong> roteiro guiado que pergunta sobre a empresa, as áreas, os tipos de dados e os responsáveis e termina num plano sugerido de quais módulos configurar primeiro, com os motivos de cada passo. As respostas ficam salvas para continuar depois; ao concluir, o ÍSIS cria áreas e categorias e envia os convites marcados (encarregado e responsáveis de área). Os três primeiros passos do plano aparecem na Jornada de implantação do painel.</td></tr>
                         <tr><td>1.6.1</td><td>02/11/2026</td><td><strong>Página inicial animada:</strong> no topo, uma aurora lenta com as cores da marca se move atrás do título, que entra em sequência com os botões; a tela do produto se endireita ao entrar na tela; seções, módulos e seus pedaços de interface aparecem em sequência. Tudo sem bibliotecas externas e respeitando a opção "reduzir movimento" do sistema, que mostra o conteúdo sem animação. No painel de conformidade, os quatro indicadores do topo passaram a ter a mesma altura, e os cartões empilhados (no painel e nas telas de detalhe) voltaram a ter espaço entre si. Nos catálogos do inventário, as marcações "Sensível" e "Vulnerável" ficaram alinhadas com o texto e entre as linhas, os nomes dos sistemas voltaram a aparecer por inteiro e, no celular, cada item mostra o nome numa linha e os controles na linha de baixo.</td></tr>

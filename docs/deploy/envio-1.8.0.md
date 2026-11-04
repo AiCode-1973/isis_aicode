@@ -1,6 +1,6 @@
-# Envio ao servidor · versões 1.1 a 1.7.1
+# Envio ao servidor · versões 1.1 a 1.8.0
 
-Pacote: `deploy/isis-1.7.1.zip` (gerado em 04/11/2026). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
+Pacote: `deploy/isis-1.8.0.zip` (gerado em 04/11/2026, versão 1.8.0). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
 
 **Não contém** `.env`, `storage/`, testes nem documentos internos. Por isso, ao extrair por cima, a configuração, os uploads, os backups e as sessões do servidor ficam como estão.
 
@@ -21,9 +21,9 @@ Confira se apareceu "Backup criado". Se quiser uma garantia extra, baixe também
 ## 2. Enviar e extrair
 
 1. cPanel › *Gerenciador de Arquivos* › pasta `isis`.
-2. *Carregar* › escolha `isis-1.7.1.zip`.
+2. *Carregar* › escolha `isis-1.8.0.zip`.
 3. Clique com o botão direito no zip › *Extract* › destino: a própria pasta `isis` (ex.: `/home/USUARIO/isis`). Confirme a substituição dos arquivos.
-4. Apague o `isis-1.7.1.zip` do servidor.
+4. Apague o `isis-1.8.0.zip` do servidor.
 
 Arquivos de versões antigas que sobrarem não atrapalham.
 
@@ -70,7 +70,8 @@ cd /home/USUARIO/isis && /usr/local/bin/ea-php83 bin/isis diario >> storage/logs
 4. Em *Configurações da plataforma › Documentos legais*, preencha razão social, CNPJ, endereço, e-mail de privacidade, encarregado e suboperadores (hospedagem e e-mail).
 5. Entre com uma conta de empresa e confira o painel com o índice de maturidade, o RIPD e a verificação em duas etapas em *Meu perfil*.
 6. Com o administrador de uma empresa, abra `https://isis.aicode.dev.br/configuracao-inicial?refazer=1`: o assistente em cinco etapas deve abrir. Empresas que já tinham concluído a configuração antiga não são obrigadas a refazê-lo. Só avance até o plano se quiser aplicar as respostas: ao concluir, os convites marcados são enviados de verdade.
-7. Rode `bin/isis verificar` de novo.
+7. No menu *Visão geral*, abra **O que preciso fazer?**: a lista deve mostrar as pendências da empresa agrupadas por prioridade.
+8. Rode `bin/isis verificar` de novo.
 
 ## Se algo der errado
 

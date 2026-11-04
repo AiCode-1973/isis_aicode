@@ -199,6 +199,7 @@ legend { font-weight: 700; margin-bottom: .5rem; }
 .kpi-icon.teal { background: var(--teal-soft); color: var(--teal); }
 .kpi-icon.warn { background: var(--warn-soft); color: var(--warn); }
 .kpi-icon.info { background: var(--info-soft); color: var(--info); }
+.kpi-icon.danger { background: var(--danger-soft); color: var(--danger); }
 .kpi-value { font-size: 1.6rem; font-weight: 750; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .kpi-label { color: var(--muted); font-size: .85rem; }
 
@@ -1006,6 +1007,8 @@ body.public .site-footer a { color: #9fb2cf; }
 .kpi-tile-label { grid-area: label; margin-top: .6rem; font-weight: 600; font-size: .9rem; color: var(--ink-2); }
 .kpi-tile-sub { grid-area: sub; font-size: .82rem; color: var(--muted); }
 .alerts-panel h2 { margin-bottom: .25rem; }
+.alerts-head { margin-bottom: .5rem; align-items: center; }
+.alerts-head h2 { margin-bottom: 0; }
 .alert-group { margin-top: .85rem; }
 .alert-group h3 { display: flex; align-items: center; gap: .4rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 .35rem; }
 .alert-group.danger h3 { color: var(--danger); }
@@ -1142,3 +1145,24 @@ tr.row-link:hover .title-link { color: var(--teal); }
 @keyframes lp-aurora-a { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(18%, 10%) scale(1.12); } 66% { transform: translate(-10%, 16%) scale(.92); } }
 @keyframes lp-aurora-b { 0%, 100% { transform: translate(0, 0) scale(1); } 40% { transform: translate(-22%, 14%) scale(.9); } 75% { transform: translate(8%, -8%) scale(1.15); } }
 @keyframes lp-aurora-c { 0%, 100% { transform: translate(0, 0) scale(.95); } 50% { transform: translate(14%, -12%) scale(1.2); } }
+
+/* Central "O que preciso fazer?" */
+.task-table td { vertical-align: top; }
+.task-table th:nth-child(2), .task-table td:nth-child(2) { width: 9.5rem; }
+.task-table th:nth-child(3), .task-table td:nth-child(3) { width: 11rem; }
+.task-table th:nth-child(4), .task-table td:nth-child(4) { width: 30%; }
+.task-module { margin: 0 0 .2rem; display: flex; align-items: center; gap: .35rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.task-module .icon { width: 14px; height: 14px; }
+.task-module .code { text-transform: none; letter-spacing: 0; font-size: .74rem; }
+.task-due { white-space: nowrap; }
+.task-next { color: var(--ink-2); font-size: .9rem; }
+.task-group .card-header h2 { display: flex; align-items: center; gap: .5rem; font-size: 1rem; }
+
+@media (max-width: 640px) {
+  .task-table th, .task-table td { width: auto !important; }
+  .task-table td:first-child { display: block; padding-top: .5rem; }
+  .task-table td:first-child::before { content: none; }
+  .task-table td.task-next { display: block; }
+  .task-table td.task-next::before { display: block; margin-bottom: .15rem; }
+  .task-table td.task-due { text-align: right; }
+}

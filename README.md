@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma + página inicial animada + assistente de configuração inicial (versão 1.7.1)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma + página inicial animada + assistente de configuração inicial + central de tarefas (versão 1.8.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -20,6 +20,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 | 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
+| 1.8 | Central "O que preciso fazer?" (`/tarefas`, `TaskCenterController`, `app/Services/TaskCenterService.php`): pendências de todos os módulos com prazo, responsável, prioridade (prazo + gravidade) e próximo passo; filtros e respeito ao perfil | **pronta** |
 | 1.7 | Assistente de configuração inicial em etapas (`OnboardingController`, `app/Services/OnboardingService.php`, migration 010): empresa, áreas, dados e responsáveis, plano sugerido de módulos com os motivos, convites ao concluir e os três primeiros passos na Jornada do painel | **pronta** |
 | 1.6 | Verificação em duas etapas obrigatória para a equipe AiCode no painel da plataforma (`PlatformMfaController`, `PlatformMfaService`, migration 009). Celular perdido: `php bin/isis plataforma:2fa-redefinir <email>` | **pronta** |
 | 1.5.2 | Termos de uso, Aviso de privacidade (`/privacidade`) e Acordo de tratamento de dados (`/acordo-de-tratamento`), com a identificação da AiCode editável no painel da plataforma (`app/Support/LegalDocs.php`) e aceite registrado na auditoria. Textos-modelo, a revisar pela assessoria jurídica | **pronta** |

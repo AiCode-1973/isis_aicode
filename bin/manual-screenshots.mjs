@@ -225,6 +225,7 @@ try {
   await login('mariana.costa@vidaplena.example');
   await evaluate("localStorage.setItem('isis.sidebar', 'expanded')");
   await go('/painel'); await shot('painel', 1250);
+  await go('/tarefas'); await shot('tarefas', 1100);
   await go('/inventario'); await shot('inventario', 900);
   const op = await hrefOf('Prontuário eletrônico');
   await go('/inventario/nova'); await shot('inventario-form', 1200);
