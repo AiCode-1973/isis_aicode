@@ -1,10 +1,10 @@
-# Envio ao servidor · versões 1.1 a 1.7.0
+# Envio ao servidor · versões 1.1 a 1.7.1
 
-Pacote: `deploy/isis-1.7.0.zip` (gerado em 03/11/2026). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
+Pacote: `deploy/isis-1.7.1.zip` (gerado em 04/11/2026). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
 
 **Não contém** `.env`, `storage/`, testes nem documentos internos. Por isso, ao extrair por cima, a configuração, os uploads, os backups e as sessões do servidor ficam como estão.
 
-O banco de produção está atualizado até a migration 009. A versão 1.7.0 traz a **migration 010** (`010_assistente_configuracao`), que só acrescenta a coluna `onboarding_answers` em `tenants`: ela é aplicada pelo `migrate` do passo 4, depois de extrair os arquivos. Os arquivos antigos continuam funcionando com ela.
+O banco de produção está atualizado até a migration 009. A versão 1.7 traz a **migration 010** (`010_assistente_configuracao`), que só acrescenta a coluna `onboarding_answers` em `tenants`: ela é aplicada pelo `migrate` do passo 4, depois de extrair os arquivos. Os arquivos antigos continuam funcionando com ela.
 
 Nos comandos abaixo, `PHP` é o PHP 8.3 do servidor, por exemplo `/usr/local/bin/ea-php83`, e a pasta do ÍSIS é `~/isis`. Ajuste se for outra.
 
@@ -21,9 +21,9 @@ Confira se apareceu "Backup criado". Se quiser uma garantia extra, baixe também
 ## 2. Enviar e extrair
 
 1. cPanel › *Gerenciador de Arquivos* › pasta `isis`.
-2. *Carregar* › escolha `isis-1.7.0.zip`.
+2. *Carregar* › escolha `isis-1.7.1.zip`.
 3. Clique com o botão direito no zip › *Extract* › destino: a própria pasta `isis` (ex.: `/home/USUARIO/isis`). Confirme a substituição dos arquivos.
-4. Apague o `isis-1.7.0.zip` do servidor.
+4. Apague o `isis-1.7.1.zip` do servidor.
 
 Arquivos de versões antigas que sobrarem não atrapalham.
 

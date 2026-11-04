@@ -23,6 +23,35 @@
     });
     mobile.addEventListener('change', function () { syncToggle(btn); });
   });
+  // Grupos do menu: o título abre e fecha os itens; os fechados ficam salvos neste navegador.
+  function closedGroups() {
+    try {
+      var list = JSON.parse(window.localStorage.getItem('isis.nav.closed') || '[]');
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  document.querySelectorAll('[data-nav-group]').forEach(function (group) {
+    var btn = group.querySelector('.nav-section');
+    var list = group.querySelector('.nav');
+    var key = group.getAttribute('data-nav-group');
+    if (!btn || !list) return;
+    var isOpen = function () {
+      return group.classList.contains('is-open') || (!group.classList.contains('is-closed')
+        && (group.classList.contains('has-active') || !root.classList.contains('nav-closed--' + key)));
+    };
+    btn.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
+    btn.addEventListener('click', function () {
+      var open = !isOpen();
+      group.classList.toggle('is-open', open);
+      group.classList.toggle('is-closed', !open);
+      root.classList.remove('nav-closed--' + key);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var closed = closedGroups().filter(function (k) { return k !== key; });
+      if (!open) closed.push(key);
+      try { window.localStorage.setItem('isis.nav.closed', JSON.stringify(closed)); } catch (e) { /* sem armazenamento */ }
+    });
+  });
+
   document.querySelectorAll('[data-close-sidebar]').forEach(function (el) {
     el.addEventListener('click', function () { document.body.classList.remove('sidebar-open'); });
   });

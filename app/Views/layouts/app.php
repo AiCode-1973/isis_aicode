@@ -66,12 +66,19 @@ $menu = [
                 continue;
             }
         ?>
-        <p class="nav-section"><span><?= e($section) ?></span></p>
-        <ul class="nav">
-            <?php foreach ($visible as [, $path, $iconName, $label]): ?>
-            <li><a class="<?= nav_active($path) ?>" href="<?= e($path) ?>" title="<?= e($label) ?>"><?= icon($iconName) ?><span class="nav-label"><?= e($label) ?></span></a></li>
-            <?php endforeach; ?>
-        </ul>
+        <?php
+            // Grupo que abre e fecha; o da página atual sempre abre (estado salvo em sidebar-state.js e app.js)
+            $key = Isis\Support\Text::slug($section);
+            $current = array_filter($visible, static fn (array $i): bool => nav_active($i[1]) !== '') !== [];
+        ?>
+        <div class="nav-group<?= $current ? ' has-active' : '' ?>" data-nav-group="<?= e($key) ?>">
+            <button type="button" class="nav-section" aria-expanded="true" aria-controls="nav-<?= e($key) ?>"><span><?= e($section) ?></span><?= icon('chevron-down') ?></button>
+            <ul class="nav" id="nav-<?= e($key) ?>">
+                <?php foreach ($visible as [, $path, $iconName, $label]): ?>
+                <li><a class="<?= nav_active($path) ?>" href="<?= e($path) ?>" title="<?= e($label) ?>"><?= icon($iconName) ?><span class="nav-label"><?= e($label) ?></span></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
         <?php endforeach; ?>
     </nav>
 

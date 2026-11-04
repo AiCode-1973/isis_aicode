@@ -387,6 +387,22 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
 .tenant-chip span { font-size: .75rem; color: #a9bcdc; }
 .nav-section { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: #8ea4c8; margin: 1rem .6rem .35rem; font-weight: 700; }
 .nav { list-style: none; margin: 0; padding: 0; }
+/* Grupos que abrem e fecham. O da página atual abre sempre ao carregar; o clique (is-open/is-closed) vale até a próxima página. */
+button.nav-section {
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem; width: calc(100% - .6rem);
+  margin: 1rem .3rem .35rem; padding: .3rem .3rem; border: 0; border-radius: 6px; background: none;
+  font: inherit; font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: #8ea4c8; font-weight: 700; text-align: left; cursor: pointer;
+}
+button.nav-section:hover { color: #dbe5f5; background: rgba(255,255,255,.05); }
+button.nav-section:focus-visible { outline: 2px solid #5eead4; outline-offset: 1px; }
+button.nav-section .icon { width: 14px; height: 14px; flex: none; transition: transform .15s ease; }
+button.nav-section[aria-expanded="false"] .icon { transform: rotate(-90deg); }
+.nav-group.is-closed > .nav,
+html.nav-closed--visao-geral [data-nav-group="visao-geral"]:not(.has-active):not(.is-open) > .nav,
+html.nav-closed--conformidade [data-nav-group="conformidade"]:not(.has-active):not(.is-open) > .nav,
+html.nav-closed--programa-de-privacidade [data-nav-group="programa-de-privacidade"]:not(.has-active):not(.is-open) > .nav,
+html.nav-closed--governanca [data-nav-group="governanca"]:not(.has-active):not(.is-open) > .nav,
+html.nav-closed--conta [data-nav-group="conta"]:not(.has-active):not(.is-open) > .nav { display: none; }
 .nav a {
   display: flex; align-items: center; gap: .65rem; padding: .55rem .65rem; border-radius: 8px;
   color: #dbe5f5; text-decoration: none; font-weight: 500; font-size: .92rem;
@@ -414,6 +430,9 @@ details.changes pre { white-space: pre-wrap; word-break: break-word; background:
   html.sidebar-collapsed .tenant-chip { justify-content: center; padding: .4rem; }
   html.sidebar-collapsed .tenant-initials { display: grid; }
   html.sidebar-collapsed .nav-section { height: 1px; background: rgba(255,255,255,.12); margin: .8rem .3rem; }
+  html.sidebar-collapsed button.nav-section { width: auto; padding: 0; border-radius: 0; pointer-events: none; }
+  html.sidebar-collapsed button.nav-section .icon { display: none; }
+  html.sidebar-collapsed .nav-group > .nav { display: block !important; } /* na faixa de ícones, todos os itens aparecem */
   html.sidebar-collapsed .nav a { justify-content: center; padding: .65rem 0; }
   html.sidebar-collapsed .nav a.is-active { box-shadow: inset 0 -3px 0 #5eead4; }
 }
