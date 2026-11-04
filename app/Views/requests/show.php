@@ -47,11 +47,24 @@ $eventLabel = ['criada' => 'Registro', 'status' => 'Situação alterada', 'nota'
         <section class="card" id="resposta">
             <h2>Responder ao titular</h2>
             <p class="small muted">A resposta fica registrada e visível no acompanhamento on-line. Confirme a identidade do titular antes de enviar dados pessoais.</p>
+            <form method="get" action="/titulares/<?= (int) $r['id'] ?>#resposta" class="model-inline section-gap-sm" aria-label="Modelo de resposta">
+                <div class="field">
+                    <label for="f-modelo">Começar de um modelo de resposta <span class="muted">(opcional)</span></label>
+                    <select id="f-modelo" name="modelo">
+                        <?php foreach ($responseModels as $m): ?><option value="<?= e($m['key']) ?>"<?= ($responseModel['key'] ?? '') === $m['key'] ? ' selected' : '' ?>><?= in_array($r['right_type'], $m['rights'] ?? [], true) ? '★ ' : '' ?><?= e($m['title']) ?></option><?php endforeach; ?>
+                    </select>
+                    <p class="hint">★ = sugerido para este tipo de pedido. O nome, o protocolo, a empresa e o encarregado entram sozinhos.</p>
+                </div>
+                <button type="submit" class="btn btn-ghost">Usar modelo</button>
+            </form>
+            <?php if ($responseModel): ?>
+            <div class="alert alert-info section-gap-sm" role="status"><?= icon('file') ?><p><strong>Modelo aplicado: <?= e($responseModel['title']) ?>.</strong> <?= e(Isis\Support\ModelLibrary::RESPONSE_NOTICE) ?> Nada foi enviado ainda.</p></div>
+            <?php endif; ?>
             <form method="post" action="/titulares/<?= (int) $r['id'] ?>/resposta" class="section-gap-sm" novalidate>
                 <?= csrf_field() ?>
                 <div class="field">
                     <label for="f-response">Resposta</label>
-                    <textarea id="f-response" name="response" maxlength="10000" rows="6"<?= error_attrs('response') ?>><?= e(old('response')) ?></textarea>
+                    <textarea id="f-response" name="response" maxlength="10000" rows="<?= $responseText ? 14 : 6 ?>"<?= error_attrs('response') ?>><?= e(old('response', $responseText ?? '')) ?></textarea>
                     <?= field_error('response') ?>
                 </div>
                 <div class="form-grid">
@@ -59,7 +72,7 @@ $eventLabel = ['criada' => 'Registro', 'status' => 'Situação alterada', 'nota'
                         <label for="f-final">Resultado</label>
                         <select id="f-final" name="final_status">
                             <option value="respondida">Atendida / respondida</option>
-                            <option value="indeferida"<?= old('final_status') === 'indeferida' ? ' selected' : '' ?>>Indeferida (com justificativa)</option>
+                            <option value="indeferida"<?= old('final_status', $responseModel['final_status'] ?? '') === 'indeferida' ? ' selected' : '' ?>>Indeferida (com justificativa)</option>
                         </select>
                     </div>
                     <div class="field">

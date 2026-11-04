@@ -1,6 +1,6 @@
-# Envio ao servidor · versões 1.1 a 1.9.0
+# Envio ao servidor · versões 1.1 a 1.10.0
 
-Pacote: `deploy/isis-1.9.0.zip` (gerado em 04/11/2026, versão 1.9.0). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
+Pacote: `deploy/isis-1.10.0.zip` (gerado em 04/11/2026, versão 1.10.0). Contém `app/`, `bin/isis`, `config/`, `database/`, `public/` (com as fontes Inter), `vendor/` só com as dependências de produção, `.htaccess`, `.env.example`, `composer.json`, `composer.lock` e `README.md`.
 
 **Não contém** `.env`, `storage/`, testes nem documentos internos. Por isso, ao extrair por cima, a configuração, os uploads, os backups e as sessões do servidor ficam como estão.
 
@@ -21,9 +21,9 @@ Confira se apareceu "Backup criado". Se quiser uma garantia extra, baixe também
 ## 2. Enviar e extrair
 
 1. cPanel › *Gerenciador de Arquivos* › pasta `isis`.
-2. *Carregar* › escolha `isis-1.9.0.zip`.
+2. *Carregar* › escolha `isis-1.10.0.zip`.
 3. Clique com o botão direito no zip › *Extract* › destino: a própria pasta `isis` (ex.: `/home/USUARIO/isis`). Confirme a substituição dos arquivos.
-4. Apague o `isis-1.9.0.zip` do servidor.
+4. Apague o `isis-1.10.0.zip` do servidor.
 
 Arquivos de versões antigas que sobrarem não atrapalham.
 
@@ -72,7 +72,8 @@ cd /home/USUARIO/isis && /usr/local/bin/ea-php83 bin/isis diario >> storage/logs
 6. Com o administrador de uma empresa, abra `https://isis.aicode.dev.br/configuracao-inicial?refazer=1`: o assistente em cinco etapas deve abrir. Empresas que já tinham concluído a configuração antiga não são obrigadas a refazê-lo. Só avance até o plano se quiser aplicar as respostas: ao concluir, os convites marcados são enviados de verdade.
 7. No menu *Visão geral*, abra **O que preciso fazer?**: a lista deve mostrar as pendências da empresa agrupadas por prioridade.
 8. Abra *Inventário › Nova operação* e clique em **Ajuda** (alto da tela): o painel deve abrir, e os campos devem mostrar "obrigatório"/"opcional" e o botão ?. Abra também *Políticas › Nova política*: o formulário deve aparecer (antes abria em branco).
-9. Rode `bin/isis verificar` de novo.
+9. Abra *Visão geral › Modelos prontos*, escolha um modelo de risco e clique em **Usar este modelo**: o formulário deve abrir preenchido (não salve, se for só um teste).
+10. Rode `bin/isis verificar` de novo.
 
 ## Se algo der errado
 

@@ -35,6 +35,8 @@ $sharings[] = ['recipient' => '', 'recipient_type' => 'operador', 'purpose' => '
     </div>
 </div>
 
+<?php if (!empty($picker)): ?><?= Isis\Core\View::partial('partials/model-picker', $picker) ?><?php endif; ?>
+
 <form method="post" action="<?= e($action) ?>" class="card" novalidate>
     <?= csrf_field() ?>
 

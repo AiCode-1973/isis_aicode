@@ -23,6 +23,7 @@ use Isis\Controllers\InstallController;
 use Isis\Controllers\InvitationController;
 use Isis\Controllers\MfaController;
 use Isis\Controllers\OnboardingController;
+use Isis\Controllers\ModelController;
 use Isis\Controllers\TaskCenterController;
 use Isis\Controllers\PasswordController;
 use Isis\Controllers\ProfileController;
@@ -85,6 +86,7 @@ return static function (Router $r): void {
     // Área da empresa
     $r->get('/painel', [DashboardController::class, 'index'], $app(P::DASHBOARD_VIEW));
     $r->get('/tarefas', [TaskCenterController::class, 'index'], $app(P::DASHBOARD_VIEW));
+    $r->get('/modelos', [ModelController::class, 'index'], $app(P::DASHBOARD_VIEW));
 
     // Inventário de operações de tratamento
     $r->get('/inventario', [InventoryController::class, 'index'], $app(P::INVENTORY_VIEW));
@@ -128,6 +130,8 @@ return static function (Router $r): void {
     // Planos de ação
     $r->get('/planos', [ActionController::class, 'index'], $app(P::ACTIONS_VIEW));
     $r->get('/planos/nova', [ActionController::class, 'create'], $app(P::ACTIONS_EDIT));
+    $r->get('/planos/modelo/{slug}', [ModelController::class, 'plan'], $app(P::ACTIONS_EDIT));
+    $r->post('/planos/modelo/{slug}', [ModelController::class, 'createPlan'], $app(P::ACTIONS_EDIT));
     $r->post('/planos', [ActionController::class, 'store'], $app(P::ACTIONS_EDIT));
     $r->get('/planos/{id}', [ActionController::class, 'show'], $app(P::ACTIONS_VIEW));
     $r->get('/planos/{id}/editar', [ActionController::class, 'edit'], $app(P::ACTIONS_EDIT));

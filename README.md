@@ -7,7 +7,7 @@ Endereço de produção: **https://isis.aicode.dev.br**. Todas as empresas usam 
 
 > O ÍSIS apoia a organização da conformidade com a LGPD e **não substitui análise jurídica especializada nem garante conformidade legal**.
 
-## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma + página inicial animada + assistente de configuração inicial + central de tarefas + ajuda em cada tela (versão 1.9.0)
+## Situação: MVP completo + planos e assinatura + RIPD + verificação em duas etapas + nova identidade visual + painel com índice de maturidade + documentos legais + duas etapas no painel da plataforma + página inicial animada + assistente de configuração inicial + central de tarefas + ajuda em cada tela + modelos prontos (versão 1.10.0)
 
 O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas. Ele é atualizado a cada mudança.
 
@@ -20,6 +20,7 @@ O manual do usuário fica dentro do sistema, em `/manual`, com imagens das telas
 | 5 | Backup criptografado com rotação e restauração, relatório de conformidade com exportações CSV, lembretes diários por e-mail, manutenção e verificação do ambiente | **pronta** |
 | 1.1 | Planos (Essencial, Profissional, Empresarial), teste grátis, limites por plano, cobrança manual, painel da plataforma (`/plataforma`) e seção de planos e preços na página inicial (`/#planos`) | **pronta** |
 | 1.2 | Relatório de Impacto à Proteção de Dados (RIPD, `/ripd`): indicação das operações de alto risco pelo inventário, elaboração com operações e riscos, aprovação com versão congelada e hash SHA-256, revisões e documento para impressão | **pronta** |
+| 1.10 | Modelos prontos por situação (`app/Support/ModelLibrary.php`, `/modelos`, `ModelController`): inventário, risco, plano de ação (pacote de ações revisado antes de criar, `/planos/modelo/<chave>`), resposta a titulares (com marcas `{nome}`, `{protocolo}`...) e incidente. Escolher um modelo só preenche o formulário (`?modelo=`) | **pronta** |
 | 1.9 | Ajuda dentro de cada tela (`app/Support/Help.php`, `partials/help.php`, marcações em `app.js`): explicação, passo a passo e campos com obrigatório/opcional e exemplo. O teste `HelpTest` confere "obrigatório" contra as regras de validação dos controllers: ao mudar uma regra, atualize a ajuda | **pronta** |
 | 1.8 | Central "O que preciso fazer?" (`/tarefas`, `TaskCenterController`, `app/Services/TaskCenterService.php`): pendências de todos os módulos com prazo, responsável, prioridade (prazo + gravidade) e próximo passo; filtros e respeito ao perfil | **pronta** |
 | 1.7 | Assistente de configuração inicial em etapas (`OnboardingController`, `app/Services/OnboardingService.php`, migration 010): empresa, áreas, dados e responsáveis, plano sugerido de módulos com os motivos, convites ao concluir e os três primeiros passos na Jornada do painel | **pronta** |

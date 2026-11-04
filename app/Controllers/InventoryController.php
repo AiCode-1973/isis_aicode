@@ -26,6 +26,7 @@ use Isis\Services\CatalogService;
 use Isis\Services\DpiaService;
 use Isis\Services\EvidenceService;
 use Isis\Support\Labels;
+use Isis\Support\ModelLibrary;
 
 /**
  * Inventário de operações de tratamento (dados, titulares, finalidades, bases legais, origem,
@@ -71,11 +72,24 @@ final class InventoryController extends Controller
     public function create(Request $request): Response
     {
         $me = Auth::user();
-        return $this->form([
+        $activity = [
             'id' => null, 'seq' => null, 'status' => 'rascunho', 'controller_role' => 'controlador',
             'department_id' => $me['department_id'], 'owner_user_id' => $me['id'], 'international_transfer' => 0,
             'data_categories' => [], 'subject_categories' => [], 'systems' => [], 'departments' => [], 'sharings' => [],
-        ], 'Nova operação de tratamento');
+        ];
+        // Modelo pronto: só preenche a tela; nada é gravado até salvar.
+        $model = ModelLibrary::find('inventario', $request->query('modelo'));
+        $missing = [];
+        if ($model !== null) {
+            $activity = array_merge($activity, $model['fields']);
+            [$activity['data_categories'], $m1] = ModelLibrary::matchCatalog((new CatalogRepository('dados'))->options(), $model['data'] ?? []);
+            [$activity['subject_categories'], $m2] = ModelLibrary::matchCatalog((new CatalogRepository('titulares'))->options(), $model['subjects'] ?? []);
+            $missing = [...$m1, ...$m2];
+        }
+        return $this->form($activity, 'Nova operação de tratamento', [
+            'picker' => ['type' => 'inventario', 'path' => '/inventario/nova', 'model' => $model, 'missing' => $missing,
+                'models' => ModelLibrary::ofType('inventario', Auth::tenant()['segment_code'] ?? null)],
+        ]);
     }
 
     public function store(Request $request): Response
@@ -218,9 +232,9 @@ final class InventoryController extends Controller
 
     // ---------------- Apoio ----------------
 
-    private function form(array $activity, string $title): Response
+    private function form(array $activity, string $title, array $extra = []): Response
     {
-        return $this->view('inventory/form', [
+        return $this->view('inventory/form', $extra + [
             'title' => $title,
             'a' => $activity,
             'bases' => LegalBasisRepository::all(false),

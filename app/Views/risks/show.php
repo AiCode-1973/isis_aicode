@@ -44,7 +44,7 @@ $level = RiskMatrix::levelOf((int) $r['likelihood'], (int) $r['impact']);
         <section class="card">
             <div class="card-header">
                 <div><h2>Plano de ação</h2><p><?= (int) $r['actions_done'] ?> de <?= plural((int) $r['actions_count'], 'ação concluída', 'ações concluídas') ?>.</p></div>
-                <?php if (can(P::ACTIONS_EDIT)): ?><a class="btn btn-ghost btn-sm" href="/planos/nova?risco=<?= (int) $r['id'] ?>"><?= icon('plus') ?> Nova ação</a><?php endif; ?>
+                <?php if (can(P::ACTIONS_EDIT)): ?><a class="btn btn-ghost btn-sm" href="/modelos?tipo=plano&amp;risco=<?= (int) $r['id'] ?>"><?= icon('layers') ?> Criar ações de um modelo</a> <a class="btn btn-ghost btn-sm" href="/planos/nova?risco=<?= (int) $r['id'] ?>"><?= icon('plus') ?> Nova ação</a><?php endif; ?>
             </div>
             <?php if (!$actions): ?>
             <p class="empty"><?= $r['treatment'] === 'mitigar' ? 'Nenhuma ação ainda. Para mitigar o risco, crie as medidas com responsável e prazo.' : 'Nenhuma ação vinculada.' ?></p>

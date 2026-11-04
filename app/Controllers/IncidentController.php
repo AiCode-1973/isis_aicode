@@ -21,6 +21,7 @@ use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Support\Deadline;
 use Isis\Support\Labels;
+use Isis\Support\ModelLibrary;
 
 /**
  * Incidentes de segurança: comunicação interna, classificação, investigação, providências,
@@ -49,9 +50,13 @@ final class IncidentController extends Controller
 
     public function create(Request $request): Response
     {
+        // Modelo pronto: só preenche a tela; nada é gravado até comunicar.
+        $model = ModelLibrary::find('incidente', $request->query('modelo'));
         return $this->view('incidents/form', [
             'title' => 'Comunicar incidente',
             'departments' => (new DepartmentRepository())->options(),
+            'm' => $model['fields'] ?? [],
+            'picker' => ['type' => 'incidente', 'path' => '/incidentes/novo', 'model' => $model, 'models' => ModelLibrary::ofType('incidente')],
         ]);
     }
 

@@ -23,6 +23,8 @@ $scale = static function (string $name, array $labels, string $current, bool $op
     </div>
 </div>
 
+<?php if (!empty($picker)): ?><?= Isis\Core\View::partial('partials/model-picker', $picker) ?><?php endif; ?>
+
 <div class="grid grid-main">
 <form method="post" action="<?= $isNew ? '/riscos' : '/riscos/' . (int) $r['id'] ?>" class="card" novalidate>
     <?= csrf_field() ?>

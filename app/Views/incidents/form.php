@@ -11,19 +11,21 @@ use Isis\Support\Labels;
     </div>
 </div>
 
+<?php if (!empty($picker)): ?><?= Isis\Core\View::partial('partials/model-picker', $picker) ?><?php endif; ?>
+
 <div class="grid grid-main">
 <form method="post" action="/incidentes" class="card" novalidate>
     <?= csrf_field() ?>
     <div class="form-grid">
         <div class="field full">
             <label for="f-title">Resumo em uma frase</label>
-            <input type="text" id="f-title" name="title" value="<?= e(old('title')) ?>" required maxlength="190" placeholder="Ex.: Planilha de clientes enviada para o e-mail errado"<?= error_attrs('title') ?>>
+            <input type="text" id="f-title" name="title" value="<?= e(old('title', $m['title'] ?? '')) ?>" required maxlength="190" placeholder="Ex.: Planilha de clientes enviada para o e-mail errado"<?= error_attrs('title') ?>>
             <?= field_error('title') ?>
         </div>
         <div class="field">
             <label for="f-cat">Tipo</label>
             <select id="f-cat" name="category"<?= error_attrs('category') ?>>
-                <?php foreach (Labels::INCIDENT_CATEGORY as $k => $v): ?><option value="<?= e($k) ?>"<?= old('category', 'outro') === $k ? ' selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?>
+                <?php foreach (Labels::INCIDENT_CATEGORY as $k => $v): ?><option value="<?= e($k) ?>"<?= old('category', $m['category'] ?? 'outro') === $k ? ' selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?>
             </select>
         </div>
         <div class="field">
@@ -35,7 +37,7 @@ use Isis\Support\Labels;
         </div>
         <div class="field full">
             <label for="f-desc">O que aconteceu</label>
-            <textarea id="f-desc" name="description" rows="6" maxlength="10000" placeholder="Descreva o que viu, quais dados ou sistemas podem ter sido afetados e o que já foi feito."<?= error_attrs('description') ?>><?= e(old('description')) ?></textarea>
+            <textarea id="f-desc" name="description" rows="<?= empty($m) ? 6 : 9 ?>" maxlength="10000" placeholder="Descreva o que viu, quais dados ou sistemas podem ter sido afetados e o que já foi feito."<?= error_attrs('description') ?>><?= e(old('description', $m['description'] ?? '')) ?></textarea>
             <p class="hint">Não cole aqui senhas nem cópias dos dados expostos. Esta descrição é guardada criptografada.</p>
             <?= field_error('description') ?>
         </div>
@@ -52,7 +54,7 @@ use Isis\Support\Labels;
             <span class="label">Há dados pessoais envolvidos?</span>
             <div class="actions">
                 <?php foreach (['sim' => 'Sim', 'nao' => 'Não', 'nao_sei' => 'Não sei'] as $k => $v): ?>
-                <label class="chip-check"><input type="radio" name="personal_data" value="<?= $k ?>"<?= old('personal_data', 'nao_sei') === $k ? ' checked' : '' ?>> <span><?= $v ?></span></label>
+                <label class="chip-check"><input type="radio" name="personal_data" value="<?= $k ?>"<?= old('personal_data', $m['personal_data'] ?? 'nao_sei') === $k ? ' checked' : '' ?>> <span><?= $v ?></span></label>
                 <?php endforeach; ?>
             </div>
         </div>

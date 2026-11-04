@@ -17,6 +17,7 @@ use Isis\Repositories\TenantRepository;
 use Isis\Repositories\UserRepository;
 use Isis\Services\RequestService;
 use Isis\Support\Labels;
+use Isis\Support\ModelLibrary;
 
 /**
  * Solicitações de titulares (art. 18): registro, verificação de identidade, atendimento, resposta e prazos.
@@ -99,7 +100,23 @@ final class RequestController extends Controller
         $item = $repo->findFullOrFail($id);
         // Acesso a dados pessoais do titular fica registrado.
         AuditLogger::log('request.viewed', 'request', $id, null, ['protocolo' => $item['protocol']]);
+        $tenant = (new TenantRepository())->current();
+        // Modelos de resposta: os sugeridos para o tipo de pedido vêm primeiro; o escolhido preenche o texto (nada é enviado).
+        $responseModels = ModelLibrary::ofType('resposta');
+        usort($responseModels, static fn (array $a, array $b): int => (int) !in_array($item['right_type'], $a['rights'] ?? [], true) <=> (int) !in_array($item['right_type'], $b['rights'] ?? [], true));
+        $responseModel = ModelLibrary::find('resposta', $request->query('modelo'));
+        $responseText = $responseModel !== null ? ModelLibrary::fill($responseModel['text'], [
+            'nome' => (string) $item['requester_name'],
+            'protocolo' => (string) $item['protocol'],
+            'empresa' => (string) ($tenant['trade_name'] ?: $tenant['legal_name']),
+            'encarregado' => (string) ($tenant['dpo_name'] ?? ''),
+            'contato' => (string) ($tenant['privacy_email'] ?: $tenant['dpo_email'] ?? ''),
+            'data_pedido' => fmt_date((string) $item['received_at']),
+        ]) : null;
         return $this->view('requests/show', [
+            'responseModels' => $responseModels,
+            'responseModel' => $responseModel,
+            'responseText' => $responseText,
             'title' => 'Solicitação ' . $item['protocol'],
             'r' => $item,
             'events' => $repo->events($id),
@@ -107,7 +124,7 @@ final class RequestController extends Controller
             'users' => (new UserRepository())->options(),
             'activities' => (new ActivityRepository())->options(),
             'canManage' => Auth::can(P::REQUESTS_MANAGE),
-            'tenant' => (new TenantRepository())->current(),
+            'tenant' => $tenant,
         ]);
     }
 

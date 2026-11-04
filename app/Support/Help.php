@@ -29,6 +29,8 @@ final class Help
         '#^/ripd$#' => 'ripd',
         '#^/ripd/(novo|\d+/editar)$#' => 'ripd.form',
         '#^/ripd/\d+$#' => 'ripd.show',
+        '#^/modelos$#' => 'modelos',
+        '#^/planos/modelo/[a-z0-9-]+$#' => 'planos.modelo',
         '#^/planos$#' => 'planos',
         '#^/planos/(nova|\d+/editar)$#' => 'planos.form',
         '#^/planos/\d+$#' => 'planos.show',
@@ -122,6 +124,34 @@ final class Help
                     'O relatório mostra o que está registrado no ÍSIS: mantenha os módulos atualizados antes de gerar.',
                 ],
                 'manual' => 'relatorios',
+            ],
+
+            'modelos' => [
+                'title' => 'Modelos prontos',
+                'intro' => 'Exemplos prontos para as situações mais comuns: operações do inventário, riscos, planos de ação, respostas a titulares e incidentes. Escolher um modelo só preenche o formulário; nada é gravado até você salvar.',
+                'steps' => [
+                    'Escolha a aba do tipo de registro e abra "Ver o conteúdo" para conferir o exemplo.',
+                    'Clique em "Usar este modelo": o formulário abre preenchido. Revise tudo e ajuste à realidade da empresa.',
+                    'Os trechos entre colchetes, como [prazo], são para você completar.',
+                    'Respostas a titulares são escolhidas dentro da solicitação, no quadro "Responder ao titular".',
+                    'Os modelos são pontos de partida, não uma avaliação jurídica: confira hipóteses legais, prazos e textos.',
+                ],
+                'manual' => 'modelos',
+            ],
+            'planos.modelo' => [
+                'title' => 'Criar ações a partir de um modelo',
+                'intro' => 'O modelo traz um conjunto de ações para resolver um problema. Revise cada uma antes de criar: só as marcadas serão gravadas.',
+                'steps' => [
+                    'Desmarque "Criar" nas ações que não se aplicam.',
+                    'Ajuste o texto, a prioridade e o prazo sugeridos.',
+                    'Defina o responsável agora ou depois, na própria ação.',
+                    'Ligue as ações a um risco para que apareçam na ficha dele.',
+                ],
+                'fields' => [
+                    'risk_id' => ['Risco', false, 'Risco que as ações ajudam a reduzir.', 'RSK-002 · Envio de dados por WhatsApp pessoal'],
+                    'department_id' => $department,
+                ],
+                'manual' => 'modelos',
             ],
 
             // ------------------------------------------------------------ inventário

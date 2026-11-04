@@ -21,6 +21,7 @@ use Isis\Services\AccessScope;
 use Isis\Services\EvidenceService;
 use Isis\Services\RiskMatrix;
 use Isis\Support\Labels;
+use Isis\Support\ModelLibrary;
 
 /**
  * Gestão de riscos: avaliação (probabilidade x impacto), classificação, tratamento e responsáveis.
@@ -71,10 +72,18 @@ final class RiskController extends Controller
     {
         $activityId = ctype_digit((string) $request->query('operacao')) ? (int) $request->query('operacao') : null;
         $me = Auth::user();
-        return $this->form([
+        $risk = [
             'id' => null, 'activity_id' => $activityId, 'category' => 'seguranca', 'likelihood' => 3, 'impact' => 3,
             'treatment' => 'mitigar', 'status' => 'identificado', 'owner_user_id' => $me['id'], 'department_id' => $me['department_id'],
-        ], 'Novo risco');
+        ];
+        // Modelo pronto: só preenche a tela; nada é gravado até salvar.
+        $model = ModelLibrary::find('risco', $request->query('modelo'));
+        $plan = $model !== null && isset($model['plan']) ? ModelLibrary::find('plano', $model['plan']) : null;
+        $path = '/riscos/novo' . ($activityId !== null ? '?operacao=' . $activityId : '');
+        return $this->form($model !== null ? array_merge($risk, $model['fields']) : $risk, 'Novo risco', [
+            'picker' => ['type' => 'risco', 'path' => $path, 'model' => $model, 'models' => ModelLibrary::ofType('risco'),
+                'extra' => $plan !== null ? 'Depois de salvar, abra o risco e use "Criar ações de um modelo" para aplicar o plano sugerido: <strong>' . e($plan['title']) . '</strong>.' : null],
+        ]);
     }
 
     public function store(Request $request): Response
@@ -120,9 +129,9 @@ final class RiskController extends Controller
         return $this->success('/riscos', 'Risco excluído. As ações vinculadas foram mantidas, sem o vínculo.');
     }
 
-    private function form(array $risk, string $title): Response
+    private function form(array $risk, string $title, array $extra = []): Response
     {
-        return $this->view('risks/form', [
+        return $this->view('risks/form', $extra + [
             'title' => $title,
             'r' => $risk,
             'activities' => (new ActivityRepository())->options(),
