@@ -256,6 +256,12 @@ try {
             if ($driver === 'smtp' && !class_exists(\PHPMailer\PHPMailer\PHPMailer::class)) {
                 throw new RuntimeException('PHPMailer não encontrado. Rode "composer install --no-dev" no servidor ou envie a pasta vendor/.');
             }
+            if ($driver === 'smtp') {
+                out('Diagnóstico da conexão (sem login):');
+                foreach (Isis\Core\Mailer::diagnose() as [$passed, $text]) {
+                    out(($passed ? '  [ok]    ' : '  [falha] ') . $text);
+                }
+            }
             $ok = Isis\Core\Mailer::send($to, 'Teste de e-mail do ÍSIS',
                 '<p>Este é um e-mail de teste do <strong>ÍSIS</strong>, enviado em ' . date('d/m/Y H:i') . '.</p><p>Se você recebeu, o envio está funcionando.</p>');
             if ($driver === 'log') {

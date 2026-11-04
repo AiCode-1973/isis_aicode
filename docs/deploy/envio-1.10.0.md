@@ -77,6 +77,7 @@ cd /home/USUARIO/isis && /usr/local/bin/ea-php83 bin/isis diario >> storage/logs
 
 ## Se algo der errado
 
+- **E-mail não sai ("Could not connect to SMTP host"):** rode `cd ~/isis && /usr/local/bin/ea-php83 bin/isis email:teste seu@email` e leia o diagnóstico. Se a conexão a `mail.aicode.dev.br` falhar no servidor, troque no `.env` para `MAIL_HOST=localhost`, `MAIL_PORT=587` e `MAIL_ENCRYPTION=none` e teste de novo (se 587 recusar, tente `25`).
 - **Página em branco ou erro 500:** veja `~/isis/storage/logs/`. Confirme que a pasta `vendor/` foi extraída e que o PHP do domínio é o 8.3.
 - **Perdeu o celular antes de guardar os códigos:** `cd ~/isis && /usr/local/bin/ea-php83 bin/isis plataforma:2fa-redefinir seu@email`.
 - **Voltar à versão anterior:** extraia de novo os arquivos antigos. O banco continua compatível, porque as colunas novas são ignoradas pelos arquivos antigos. Para restaurar os dados, use o backup do passo 1 (`bin/isis backup:restaurar`; veja o README).

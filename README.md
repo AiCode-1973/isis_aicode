@@ -133,7 +133,7 @@ O ÍSIS envia e-mails para:
 | Sintoma | Causa provável e solução |
 |---|---|
 | `Could not authenticate` | Usuário ou senha errados. O usuário é o e-mail completo; confira também as aspas da senha no `.env`. |
-| `Could not connect to SMTP host` / tempo esgotado | Host ou porta errados, ou a hospedagem bloqueia a porta. Troque entre 465/ssl e 587/tls, ou use `localhost` com porta 25 ou 587 se a hospedagem orientar assim para scripts no próprio servidor. |
+| `Could not connect to SMTP host` / tempo esgotado | Rode `php bin/isis email:teste <destino>`: antes de enviar, ele mostra o diagnóstico passo a passo (nome, conexão, criptografia e login oferecido), sem expor a senha. Causas comuns: porta e criptografia trocadas (465 é `ssl`; 587 é `tls`) ou, no cPanel, a proteção **SMTP Restrictions**, que impede o PHP do site de se conectar ao endereço público do servidor de e-mail. Nesse caso use `MAIL_HOST=localhost`, `MAIL_PORT=587` (ou `25`) e `MAIL_ENCRYPTION=none`: a conexão fica dentro do próprio servidor, e `none` evita a falha do certificado, que não vale para "localhost". |
 | Certificado SSL inválido | Use como `MAIL_HOST` o nome que consta no certificado do servidor de e-mail (às vezes é o nome do servidor da hospedagem, não `mail.seudominio`). |
 | E-mail chega no spam | Configure SPF, DKIM e DMARC (passo 3) e use um remetente do mesmo domínio autenticado. |
 | Links do e-mail apontam para `localhost` | Corrija `APP_URL` no `.env` do servidor. |
